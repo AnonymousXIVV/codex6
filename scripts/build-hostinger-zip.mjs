@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { existsSync, readFileSync, writeFileSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
 import JSZip from "jszip";
 
 async function main() {

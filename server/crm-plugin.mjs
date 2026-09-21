@@ -40,6 +40,12 @@ import {
   getSiteConfig,
   saveSiteConfig,
   resetSiteConfig,
+  getChatThreads,
+  getChatMessages,
+  sendChatMessage,
+  markChatThreadRead,
+  updateChatThreadStatus,
+  deleteChatThread,
 } from "./crm-db.mjs";
 
 function parseJsonBody(req) {
@@ -209,6 +215,145 @@ export function crmApiPlugin() {
             res.setHeader("Content-Type", "application/json");
             res.statusCode = 200;
             res.end(JSON.stringify({ ok: true, ...data, settings: { webhookUrl } }));
+          } catch (err) {
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 500;
+            res.end(JSON.stringify({ ok: false, error: String(err) }));
+          }
+          return;
+        }
+
+        // Live Chat: List Threads
+        if (url.startsWith("/api/crm/chat/threads")) {
+          try {
+            const threads = getChatThreads();
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 200;
+            res.end(JSON.stringify({ ok: true, threads }));
+          } catch (err) {
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 500;
+            res.end(JSON.stringify({ ok: false, error: String(err) }));
+          }
+          return;
+        }
+
+        // Live Chat: Get Messages for Thread
+        if (url.startsWith("/api/crm/chat/messages")) {
+          try {
+            const parsedUrl = new URL(url, "http://localhost:3000");
+            const threadId = parsedUrl.searchParams.get("threadId");
+            const markRead = parsedUrl.searchParams.get("markRead") === "true";
+            if (!threadId) {
+              res.setHeader("Content-Type", "application/json");
+              res.statusCode = 400;
+              res.end(JSON.stringify({ ok: false, error: "Missing threadId parameter." }));
+              return;
+            }
+            if (markRead) {
+              markChatThreadRead(threadId);
+            }
+            const messages = getChatMessages(threadId);
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 200;
+            res.end(JSON.stringify({ ok: true, messages }));
+          } catch (err) {
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 500;
+            res.end(JSON.stringify({ ok: false, error: String(err) }));
+          }
+          return;
+        }
+
+        // Live Chat: Send Message
+        if (url.startsWith("/api/crm/chat/send") && req.method === "POST") {
+          try {
+            const payload = await parseJsonBody(req);
+            const { threadId, sender, senderName, message, visitorInfo, autoReply } = payload;
+            if (!message || !message.trim()) {
+              res.setHeader("Content-Type", "application/json");
+              res.statusCode = 400;
+              res.end(JSON.stringify({ ok: false, error: "Message cannot be empty." }));
+              return;
+            }
+
+            const result = sendChatMessage({
+              threadId: threadId || undefined,
+              sender: sender || "visitor",
+              senderName: senderName || (sender === "operator" ? "Studio Operator" : "Visitor"),
+              message: message.trim(),
+              visitorInfo: visitorInfo || {},
+            });
+
+            // Optional automated welcome or acknowledgment if visitor's first message
+            if (sender === "visitor" && autoReply) {
+              setTimeout(() => {
+                try {
+                  const automatedResponse =
+                    "Thank you for contacting Codex Dynamics! 👋 A senior engineer and project strategist have received your message. You can also connect directly on WhatsApp for expedited responses.";
+                  sendChatMessage({
+                    threadId: result.thread.id,
+                    sender: "bot",
+                    senderName: "Codex Concierge",
+                    message: automatedResponse,
+                  });
+                } catch {
+                  // Silent catch for background automated reply
+                }
+              }, 600);
+            }
+
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 200;
+            res.end(JSON.stringify({ ok: true, ...result }));
+          } catch (err) {
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 500;
+            res.end(JSON.stringify({ ok: false, error: String(err) }));
+          }
+          return;
+        }
+
+        // Live Chat: Thread Action (mark_read, update_status, delete_thread)
+        if (url.startsWith("/api/crm/chat/action") && req.method === "POST") {
+          try {
+            const payload = await parseJsonBody(req);
+            const { action, threadId, status } = payload;
+
+            if (!threadId) {
+              res.setHeader("Content-Type", "application/json");
+              res.statusCode = 400;
+              res.end(JSON.stringify({ ok: false, error: "Missing threadId." }));
+              return;
+            }
+
+            if (action === "mark_read") {
+              markChatThreadRead(threadId);
+              res.setHeader("Content-Type", "application/json");
+              res.statusCode = 200;
+              res.end(JSON.stringify({ ok: true }));
+              return;
+            }
+
+            if (action === "update_status") {
+              updateChatThreadStatus(threadId, status || "active");
+              res.setHeader("Content-Type", "application/json");
+              res.statusCode = 200;
+              res.end(JSON.stringify({ ok: true }));
+              return;
+            }
+
+            if (action === "delete_thread") {
+              deleteChatThread(threadId);
+              res.setHeader("Content-Type", "application/json");
+              res.statusCode = 200;
+              res.end(JSON.stringify({ ok: true }));
+              return;
+            }
+
+            res.setHeader("Content-Type", "application/json");
+            res.statusCode = 400;
+            res.end(JSON.stringify({ ok: false, error: "Unknown action." }));
           } catch (err) {
             res.setHeader("Content-Type", "application/json");
             res.statusCode = 500;

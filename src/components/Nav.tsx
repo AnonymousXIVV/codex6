@@ -179,8 +179,12 @@ export function Nav() {
   useEffect(() => {
     const onScroll = () => {
       const hero = document.getElementById("hero");
+      const heroLayout = config.theme?.heroLayout || config.theme?.layout?.heroLayout || "streamer";
+      const isDarkHero = heroLayout === "streamer";
       if (hero) {
-        setOverLight(hero.getBoundingClientRect().bottom < 88);
+        setOverLight(!isDarkHero || hero.getBoundingClientRect().bottom < 88);
+      } else {
+        setOverLight(true);
       }
       const doc = document.documentElement;
       const max = doc.scrollHeight - doc.clientHeight;
@@ -190,7 +194,7 @@ export function Nav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [config.theme?.heroLayout, config.theme?.layout?.heroLayout]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -337,11 +341,11 @@ export function Nav() {
   return (
     <header className={cn("pointer-events-none inset-x-0 top-0 z-50 pt-[max(0.7rem,env(safe-area-inset-top))]", pin)}>
 
-      <div className={cn("flex justify-center", headerStyle === "minimal" ? "px-4" : "px-3 sm:px-5 xl:px-8")}>
+      <div className={cn("flex justify-center", "px-3 sm:px-5 xl:px-8")}>
         <nav
           className={cn(
             "ios-island pointer-events-auto relative z-50 flex h-12 w-full items-center justify-between gap-2 px-2 transition-[background-color,box-shadow,backdrop-filter,transform] duration-300 sm:h-[3.25rem] sm:px-2.5",
-            headerStyle === "minimal" ? "max-w-[50rem]" : "max-w-[72rem]",
+            "max-w-[72rem]",
             light ? "ios-island-light text-label" : "ios-island-dark text-paper",
             scrolled && "ios-island-scrolled",
             open && "ios-island-open",

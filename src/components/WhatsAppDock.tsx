@@ -61,7 +61,7 @@ export function WhatsAppDock() {
   }
 
   const tidio = config.tidio;
-  const isTidioActive = Boolean(tidio?.enabled && tidio?.publicKey?.trim());
+  const isTidioActive = Boolean(tidio?.enabled !== false);
   const isLeft = waConfig?.position === "bottom-left";
   const tidioIsLeft = tidio?.position === "bottom-left";
 

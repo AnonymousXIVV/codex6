@@ -178,6 +178,37 @@ export interface CrmStats {
   totalBlogs: number;
   totalReviews: number;
   totalProjects: number;
+  totalChatThreads?: number;
+  activeChatThreads?: number;
+  unreadChatCount?: number;
+}
+
+export interface ChatThread {
+  id: string;
+  visitor_name: string;
+  visitor_email?: string;
+  visitor_phone?: string;
+  visitor_ip?: string;
+  visitor_device?: string;
+  visitor_country?: string;
+  visitor_flag?: string;
+  visitor_city?: string;
+  page_url?: string;
+  status: "active" | "resolved";
+  last_message: string;
+  last_message_at: string;
+  unread_count: number;
+  created_at: string;
+}
+
+export interface ChatMessage {
+  id: number;
+  thread_id: string;
+  sender: "visitor" | "operator" | "bot";
+  sender_name: string;
+  message: string;
+  created_at: string;
+  is_read: number;
 }
 
 export interface RegionStat {

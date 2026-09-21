@@ -26,6 +26,7 @@ export function ConversionSettingsSection({ config, onChange }: ConversionSettin
 
   const whatsapp = config.whatsapp || {
     enabled: true,
+    number: "+380630000000",
     phone: "+380630000000",
     defaultMessage: "Hello Codex Dynamics studio, I would like to discuss a new high-performance web project.",
     position: "bottom-right",
@@ -218,7 +219,7 @@ export function ConversionSettingsSection({ config, onChange }: ConversionSettin
               onChange={(e) =>
                 onChange({
                   ...config,
-                  whatsapp: { ...whatsapp, phone: e.target.value },
+                  whatsapp: { ...whatsapp, phone: e.target.value, number: e.target.value },
                 })
               }
               placeholder="+380630000000"

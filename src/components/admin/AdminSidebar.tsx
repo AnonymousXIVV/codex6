@@ -76,15 +76,6 @@ export function AdminSidebar({
       group: "Studio & Site Customizer",
       items: [
         {
-          id: "customizer" as const,
-          label: "Studio Customizer",
-          icon: Sparkles,
-          count: null,
-          badgeLive: true,
-          badgeText: "Visual Suite",
-          badgeColor: "bg-blue/10 text-blue border-blue/20",
-        },
-        {
           id: "branding" as const,
           label: "Visual Branding & Colors",
           icon: Palette,
@@ -147,12 +138,12 @@ export function AdminSidebar({
       items: [
         {
           id: "tidio" as const,
-          label: "Tidio Live Chat",
+          label: "Live Chat & Tidio",
           icon: MessageSquare,
-          count: null,
-          badgeLive: true,
-          badgeText: null,
-          badgeColor: "bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/20",
+          count: (stats.unreadChatCount && stats.unreadChatCount > 0) ? stats.unreadChatCount : (stats.activeChatThreads || null),
+          badgeLive: Boolean(stats.activeChatThreads && stats.activeChatThreads > 0),
+          badgeText: (stats.unreadChatCount && stats.unreadChatCount > 0) ? `${stats.unreadChatCount} new` : null,
+          badgeColor: (stats.unreadChatCount && stats.unreadChatCount > 0) ? "bg-red-500 text-white border-red-500" : "bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/20",
         },
         {
           id: "visitors" as const,
@@ -297,30 +288,6 @@ export function AdminSidebar({
         </button>
       </div>
 
-      {/* Hostinger SQLite Live Status Badge */}
-      <div className="px-5 pt-3.5 pb-2">
-        <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-black/6 shadow-xs">
-          <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-            </span>
-            <div className="flex flex-col">
-              <span className="text-[11px] font-semibold text-label">SQLite3 Active</span>
-              <span className="text-[10px] text-muted-foreground font-mono">database.sqlite</span>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onOpenHostingerModal}
-            className="text-[10px] font-medium text-blue hover:underline cursor-pointer px-1.5 py-0.5 rounded"
-            title="Hostinger documentation"
-          >
-            Docs
-          </button>
-        </div>
-      </div>
-
       {/* Navigation Groups */}
       <nav className="flex-1 px-3 py-2 space-y-5 overflow-y-auto custom-scrollbar">
         {navSections.map((section) => (
@@ -332,10 +299,7 @@ export function AdminSidebar({
             <div className="space-y-0.5">
               {section.items.map((item) => {
                 const Icon = item.icon;
-                const isActive =
-                  activeTab === item.id ||
-                  (item.id === "content" && activeTab === "site_content") ||
-                  (item.id === "site_content" && activeTab === "content");
+                const isActive = activeTab === item.id;
                 return (
                   <button
                     key={item.id}

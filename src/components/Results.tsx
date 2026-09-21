@@ -96,7 +96,7 @@ export function Results() {
           </p>
         </Reveal>
         <div className="mt-12 grid grid-cols-2 gap-10 lg:grid-cols-4">
-          {statList.map((s, idx) => (
+          {statList.map((s: any, idx: number) => (
             <Reveal key={s.label} delay={idx * 75} direction="up">
               <Stat {...s} active={active} />
             </Reveal>

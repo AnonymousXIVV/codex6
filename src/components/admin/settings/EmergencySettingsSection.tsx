@@ -31,6 +31,7 @@ export function EmergencySettingsSection({ config, onChange }: EmergencySettings
     const newSnapshot: ConfigSnapshot = {
       id: "snap-" + Date.now(),
       name: label,
+      timestamp: new Date().toISOString(),
       createdAt: new Date().toISOString(),
       config: JSON.parse(JSON.stringify(config)),
     };
@@ -45,14 +46,16 @@ export function EmergencySettingsSection({ config, onChange }: EmergencySettings
   };
 
   const handleRestoreSnapshot = (snap: ConfigSnapshot) => {
-    if (!window.confirm(`Restore configuration snapshot "${snap.name}" from ${new Date(snap.createdAt).toLocaleString()}?`)) {
+    const timeStr = snap.createdAt || snap.timestamp;
+    if (!window.confirm(`Restore configuration snapshot "${snap.name}" from ${new Date(timeStr).toLocaleString()}?`)) {
       return;
     }
 
     onChange({
+      ...config,
       ...snap.config,
       snapshots, // preserve existing snapshot history
-    });
+    } as any);
 
     toast.success(`Restored configuration to "${snap.name}". Click 'Save Changes' to publish.`);
   };
@@ -230,7 +233,7 @@ export function EmergencySettingsSection({ config, onChange }: EmergencySettings
                 <div>
                   <h4 className="text-xs font-bold text-label">{snap.name}</h4>
                   <span className="text-[10px] text-subtle font-mono">
-                    {new Date(snap.createdAt).toLocaleString()}
+                    {new Date(snap.createdAt || snap.timestamp).toLocaleString()}
                   </span>
                 </div>
 

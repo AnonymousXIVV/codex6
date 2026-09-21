@@ -145,6 +145,34 @@ function initSchema(db) {
       created_at TEXT DEFAULT CURRENT_TIMESTAMP,
       updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS chat_threads (
+      id TEXT PRIMARY KEY,
+      visitor_name TEXT DEFAULT 'Visitor',
+      visitor_email TEXT DEFAULT '',
+      visitor_phone TEXT DEFAULT '',
+      visitor_ip TEXT DEFAULT '',
+      visitor_device TEXT DEFAULT 'Desktop',
+      visitor_country TEXT DEFAULT 'US',
+      visitor_flag TEXT DEFAULT '🇺🇸',
+      visitor_city TEXT DEFAULT 'Kyiv',
+      page_url TEXT DEFAULT '/',
+      status TEXT DEFAULT 'active',
+      last_message TEXT DEFAULT '',
+      last_message_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      unread_count INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS chat_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      thread_id TEXT NOT NULL,
+      sender TEXT NOT NULL,
+      sender_name TEXT NOT NULL,
+      message TEXT NOT NULL,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      is_read INTEGER DEFAULT 0
+    );
   `);
 
   // Ensure extended columns exist in visitors
@@ -227,8 +255,8 @@ function initSchema(db) {
 }
 
 function seedInitialDataIfEmpty(db) {
-  // Check visitors
-  const visCount = db.prepare("SELECT COUNT(*) as count FROM visitors").get().count;
+  // Visitors table is left unseeded so it exclusively tracks authentic user visits.
+  const visCount = 999;
   if (visCount === 0) {
     const initialVisitors = [
       {
@@ -661,6 +689,68 @@ function seedInitialDataIfEmpty(db) {
       stmt.run(pr.title, pr.site_name, pr.site_url, pr.description, pr.category, pr.image_url, pr.is_published);
     }
   }
+
+  // Check chat threads
+  const chatCount = db.prepare("SELECT COUNT(*) as count FROM chat_threads").get().count;
+  if (chatCount === 0) {
+    const threadStmt = db.prepare(`
+      INSERT INTO chat_threads (id, visitor_name, visitor_email, visitor_phone, visitor_ip, visitor_device, visitor_country, visitor_flag, visitor_city, page_url, status, last_message, last_message_at, unread_count, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    const msgStmt = db.prepare(`
+      INSERT INTO chat_messages (thread_id, sender, sender_name, message, created_at, is_read)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
+    // Seed thread 1 (Active)
+    const t1Id = "thread_sarah_01";
+    const t1Time = new Date(Date.now() - 12 * 60 * 1000).toISOString();
+    const t1LastTime = new Date(Date.now() - 4 * 60 * 1000).toISOString();
+    threadStmt.run(
+      t1Id,
+      "Sarah Jenkins",
+      "sarah.j@nexora.io",
+      "+1 (415) 890-2134",
+      "104.28.192.42",
+      "Desktop (Mac)",
+      "United States",
+      "🇺🇸",
+      "San Francisco",
+      "/#services",
+      "active",
+      "We are targeting a Q4 kickoff. Could you provide typical sprint pricing and engagement terms?",
+      t1LastTime,
+      1,
+      t1Time
+    );
+    msgStmt.run(t1Id, "visitor", "Sarah Jenkins", "Hi! We saw your case study on the high-conversion e-commerce revamp. We are currently planning a ground-up rebuild of our customer portal.", t1Time, 1);
+    msgStmt.run(t1Id, "bot", "Codex Concierge", "Welcome to Codex Dynamics! 👋 An engineer and project manager have received your inquiry. What is your preferred launch timeline?", new Date(Date.now() - 8 * 60 * 1000).toISOString(), 1);
+    msgStmt.run(t1Id, "visitor", "Sarah Jenkins", "We are targeting a Q4 kickoff. Could you provide typical sprint pricing and engagement terms?", t1LastTime, 0);
+
+    // Seed thread 2 (Resolved)
+    const t2Id = "thread_david_02";
+    const t2Time = new Date(Date.now() - 3 * 3600 * 1000).toISOString();
+    threadStmt.run(
+      t2Id,
+      "David Miller",
+      "david@millerassociates.io",
+      "+44 20 7946 0912",
+      "185.120.44.18",
+      "Mobile (iPhone 15)",
+      "United Kingdom",
+      "🇬🇧",
+      "London",
+      "/#work",
+      "resolved",
+      "Sounds fantastic! Please email the MSA over to david@millerassociates.io.",
+      t2Time,
+      0,
+      t2Time
+    );
+    msgStmt.run(t2Id, "visitor", "David Miller", "Hello, do you offer bespoke React / Next.js web application engineering and ongoing retainers?", new Date(Date.now() - 4 * 3600 * 1000).toISOString(), 1);
+    msgStmt.run(t2Id, "operator", "Studio Operator", "Hi David! Yes, our core focus is high-performance React & TypeScript engineering with dedicated monthly SLAs. I can send over our standard Master Services Agreement.", new Date(Date.now() - 3.5 * 3600 * 1000).toISOString(), 1);
+    msgStmt.run(t2Id, "visitor", "David Miller", "Sounds fantastic! Please email the MSA over to david@millerassociates.io.", t2Time, 1);
+  }
 }
 
 export function getAllCrmData() {
@@ -672,6 +762,7 @@ export function getAllCrmData() {
   const blogs = db.prepare("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT 50").all();
   const reviews = db.prepare("SELECT * FROM reviews ORDER BY created_at DESC LIMIT 50").all();
   const projects = db.prepare("SELECT * FROM projects ORDER BY created_at DESC LIMIT 50").all();
+  const chatThreads = db.prepare("SELECT * FROM chat_threads ORDER BY last_message_at DESC LIMIT 50").all();
 
   const totalVisitors = db.prepare("SELECT COUNT(*) as count FROM visitors").get().count;
   const todayVisitors = db.prepare("SELECT COUNT(*) as count FROM visitors WHERE date(created_at) = date('now')").get().count;
@@ -682,6 +773,9 @@ export function getAllCrmData() {
   const totalBlogs = db.prepare("SELECT COUNT(*) as count FROM blog_posts").get().count;
   const totalReviews = db.prepare("SELECT COUNT(*) as count FROM reviews").get().count;
   const totalProjects = db.prepare("SELECT COUNT(*) as count FROM projects").get().count;
+  const totalChatThreads = db.prepare("SELECT COUNT(*) as count FROM chat_threads").get().count;
+  const activeChatThreads = db.prepare("SELECT COUNT(*) as count FROM chat_threads WHERE status = 'active'").get().count;
+  const unreadChatCount = db.prepare("SELECT COALESCE(SUM(unread_count), 0) as count FROM chat_threads").get().count || 0;
 
   // Regional breakdown
   const regions = db.prepare(`
@@ -723,6 +817,9 @@ export function getAllCrmData() {
       totalBlogs,
       totalReviews,
       totalProjects,
+      totalChatThreads,
+      activeChatThreads,
+      unreadChatCount,
     },
     visitors,
     enquiries,
@@ -731,6 +828,7 @@ export function getAllCrmData() {
     blogs,
     reviews,
     projects,
+    chatThreads,
     regions,
     browsers,
     devices,
@@ -1503,5 +1601,95 @@ export function resetSiteConfig() {
   const db = getDb();
   db.prepare("DELETE FROM settings WHERE key = ?").run("site_content");
   return DEFAULT_SITE_CONFIG;
+}
+
+export function getChatThreads() {
+  const db = getDb();
+  return db.prepare("SELECT * FROM chat_threads ORDER BY last_message_at DESC").all();
+}
+
+export function getChatMessages(threadId) {
+  const db = getDb();
+  return db.prepare("SELECT * FROM chat_messages WHERE thread_id = ? ORDER BY created_at ASC").all(threadId);
+}
+
+export function sendChatMessage({ threadId, sender, senderName, message, visitorInfo = {} }) {
+  const db = getDb();
+  const now = new Date().toISOString();
+  const safeThreadId = threadId || `thread_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+
+  let thread = db.prepare("SELECT * FROM chat_threads WHERE id = ?").get(safeThreadId);
+  if (!thread) {
+    db.prepare(`
+      INSERT INTO chat_threads (
+        id, visitor_name, visitor_email, visitor_phone, visitor_ip,
+        visitor_device, visitor_country, visitor_flag, visitor_city,
+        page_url, status, last_message, last_message_at, unread_count, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?)
+    `).run(
+      safeThreadId,
+      visitorInfo.name || "Website Visitor",
+      visitorInfo.email || "",
+      visitorInfo.phone || "",
+      visitorInfo.ip || "127.0.0.1",
+      visitorInfo.device || "Desktop",
+      visitorInfo.country || "United States",
+      visitorInfo.flag || "🇺🇸",
+      visitorInfo.city || "San Francisco",
+      visitorInfo.pageUrl || "/",
+      message,
+      now,
+      sender === "visitor" ? 1 : 0,
+      now
+    );
+  } else {
+    const unreadInc = sender === "visitor" ? (thread.unread_count || 0) + 1 : 0;
+    db.prepare(`
+      UPDATE chat_threads
+      SET last_message = ?, last_message_at = ?, unread_count = ?,
+          status = CASE WHEN status = 'resolved' AND ? = 'visitor' THEN 'active' ELSE status END
+      WHERE id = ?
+    `).run(message, now, unreadInc, sender, safeThreadId);
+  }
+
+  const finalSenderName = senderName || (sender === "operator" ? "Studio Operator" : (sender === "bot" ? "Codex Concierge" : "Visitor"));
+  const insertStmt = db.prepare(`
+    INSERT INTO chat_messages (thread_id, sender, sender_name, message, created_at, is_read)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `);
+  const result = insertStmt.run(safeThreadId, sender, finalSenderName, message, now, sender === "operator" ? 1 : 0);
+
+  const savedMsg = {
+    id: result.lastInsertRowid,
+    thread_id: safeThreadId,
+    sender,
+    sender_name: finalSenderName,
+    message,
+    created_at: now,
+    is_read: sender === "operator" ? 1 : 0,
+  };
+
+  const updatedThread = db.prepare("SELECT * FROM chat_threads WHERE id = ?").get(safeThreadId);
+  return { message: savedMsg, thread: updatedThread };
+}
+
+export function markChatThreadRead(threadId) {
+  const db = getDb();
+  db.prepare("UPDATE chat_threads SET unread_count = 0 WHERE id = ?").run(threadId);
+  db.prepare("UPDATE chat_messages SET is_read = 1 WHERE thread_id = ?").run(threadId);
+  return { ok: true };
+}
+
+export function updateChatThreadStatus(threadId, status) {
+  const db = getDb();
+  db.prepare("UPDATE chat_threads SET status = ? WHERE id = ?").run(status, threadId);
+  return { ok: true };
+}
+
+export function deleteChatThread(threadId) {
+  const db = getDb();
+  db.prepare("DELETE FROM chat_messages WHERE thread_id = ?").run(threadId);
+  db.prepare("DELETE FROM chat_threads WHERE id = ?").run(threadId);
+  return { ok: true };
 }
 

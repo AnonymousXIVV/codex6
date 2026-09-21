@@ -194,10 +194,10 @@ function StreamerHero() {
                   {config.hero?.badge || "Codex Dynamics"}
                 </motion.p>
                 <motion.h1
-                  initial={{ opacity: 0, y: 12, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.65,
+                    duration: 0.55,
                     delay: 0.08,
                     ease: [0.22, 1, 0.36, 1],
                   }}
@@ -224,10 +224,10 @@ function StreamerHero() {
               <AnimatePresence mode="wait">
                 <motion.div
                   key={current.label}
-                  initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -6, filter: "blur(4px)" }}
-                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <p className="text-[11px] font-medium tracking-[0.22em] text-paper/70 uppercase">
                     {current.label}

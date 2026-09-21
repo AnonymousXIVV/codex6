@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
+import { MessageSquare, X, Send, User, Sparkles, CheckCheck } from "lucide-react";
 import { useSiteConfig } from "@/context/SiteConfigContext";
+import type { ChatMessage } from "@/types/crm";
 
 declare global {
   interface Window {
@@ -18,11 +20,87 @@ export function TidioWidget() {
   const { config } = useSiteConfig();
   const tidio = config.tidio;
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputText, setInputText] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [threadId, setThreadId] = useState<string>("");
+  const [hasUnread, setHasUnread] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const isAdminRoute = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+  const isExternalTidio = Boolean(tidio?.enabled && tidio?.publicKey?.trim());
+  const isEnabled = tidio?.enabled !== false;
+  const isLeft = tidio?.position === "bottom-left";
+  const hideMobile = Boolean(tidio?.hideOnMobile);
+
+  // Initialize or load visitor thread ID from localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let storedId = localStorage.getItem("cdx_visitor_chat_thread");
+    if (!storedId) {
+      storedId = `thread_vis_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      localStorage.setItem("cdx_visitor_chat_thread", storedId);
+    }
+    setThreadId(storedId);
+  }, []);
+
+  // Poll messages for active visitor thread
+  useEffect(() => {
+    if (!threadId || isExternalTidio || !isEnabled) return;
+
+    const fetchMessages = async () => {
+      try {
+        const res = await fetch(`/api/crm/chat/messages?threadId=${encodeURIComponent(threadId)}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.ok && Array.isArray(data.messages)) {
+            setMessages((prev) => {
+              if (data.messages.length > prev.length) {
+                // If new messages from operator arrive while closed, show unread badge
+                const lastMsg = data.messages[data.messages.length - 1];
+                if (!isOpen && (lastMsg.sender === "operator" || lastMsg.sender === "bot")) {
+                  setHasUnread(true);
+                }
+              }
+              return data.messages;
+            });
+          }
+        }
+      } catch {
+        // Silent polling catch
+      }
+    };
+
+    void fetchMessages();
+    const interval = setInterval(fetchMessages, 3500);
+    return () => clearInterval(interval);
+  }, [threadId, isOpen, isExternalTidio, isEnabled]);
+
+  // Scroll to bottom when messages update
+  useEffect(() => {
+    if (isOpen) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      setHasUnread(false);
+    }
+  }, [messages, isOpen]);
+
+  // Handle WhatsApp dock notification events when opening/closing
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (isOpen) {
+      window.dispatchEvent(new CustomEvent("tidio-chat-open"));
+      window.dispatchEvent(new CustomEvent("tidio-chat-status", { detail: { isOpen: true } }));
+    } else {
+      window.dispatchEvent(new CustomEvent("tidio-chat-close"));
+      window.dispatchEvent(new CustomEvent("tidio-chat-status", { detail: { isOpen: false } }));
+    }
+  }, [isOpen]);
+
+  // External Tidio script injection handler
   useEffect(() => {
     if (typeof window === "undefined" || typeof document === "undefined") return;
 
-    // Check if we are on admin route
-    const isAdminRoute = window.location.pathname.startsWith("/admin");
     if (isAdminRoute && tidio?.disableOnAdmin) {
       if (window.tidioChatApi?.hide) {
         window.tidioChatApi.hide();
@@ -30,20 +108,18 @@ export function TidioWidget() {
       return;
     }
 
-    if (!tidio?.enabled || !tidio?.publicKey?.trim()) {
-      // If disabled or empty key, remove any existing tidio script, iframe, and styles
+    if (!isExternalTidio) {
+      // Clean up script if switching away from external Tidio
       const existingScript = document.getElementById("tidio-chat-script");
       if (existingScript) existingScript.remove();
       const tidioIframe = document.getElementById("tidio-chat-iframe");
       if (tidioIframe) tidioIframe.remove();
       const styleEl = document.getElementById("tidio-custom-styles");
       if (styleEl) styleEl.remove();
-      window.dispatchEvent(new CustomEvent("tidio-chat-close"));
       return;
     }
 
-    // Clean the public key (user might paste full URL or script tag)
-    let key = tidio.publicKey.trim();
+    let key = (tidio?.publicKey || "").trim();
     if (key.includes("code.tidio.co/")) {
       const match = key.match(/code\.tidio\.co\/([a-zA-Z0-9_-]+)(?:\.js)?/);
       if (match) key = match[1];
@@ -51,14 +127,8 @@ export function TidioWidget() {
       const match = key.match(/src=["'](?:https?:)?\/\/code\.tidio\.co\/([a-zA-Z0-9_-]+)(?:\.js)?["']/);
       if (match) key = match[1];
     }
-    // Remove trailing .js if user typed it
     key = key.replace(/\.js$/, "");
-
     if (!key) return;
-
-    // Apply custom positioning and mobile visibility styles
-    const isLeft = tidio.position === "bottom-left";
-    const hideMobile = Boolean(tidio.hideOnMobile);
 
     let styleEl = document.getElementById("tidio-custom-styles") as HTMLStyleElement | null;
     if (!styleEl) {
@@ -67,23 +137,21 @@ export function TidioWidget() {
       document.head.appendChild(styleEl);
     }
 
-    const updateStyles = (isOpen: boolean) => {
+    const updateStyles = (openState: boolean) => {
       if (!styleEl) return;
       styleEl.textContent = `
         #tidio-chat-iframe, #tidio-chat {
           ${isLeft ? "left: env(safe-area-inset-left, 0px) !important; right: auto !important;" : "right: env(safe-area-inset-right, 0px) !important; left: auto !important;"}
           bottom: env(safe-area-inset-bottom, 0px) !important;
-          z-index: ${isOpen ? "2147483647" : "2147483640"} !important;
+          z-index: ${openState ? "2147483647" : "2147483640"} !important;
         }
         ${hideMobile ? "@media (max-width: 640px) { #tidio-chat-iframe, #tidio-chat { display: none !important; } }" : ""}
       `;
     };
     updateStyles(false);
 
-    // Check if already injected with the same key
     const scriptId = "tidio-chat-script";
     let script = document.getElementById(scriptId) as HTMLScriptElement | null;
-
     if (!script) {
       script = document.createElement("script");
       script.id = scriptId;
@@ -91,63 +159,250 @@ export function TidioWidget() {
       script.async = true;
       document.body.appendChild(script);
     } else if (!script.src.includes(key)) {
-      // Key changed, replace script
       script.src = `//code.tidio.co/${encodeURIComponent(key)}.js`;
     }
 
-    // Unhide if was previously hidden
     if (window.tidioChatApi?.show) {
       window.tidioChatApi.show();
     }
+  }, [isExternalTidio, tidio?.publicKey, tidio?.disableOnAdmin, isLeft, hideMobile, isAdminRoute]);
 
-    // Listen for Tidio open/close states to coordinate with WhatsAppDock
-    let lastOpen = false;
-    const notifyState = (isOpen: boolean) => {
-      if (isOpen !== lastOpen) {
-        lastOpen = isOpen;
-        updateStyles(isOpen);
-        window.dispatchEvent(
-          new CustomEvent("tidio-chat-status", { detail: { isOpen } })
-        );
-        if (isOpen) {
-          window.dispatchEvent(new CustomEvent("tidio-chat-open"));
-        } else {
-          window.dispatchEvent(new CustomEvent("tidio-chat-close"));
+  // Don't render internal widget if disabled or on admin route with disableOnAdmin
+  if (isAdminRoute && tidio?.disableOnAdmin) return null;
+  if (!isEnabled) return null;
+
+  // If using external Tidio key, that script will handle DOM rendering
+  if (isExternalTidio) return null;
+
+  const handleSendMessage = async (textToSend?: string) => {
+    const content = (textToSend || inputText).trim();
+    if (!content || isSending || !threadId) return;
+
+    setIsSending(true);
+    if (!textToSend) setInputText("");
+
+    // Optimistic message
+    const tempMsg: ChatMessage = {
+      id: Date.now(),
+      thread_id: threadId,
+      sender: "visitor",
+      sender_name: "You",
+      message: content,
+      created_at: new Date().toISOString(),
+      is_read: 0,
+    };
+    setMessages((prev) => [...prev, tempMsg]);
+
+    try {
+      const res = await fetch("/api/crm/chat/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          threadId,
+          sender: "visitor",
+          senderName: "Website Visitor",
+          message: content,
+          autoReply: messages.length === 0, // auto reply on first message
+          visitorInfo: {
+            pageUrl: typeof window !== "undefined" ? window.location.pathname : "/",
+            device: typeof navigator !== "undefined" ? (navigator.userAgent.includes("Mobile") ? "Mobile" : "Desktop") : "Web",
+          },
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok && data.message) {
+          setMessages((prev) => prev.map((m) => (m.id === tempMsg.id ? data.message : m)));
         }
       }
-    };
+    } catch {
+      // Revert optimistic or keep error indicator
+    } finally {
+      setIsSending(false);
+    }
+  };
 
-    let apiBound = false;
-    const bindApi = () => {
-      if (window.tidioChatApi?.on && !apiBound) {
-        apiBound = true;
-        window.tidioChatApi.on("open", () => notifyState(true));
-        window.tidioChatApi.on("close", () => notifyState(false));
-      }
-    };
-    bindApi();
+  const welcomeGreeting =
+    tidio?.welcomeMessage ||
+    "Hello! 👋 Welcome to Codex Dynamics. How can our engineering and design team help with your project today?";
 
-    // Fallback dimension observer on iframe in case event listeners aren't fired immediately
-    const checkIframe = () => {
-      bindApi();
-      const iframe = document.getElementById("tidio-chat-iframe");
-      if (iframe) {
-        const height = iframe.offsetHeight || iframe.getBoundingClientRect().height;
-        // When chat is open, Tidio iframe expands from ~94px to >250px
-        if (height > 220) {
-          notifyState(true);
-        } else {
-          notifyState(false);
-        }
-      }
-    };
+  return (
+    <div
+      className={`fixed z-50 transition-all duration-200 select-none ${
+        isLeft ? "left-5" : "right-5"
+      } bottom-5 ${hideMobile ? "sm:block hidden" : "block"}`}
+    >
+      {/* Floating Chat Window */}
+      {isOpen && (
+        <div
+          className={`absolute bottom-16 ${
+            isLeft ? "left-0" : "right-0"
+          } w-[360px] max-w-[calc(100vw-32px)] h-[510px] max-h-[82vh] bg-white rounded-2xl shadow-2xl border border-black/10 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-3 duration-200`}
+        >
+          {/* Header */}
+          <div className="bg-[#0066FF] text-white px-4 py-3.5 flex items-center justify-between shrink-0 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="size-9 rounded-full bg-white/20 flex items-center justify-center font-bold text-sm text-white">
+                  <User className="size-5" />
+                </div>
+                <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-400 ring-2 ring-[#0066FF]" />
+              </div>
+              <div>
+                <h4 className="text-xs font-semibold text-white leading-tight">
+                  Codex Dynamics Support
+                </h4>
+                <p className="text-[11px] text-white/80 flex items-center gap-1 mt-0.5">
+                  <span className="size-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                  Online &middot; Typically replies in minutes
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/15 transition-colors"
+              title="Close chat"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
 
-    const interval = setInterval(checkIframe, 800);
+          {/* Messages Container */}
+          <div className="flex-1 p-3.5 overflow-y-auto space-y-3 bg-[#f8f9fc] text-xs">
+            {/* System welcome greeting */}
+            <div className="flex justify-start">
+              <div className="max-w-[85%] rounded-2xl rounded-bl-xs px-3.5 py-2.5 bg-white text-slate-800 border border-black/8 shadow-xs leading-relaxed">
+                <p className="flex items-center gap-1.5 text-[11px] font-semibold text-[#0066FF] mb-1">
+                  <Sparkles className="size-3" />
+                  Codex Concierge
+                </p>
+                <p>{welcomeGreeting}</p>
+                <span className="text-[9px] text-slate-400 block mt-1">Just now</span>
+              </div>
+            </div>
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [tidio?.enabled, tidio?.publicKey, tidio?.disableOnAdmin, tidio?.position, tidio?.hideOnMobile]);
+            {/* Conversation Messages */}
+            {messages.map((msg) => {
+              const isVisitor = msg.sender === "visitor";
+              const isBot = msg.sender === "bot";
+              return (
+                <div
+                  key={msg.id}
+                  className={`flex ${isVisitor ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 leading-relaxed shadow-xs ${
+                      isVisitor
+                        ? "bg-[#0066FF] text-white rounded-br-xs"
+                        : isBot
+                        ? "bg-[#0066FF]/8 text-slate-800 border border-[#0066FF]/20 rounded-bl-xs"
+                        : "bg-white text-slate-800 border border-black/8 rounded-bl-xs"
+                    }`}
+                  >
+                    {!isVisitor && (
+                      <p className="text-[10px] font-semibold text-[#0066FF] mb-0.5">
+                        {isBot ? "🤖 Automated Assistant" : "👤 Studio Operator"}
+                      </p>
+                    )}
+                    <p className="whitespace-pre-wrap">{msg.message}</p>
+                    <div
+                      className={`text-[9px] mt-1 flex items-center justify-end gap-1 ${
+                        isVisitor ? "text-white/70" : "text-slate-400"
+                      }`}
+                    >
+                      <span>
+                        {new Date(msg.created_at).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      {isVisitor && <CheckCheck className="size-3 text-white/80" />}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            <div ref={messagesEndRef} />
+          </div>
 
-  return null;
+          {/* Quick Action Chips */}
+          <div className="px-3 py-2 bg-white border-t border-black/6 flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+            <button
+              type="button"
+              onClick={() => handleSendMessage("I need a quote for a new web project")}
+              className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#0066FF]/8 text-[#0066FF] hover:bg-[#0066FF]/15 transition-colors whitespace-nowrap shrink-0"
+            >
+              💼 Project Quote
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSendMessage("Can we schedule a 15-min discovery call?")}
+              className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#0066FF]/8 text-[#0066FF] hover:bg-[#0066FF]/15 transition-colors whitespace-nowrap shrink-0"
+            >
+              📅 Discovery Call
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSendMessage("Tell me about your tech stack & SLAs")}
+              className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#0066FF]/8 text-[#0066FF] hover:bg-[#0066FF]/15 transition-colors whitespace-nowrap shrink-0"
+            >
+              ⚡ Tech Stack
+            </button>
+          </div>
+
+          {/* Chat Input Bar */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              void handleSendMessage();
+            }}
+            className="p-3 bg-white border-t border-black/6 flex items-center gap-2 shrink-0"
+          >
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Write a message..."
+              className="flex-1 px-3 py-2 text-xs rounded-xl border border-black/10 bg-slate-50 text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#0066FF] focus:bg-white"
+            />
+            <button
+              type="submit"
+              disabled={isSending || !inputText.trim()}
+              className="size-8 rounded-xl bg-[#0066FF] text-white flex items-center justify-center hover:bg-[#0052cc] transition-colors disabled:opacity-40 shrink-0"
+            >
+              <Send className="size-3.5" />
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Launcher Bubble */}
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="size-14 rounded-full bg-[#0066FF] hover:bg-[#0052cc] text-white shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 active:scale-95 relative group cursor-pointer"
+        aria-label="Toggle live chat"
+      >
+        {isOpen ? (
+          <X className="size-6 transition-transform group-hover:rotate-90 duration-200" />
+        ) : (
+          <MessageSquare className="size-6 transition-transform group-hover:scale-110 duration-200" />
+        )}
+
+        {/* Online pulse dot */}
+        <span className="absolute top-0 right-0 size-3.5 rounded-full bg-emerald-400 ring-2 ring-white flex items-center justify-center">
+          <span className="size-2 rounded-full bg-white animate-ping opacity-75" />
+        </span>
+
+        {/* Unread message indicator */}
+        {hasUnread && !isOpen && (
+          <span className="absolute -top-1 -left-1 px-1.5 py-0.5 rounded-full bg-red-600 text-[10px] font-bold text-white shadow-xs">
+            1
+          </span>
+        )}
+      </button>
+    </div>
+  );
 }

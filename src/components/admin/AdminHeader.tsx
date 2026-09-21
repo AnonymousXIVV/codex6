@@ -1,10 +1,5 @@
-import { Link } from "@tanstack/react-router";
 import {
-  RefreshCw,
-  ExternalLink,
   Menu,
-  Database,
-  Download,
   Activity,
   BarChart3,
   Inbox,
@@ -129,22 +124,14 @@ const tabMeta: Record<AdminTabKey, { label: string; icon: any; subtitle: string 
 
 export function AdminHeader({
   activeTab,
-  loading,
-  onRefresh,
+  loading: _loading,
+  onRefresh: _onRefresh,
   onOpenMobileSidebar,
-  onOpenHostingerModal,
-  onSelectTab,
+  onOpenHostingerModal: _onOpenHostingerModal,
+  onSelectTab: _onSelectTab,
 }: AdminHeaderProps) {
   const current = tabMeta[activeTab] || tabMeta.visitors;
   const TabIcon = current.icon;
-  const isCustomizerActive =
-    activeTab === "customizer" ||
-    activeTab === "branding" ||
-    activeTab === "layout" ||
-    activeTab === "conversion" ||
-    activeTab === "seo_studio" ||
-    activeTab === "emergency";
-  const isContentActive = activeTab === "content" || activeTab === "site_content";
 
   return (
     <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-xl border-b border-black/8 px-4 sm:px-6 lg:px-8 py-3.5 transition-colors">
@@ -181,75 +168,7 @@ export function AdminHeader({
           </div>
         </div>
 
-        {/* Right Side: Quick Actions */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-          {onSelectTab && (
-            <>
-              <button
-                type="button"
-                onClick={() => onSelectTab("customizer")}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all hover:shadow-xs cursor-pointer ${
-                  isCustomizerActive
-                    ? "bg-blue text-white border-blue shadow-xs"
-                    : "bg-blue/10 hover:bg-blue/20 text-blue border-blue/25"
-                }`}
-                title="Open Studio Customizer (Branding, Layout, WhatsApp, SEO & Emergency)"
-              >
-                <Sparkles className="size-3.5" />
-                <span>Studio Customizer</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onSelectTab("content")}
-                className={`hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all hover:shadow-xs cursor-pointer ${
-                  isContentActive
-                    ? "bg-black/90 text-white border-black/90 shadow-xs"
-                    : "bg-fill hover:bg-fill-elevated text-label border-black/8"
-                }`}
-                title="Edit live phone, WhatsApp, email, addresses, header social buttons & site copy"
-              >
-                <Globe className="size-3.5" />
-                <span>Contacts & Copy</span>
-              </button>
-            </>
-          )}
-
-          <button
-            type="button"
-            onClick={onOpenHostingerModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue/10 hover:bg-blue/15 text-blue text-xs font-semibold border border-blue/20 transition-all hover:shadow-xs cursor-pointer"
-            title="Download Hostinger public_html ZIP Package"
-          >
-            <Download className="size-3.5 text-blue" />
-            <span>Hostinger ZIP</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={onRefresh}
-            disabled={loading}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-fill-elevated text-label text-xs font-medium border border-black/8 transition-all hover:shadow-xs cursor-pointer disabled:opacity-50"
-            title="Sync data with SQLite database"
-          >
-            <RefreshCw
-              className={`size-3.5 text-muted-foreground ${
-                loading ? "animate-spin text-blue" : ""
-              }`}
-            />
-            <span className="hidden sm:inline">Sync DB</span>
-          </button>
-
-          <Link
-            to="/"
-            target="_blank"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-fill hover:bg-fill-elevated text-label text-xs font-medium border border-black/8 transition-all hover:shadow-xs"
-            title="Open public website in new tab"
-          >
-            <ExternalLink className="size-3.5 text-muted-foreground" />
-            <span className="hidden sm:inline">Public Site</span>
-          </Link>
-        </div>
+        {/* Right Side: Quick Actions removed per user request */}
       </div>
     </header>
   );

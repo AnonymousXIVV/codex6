@@ -24,7 +24,7 @@ export function AlternateHero({ layout }: { layout: HeroLayout }) {
 
   if (layout === "split") {
     return (
-      <section id="hero" aria-label="Hero" className="hero-stage relative isolate pt-20 sm:pt-24">
+      <section id="hero" aria-label="Hero" className="relative isolate bg-background text-foreground pt-24 sm:pt-28 antialiased">
         <div className="shell grid items-center gap-8 pb-10 lg:grid-cols-2 lg:gap-12">
           <div className="max-w-xl">
             <p className="mb-3 text-[11px] font-medium tracking-[0.22em] text-subtle uppercase">{badge}</p>
@@ -35,12 +35,14 @@ export function AlternateHero({ layout }: { layout: HeroLayout }) {
             <div className="mt-6 flex flex-wrap gap-2">
               {clips.map((video, i) => (
                 <button
-                  key={video.label || video.id || i}
+                  key={(video as any).id || video.label || i}
                   type="button"
                   onClick={() => setClip(i)}
                   className={cn(
-                    "rounded-full px-3 py-1.5 text-[11px] font-medium transition-colors",
-                    i === clip ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground",
+                    "rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-colors border",
+                    i === clip
+                      ? "bg-label text-paper border-label shadow-xs"
+                      : "bg-fill hover:bg-fill-elevated text-label border-black/8",
                   )}
                 >
                   {video.label}
@@ -48,7 +50,7 @@ export function AlternateHero({ layout }: { layout: HeroLayout }) {
               ))}
             </div>
           </div>
-          <div className="relative overflow-hidden rounded-xl bg-ink aspect-[16/11] shadow-border">
+          <div className="relative overflow-hidden rounded-2xl bg-ink aspect-[16/11] shadow-lg border border-black/10">
             <img src={current.poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
             {current.src ? (
               <video
@@ -62,10 +64,10 @@ export function AlternateHero({ layout }: { layout: HeroLayout }) {
                 autoPlay
               />
             ) : null}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/50 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/20 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4 text-paper">
-              <p className="text-[11px] tracking-[0.2em] uppercase text-paper/70">{current.label}</p>
-              <p className="mt-1 text-sm text-paper/90">{current.line}</p>
+              <p className="text-[11px] tracking-[0.2em] uppercase text-paper/70 font-mono">{current.label}</p>
+              <p className="mt-1 text-sm font-medium text-paper">{current.line}</p>
             </div>
           </div>
         </div>
@@ -75,25 +77,27 @@ export function AlternateHero({ layout }: { layout: HeroLayout }) {
 
   if (layout === "centered") {
     return (
-      <section id="hero" aria-label="Hero" className="hero-stage relative isolate pt-24 sm:pt-28">
+      <section id="hero" aria-label="Hero" className="relative isolate bg-background text-foreground pt-24 sm:pt-28 antialiased">
         <div className="shell pb-10 text-center">
           <p className="mb-4 text-[11px] font-medium tracking-[0.24em] text-subtle uppercase">{badge}</p>
           <h1 className="mx-auto max-w-4xl text-[2.35rem] leading-[1.05] font-semibold tracking-tight text-label sm:text-[3.4rem] lg:text-[4rem]">
             {title}
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-muted-foreground sm:text-base">{subtitle}</p>
-          <div className="mx-auto mt-10 overflow-hidden rounded-xl bg-ink aspect-[21/9] max-w-5xl shadow-border">
+          <div className="mx-auto mt-8 overflow-hidden rounded-2xl bg-ink aspect-[21/9] max-w-5xl shadow-xl border border-black/10">
             <img src={current.poster} alt="" className="h-full w-full object-cover" />
           </div>
-          <div className="mx-auto mt-5 flex max-w-3xl flex-wrap justify-center gap-1.5">
+          <div className="mx-auto mt-6 flex max-w-3xl flex-wrap justify-center gap-2">
             {clips.map((video, i) => (
               <button
-                key={video.label || video.id || i}
+                key={(video as any).id || video.label || i}
                 type="button"
                 onClick={() => setClip(i)}
                 className={cn(
-                  "min-h-10 rounded-full px-4 text-[12px] font-medium",
-                  i === clip ? "bg-label text-paper" : "bg-card text-muted-foreground",
+                  "min-h-10 rounded-full px-4 text-[12px] font-medium transition-colors border",
+                  i === clip
+                    ? "bg-label text-paper border-label shadow-xs"
+                    : "bg-fill hover:bg-fill-elevated text-label border-black/8",
                 )}
               >
                 {video.label}
@@ -107,19 +111,19 @@ export function AlternateHero({ layout }: { layout: HeroLayout }) {
 
   if (layout === "editorial") {
     return (
-      <section id="hero" aria-label="Hero" className="hero-stage relative isolate pt-28 sm:pt-32">
+      <section id="hero" aria-label="Hero" className="relative isolate bg-background text-foreground pt-28 sm:pt-32 antialiased">
         <div className="shell pb-12">
           <p className="text-[12px] font-medium tracking-[0.28em] text-subtle uppercase">{badge}</p>
           <h1 className="mt-5 max-w-5xl font-display text-[2.8rem] leading-[0.98] font-semibold tracking-tight text-label sm:text-[4.4rem] lg:text-[5.2rem]">
             {title}
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">{subtitle}</p>
-          <div className="mt-10 overflow-hidden rounded-lg bg-ink aspect-[2.2/1] shadow-border">
+          <div className="mt-10 overflow-hidden rounded-2xl bg-ink aspect-[2.2/1] shadow-xl border border-black/10">
             <img src={current.poster} alt="" className="h-full w-full object-cover" />
           </div>
           <div className="mt-4 flex flex-wrap gap-6 text-[13px] text-muted-foreground">
-            {clips.map((video) => (
-              <span key={video.label || video.id} className="tracking-wide">
+            {clips.map((video, i) => (
+              <span key={(video as any).id || video.label || i} className="tracking-wide font-medium">
                 {video.label}
               </span>
             ))}
@@ -130,9 +134,9 @@ export function AlternateHero({ layout }: { layout: HeroLayout }) {
   }
 
   return (
-    <section id="hero" aria-label="Hero" className="hero-stage relative isolate pt-20 sm:pt-24">
-      <div className="shell grid gap-3 pb-10 md:grid-cols-6 md:grid-rows-2 md:h-[min(72vh,38rem)]">
-        <div className="surface-lift rounded-xl bg-card p-6 md:col-span-3 md:row-span-2 md:p-8 flex flex-col justify-between">
+    <section id="hero" aria-label="Hero" className="relative isolate bg-background text-foreground pt-24 sm:pt-28 antialiased">
+      <div className="shell grid gap-4 pb-10 md:grid-cols-6 md:grid-rows-2 md:h-[min(72vh,38rem)]">
+        <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 md:col-span-3 md:row-span-2 md:p-8 flex flex-col justify-between shadow-xs">
           <div>
             <p className="text-[11px] font-medium tracking-[0.22em] text-subtle uppercase">{badge}</p>
             <h1 className="mt-4 text-[2rem] leading-[1.05] font-semibold tracking-tight text-label sm:text-[2.8rem]">
@@ -143,16 +147,16 @@ export function AlternateHero({ layout }: { layout: HeroLayout }) {
         </div>
         {clips.slice(0, 3).map((video, i) => (
           <button
-            key={video.label || video.id || i}
+            key={(video as any).id || video.label || i}
             type="button"
             onClick={() => setClip(i)}
             className={cn(
-              "relative overflow-hidden rounded-xl bg-ink text-left md:col-span-3 min-h-[9rem]",
+              "relative overflow-hidden rounded-2xl bg-ink text-left md:col-span-3 min-h-[9rem] border border-black/10 transition-transform hover:scale-[1.01] cursor-pointer",
               i === 0 ? "md:col-span-3" : "md:col-span-3",
             )}
           >
             <img src={video.poster} alt="" className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/20 to-transparent" />
             <span className="absolute bottom-3 left-3 text-sm font-medium text-paper">{video.label}</span>
           </button>
         ))}
