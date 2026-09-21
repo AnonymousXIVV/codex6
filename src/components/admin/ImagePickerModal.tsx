@@ -382,29 +382,29 @@ export function ImagePickerModal({
                     if (file) handleFileUpload(file);
                   }}
                 />
-                <div className="size-12 rounded-full bg-blue/10 text-blue flex items-center justify-center mb-3">
+                <div className="size-12 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center mb-3">
                   <Upload className="size-5" />
                 </div>
-                <p className="text-sm font-semibold text-label">
+                <p className="text-sm font-semibold text-neutral-900">
                   {isUploading ? "Uploading picture to server..." : "Click or drag picture here to upload"}
                 </p>
-                <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+                <p className="text-xs text-neutral-500 mt-1 max-w-sm">
                   Supports WebP, JPG, PNG, and SVG. Persisted permanently in SQLite and served through the public uploads API.
                 </p>
               </div>
 
               {selectedUrl && (
-                <div className="p-3 bg-zinc-50 rounded-xl border border-black/8 flex items-center gap-3">
+                <div className="p-3 bg-neutral-50 rounded-xl border border-black/[0.08] flex items-center gap-3">
                   <img
                     src={selectedUrl}
                     alt="Uploaded preview"
-                    className="size-14 rounded-lg object-cover border border-black/10 shrink-0"
+                    className="size-14 rounded-lg object-cover border border-black/[0.08] shrink-0"
                   />
                   <div className="flex-1 min-w-0">
-                    <span className="text-xs font-semibold text-label block truncate">Selected Upload</span>
-                    <span className="text-[11px] text-muted-foreground font-mono block truncate">{selectedUrl}</span>
+                    <span className="text-xs font-semibold text-neutral-900 block truncate">Selected Upload</span>
+                    <span className="text-[11px] text-neutral-500 font-mono block truncate">{selectedUrl}</span>
                   </div>
-                  <span className="text-xs text-emerald-600 font-semibold px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 shrink-0">
+                  <span className="text-xs text-emerald-700 font-semibold px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200/60 shrink-0">
                     Ready
                   </span>
                 </div>

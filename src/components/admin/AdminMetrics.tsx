@@ -17,106 +17,106 @@ interface AdminMetricsProps {
 }
 
 export function AdminMetrics({ stats, activeTab, setActiveTab }: AdminMetricsProps) {
-  const cards = [
+  const items = [
     {
       id: "visitors" as const,
-      title: "Total Visitors",
+      title: "Live Visitors",
       value: stats.totalVisitors,
       subValue: `+${stats.todayVisitors} today`,
       icon: Users,
-      badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
-      accent: "text-emerald-600",
     },
     {
       id: "leads" as const,
       title: "CRM Leads",
       value: stats.totalLeads ?? 0,
-      subValue: `${stats.newLeads ?? 0} new inbound`,
+      subValue: `${stats.newLeads ?? 0} new active`,
       icon: Contact,
-      badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/60",
-      accent: "text-emerald-600",
     },
     {
       id: "enquiries" as const,
       title: "Inquiries",
       value: stats.totalEnquiries,
-      subValue: "Form submissions",
+      subValue: "Form inquiries",
       icon: UserPlus,
-      badgeColor: "bg-blue/10 text-blue border-blue/20",
-      accent: "text-blue",
     },
     {
       id: "backlinks" as const,
-      title: "SEO Backlinks",
+      title: "Backlinks",
       value: stats.totalBacklinks,
       subValue: "Indexed domains",
       icon: Link2,
-      badgeColor: "bg-purple-50 text-purple-700 border-purple-200/60",
-      accent: "text-purple-600",
     },
     {
       id: "blogs" as const,
-      title: "Blog Articles",
+      title: "Blog Posts",
       value: stats.totalBlogs,
-      subValue: "Rank Math ready",
+      subValue: "Published SEO",
       icon: FileText,
-      badgeColor: "bg-amber-50 text-amber-700 border-amber-200/60",
-      accent: "text-amber-600",
     },
     {
       id: "reviews" as const,
-      title: "Client Reviews",
+      title: "Reviews",
       value: stats.totalReviews,
       subValue: "5.0 ★ average",
       icon: Star,
-      badgeColor: "bg-amber-50 text-amber-700 border-amber-200/60",
-      accent: "text-amber-500",
     },
     {
       id: "projects" as const,
-      title: "Portfolio Sites",
+      title: "Showcase",
       value: stats.totalProjects,
-      subValue: "Active showcases",
+      subValue: "Live projects",
       icon: Briefcase,
-      badgeColor: "bg-blue/10 text-blue border-blue/20",
-      accent: "text-blue",
     },
   ];
 
   return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
-        {cards.map((c) => {
-          const Icon = c.icon;
-          const isSelected = activeTab === c.id;
+    <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-1.5 sm:p-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1 sm:gap-1.5">
+        {items.map((item) => {
+          const Icon = item.icon;
+          const isSelected = activeTab === item.id;
           return (
             <button
-              key={c.id}
+              key={item.id}
               type="button"
-              onClick={() => setActiveTab(c.id as any)}
-              className={`surface-lift text-left p-4 rounded-2xl bg-card border transition-all duration-200 cursor-pointer ${
+              onClick={() => setActiveTab(item.id)}
+              className={`group flex flex-col p-3 rounded-xl text-left transition-all duration-150 cursor-pointer ${
                 isSelected
-                  ? "border-blue/50 ring-2 ring-blue/10 shadow-sm"
-                  : "border-black/8 hover:border-black/15 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)]"
+                  ? "bg-[#0071E3] text-white shadow-[0_2px_6px_rgba(0,113,227,0.25)]"
+                  : "hover:bg-neutral-100/80 text-neutral-800"
               }`}
             >
-              <div className="flex items-center justify-between gap-1 mb-2">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-subtle">
-                  {c.title}
+              <div className="flex items-center justify-between gap-1 mb-1.5">
+                <span
+                  className={`text-[11px] font-medium tracking-wide truncate ${
+                    isSelected ? "text-white/80" : "text-neutral-500 group-hover:text-neutral-700"
+                  }`}
+                >
+                  {item.title}
                 </span>
-                <div className={`p-1 rounded-lg ${c.badgeColor}`}>
-                  <Icon className="size-3.5" />
-                </div>
+                <Icon
+                  className={`size-3.5 shrink-0 ${
+                    isSelected ? "text-white" : "text-neutral-400 group-hover:text-neutral-600"
+                  }`}
+                />
               </div>
 
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-bold tracking-tight font-display text-label">
-                  {c.value}
+              <div className="flex items-baseline gap-1.5">
+                <span
+                  className={`text-xl sm:text-2xl font-bold tracking-tight ${
+                    isSelected ? "text-white" : "text-neutral-900"
+                  }`}
+                >
+                  {item.value}
                 </span>
               </div>
 
-              <div className="text-[11px] font-medium text-muted-foreground mt-1 truncate">
-                {c.subValue}
+              <div
+                className={`text-[11px] mt-0.5 truncate font-medium ${
+                  isSelected ? "text-white/80" : "text-neutral-400"
+                }`}
+              >
+                {item.subValue}
               </div>
             </button>
           );

@@ -320,7 +320,7 @@ export function BrowserBadge({
 
   return (
     <span
-      className={`inline-flex items-center rounded-full font-medium border shadow-2xs transition-colors ${sizeClasses} ${badgeTheme} ${className}`}
+      className={`inline-flex items-center rounded-lg font-medium border shadow-2xs transition-colors ${sizeClasses} ${badgeTheme} ${className}`}
       title={`${fullName} ${version ? `(Version ${version})` : ""}`}
     >
       {/* 1. Official Browser Icon */}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   MessageSquare,
   ExternalLink,
@@ -7,21 +7,15 @@ import {
   AlertCircle,
   Sparkles,
   Zap,
-  Globe,
   Radio,
   Send,
-  User,
-  RotateCcw,
   CheckCheck,
-  Clock,
   Laptop,
   Smartphone,
   Trash2,
   Search,
-  Filter,
   RefreshCw,
   PlusCircle,
-  HelpCircle,
   Settings,
   ShieldCheck,
 } from "lucide-react";
@@ -68,7 +62,7 @@ export function TidioTab() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   // Fetch threads list
-  const fetchThreads = async () => {
+  const fetchThreads = useCallback(async () => {
     try {
       const res = await fetch("/api/crm/chat/threads");
       if (res.ok) {
@@ -86,7 +80,7 @@ export function TidioTab() {
     } finally {
       setIsLoadingThreads(false);
     }
-  };
+  }, [selectedThreadId]);
 
   // Fetch messages for selected thread
   const fetchMessages = async (threadId: string, markRead = true) => {
@@ -110,7 +104,7 @@ export function TidioTab() {
     void fetchThreads();
     const interval = setInterval(fetchThreads, 3500);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchThreads]);
 
   // When selected thread changes, fetch its messages immediately
   useEffect(() => {
@@ -371,7 +365,7 @@ export function TidioTab() {
       setTestResult(null);
       const start = performance.now();
       const url = `https://code.tidio.co/${encodeURIComponent(key)}.js`;
-      const res = await fetch(url, { method: "HEAD", mode: "no-cors" });
+      await fetch(url, { method: "HEAD", mode: "no-cors" });
       const latencyMs = Math.round(performance.now() - start);
 
       setTestResult({
@@ -413,20 +407,20 @@ export function TidioTab() {
   return (
     <div className="space-y-5 animate-in fade-in duration-300">
       {/* Top Banner & Mode Switcher */}
-      <div className="bg-white rounded-2xl border border-black/8 shadow-xs p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="size-9 rounded-xl bg-[#0066FF]/10 text-[#0066FF] flex items-center justify-center">
+            <div className="size-9 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center">
               <MessageSquare className="size-5" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-label flex items-center gap-2">
+              <h2 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
                 Live Chat & Tidio Center
-                <span className="text-[11px] px-2 py-0.5 rounded-full font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="text-[11px] px-2 py-0.5 rounded-md font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                   SQLite Live Sync
                 </span>
               </h2>
-              <p className="text-xs text-muted-foreground mt-0.5">
+              <p className="text-xs text-neutral-500 mt-0.5">
                 Real-time visitor inquiries, operator inbox, conversation threads, and Tidio CDN gateway.
               </p>
             </div>
@@ -434,17 +428,17 @@ export function TidioTab() {
         </div>
 
         {/* View Switcher Pills */}
-        <div className="flex items-center gap-2 bg-black/5 p-1 rounded-xl self-start md:self-center">
+        <div className="flex items-center gap-1 bg-neutral-100 p-1.5 rounded-xl self-start md:self-center">
           <button
             type="button"
             onClick={() => setActiveView("inbox")}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
               activeView === "inbox"
-                ? "bg-white text-label shadow-xs font-semibold"
-                : "text-muted-foreground hover:text-label"
+                ? "bg-white text-neutral-900 shadow-2xs font-semibold"
+                : "text-neutral-500 hover:text-neutral-900"
             }`}
           >
-            <Radio className="size-3.5 text-[#0066FF]" />
+            <Radio className="size-3.5 text-[#0071E3]" />
             <span>Operator Inbox</span>
             {unreadTotal > 0 && (
               <span className="size-4 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
@@ -457,11 +451,11 @@ export function TidioTab() {
             onClick={() => setActiveView("settings")}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer ${
               activeView === "settings"
-                ? "bg-white text-label shadow-xs font-semibold"
-                : "text-muted-foreground hover:text-label"
+                ? "bg-white text-neutral-900 shadow-2xs font-semibold"
+                : "text-neutral-500 hover:text-neutral-900"
             }`}
           >
-            <Settings className="size-3.5 text-slate-500" />
+            <Settings className="size-3.5 text-neutral-500" />
             <span>Tidio Gateway & Settings</span>
             {isTidioActive && (
               <span className="size-2 rounded-full bg-emerald-500" title="Tidio CDN Connected" />
@@ -470,17 +464,21 @@ export function TidioTab() {
         </div>
       </div>
 
-      {/* VIEW 1: OPERATOR INBOX (REAL VISITOR CONVERSATIONS) */}
+      {/* VIEW 1: OPERATOR INBOX (INTEGRATED WHATSAPP / TELEGRAM / SIGNAL WEB LAYOUT) */}
       {activeView === "inbox" && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 h-[650px] min-h-[600px]">
-          {/* Left Column: Conversations List (5 Cols) */}
-          <div className="lg:col-span-4 bg-white rounded-2xl border border-black/8 shadow-xs flex flex-col overflow-hidden">
+        <div className="rounded-2xl border border-black/[0.08] bg-white shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden flex flex-col md:flex-row h-[700px] min-h-[600px]">
+          {/* Left Pane: Conversations List (Sidebar like WhatsApp/Telegram Web) */}
+          <div
+            className={`w-full md:w-[340px] lg:w-[380px] shrink-0 border-r border-black/[0.08] flex flex-col bg-white ${
+              selectedThreadId ? "hidden md:flex" : "flex"
+            }`}
+          >
             {/* Thread List Header & Actions */}
-            <div className="p-3.5 border-b border-black/6 space-y-3">
+            <div className="p-3.5 border-b border-black/[0.06] bg-[#F9F9FB]/80 space-y-2.5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-xs font-semibold text-label">Visitor Chats</h3>
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#0066FF]/10 text-[#0066FF] font-semibold">
+                  <h3 className="text-xs font-semibold text-neutral-900 tracking-tight">Chats</h3>
+                  <span className="text-[11px] px-2 py-0.5 rounded-md bg-[#0071E3]/10 text-[#0071E3] font-semibold">
                     {activeCount} active
                   </span>
                 </div>
@@ -488,7 +486,7 @@ export function TidioTab() {
                   <button
                     type="button"
                     onClick={handleSimulateVisitorInbound}
-                    className="px-2.5 py-1 text-[11px] font-medium bg-[#0066FF] text-white hover:bg-[#0052cc] rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1 text-[11px] font-medium bg-[#0071E3] text-white hover:bg-blue-600 rounded-lg transition-colors flex items-center gap-1 cursor-pointer shadow-2xs"
                     title="Simulate incoming visitor inquiry"
                   >
                     <PlusCircle className="size-3" />
@@ -497,7 +495,7 @@ export function TidioTab() {
                   <button
                     type="button"
                     onClick={fetchThreads}
-                    className="p-1 rounded-lg text-muted-foreground hover:text-label hover:bg-black/5 transition-colors"
+                    className="p-1 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 transition-colors"
                     title="Refresh chats"
                   >
                     <RefreshCw className="size-3.5" />
@@ -507,27 +505,27 @@ export function TidioTab() {
 
               {/* Search Box */}
               <div className="relative">
-                <Search className="size-3.5 text-muted-foreground absolute left-2.5 top-1/2 -translate-y-1/2" />
+                <Search className="size-3.5 text-neutral-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search visitor, message..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl bg-slate-50 border border-black/8 focus:outline-none focus:ring-1 focus:ring-[#0066FF] focus:bg-white"
+                  placeholder="Search chats or messages..."
+                  className="w-full pl-8 pr-3 py-1.5 text-xs rounded-xl bg-white border border-black/[0.08] focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20"
                 />
               </div>
 
-              {/* Status Filter Chips */}
+              {/* Status Filter Tabs */}
               <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
                 {(["all", "active", "unread", "resolved"] as const).map((filter) => (
                   <button
                     key={filter}
                     type="button"
                     onClick={() => setStatusFilter(filter)}
-                    className={`px-2.5 py-0.5 rounded-lg text-[11px] font-medium capitalize transition-colors cursor-pointer ${
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-medium capitalize transition-colors cursor-pointer ${
                       statusFilter === filter
-                        ? "bg-[#0066FF] text-white"
-                        : "bg-black/5 text-muted-foreground hover:bg-black/8"
+                        ? "bg-neutral-900 text-white shadow-2xs"
+                        : "bg-neutral-100/80 text-neutral-600 hover:bg-neutral-200/80"
                     }`}
                   >
                     {filter}
@@ -537,20 +535,20 @@ export function TidioTab() {
             </div>
 
             {/* Conversation Threads Scroll Area */}
-            <div className="flex-1 overflow-y-auto divide-y divide-black/5">
+            <div className="flex-1 overflow-y-auto divide-y divide-black/[0.04]">
               {isLoadingThreads ? (
-                <div className="p-8 text-center text-xs text-muted-foreground">
-                  <RefreshCw className="size-5 animate-spin mx-auto mb-2 text-[#0066FF]" />
+                <div className="p-8 text-center text-xs text-neutral-400">
+                  <RefreshCw className="size-5 animate-spin mx-auto mb-2 text-[#0071E3]" />
                   Loading conversations...
                 </div>
               ) : filteredThreads.length === 0 ? (
-                <div className="p-8 text-center text-xs text-muted-foreground space-y-2">
-                  <MessageSquare className="size-8 text-slate-300 mx-auto" />
+                <div className="p-8 text-center text-xs text-neutral-400 space-y-2">
+                  <MessageSquare className="size-8 text-neutral-300 mx-auto" />
                   <p>No conversations found.</p>
                   <button
                     type="button"
                     onClick={handleSimulateVisitorInbound}
-                    className="text-[#0066FF] underline font-medium"
+                    className="text-[#0071E3] underline font-medium"
                   >
                     Generate a test visitor chat
                   </button>
@@ -569,17 +567,17 @@ export function TidioTab() {
                       key={thread.id}
                       type="button"
                       onClick={() => setSelectedThreadId(thread.id)}
-                      className={`w-full text-left p-3.5 transition-colors flex items-start gap-3 cursor-pointer ${
+                      className={`w-full text-left p-3 transition-colors flex items-start gap-3 cursor-pointer ${
                         isSelected
-                          ? "bg-[#0066FF]/8 border-l-4 border-[#0066FF]"
+                          ? "bg-[#0071E3]/10 border-l-3 border-[#0071E3]"
                           : isUnread
                           ? "bg-blue-50/40 hover:bg-blue-50/70"
-                          : "hover:bg-slate-50"
+                          : "hover:bg-neutral-50"
                       }`}
                     >
                       {/* Avatar with Country Flag */}
                       <div className="relative shrink-0">
-                        <div className="size-9 rounded-full bg-slate-100 border border-black/10 flex items-center justify-center text-xs font-bold text-slate-700">
+                        <div className="size-10 rounded-xl bg-neutral-100 border border-black/[0.08] flex items-center justify-center text-xs font-bold text-neutral-700">
                           {thread.visitor_name
                             .split(" ")
                             .map((n) => n[0])
@@ -594,33 +592,35 @@ export function TidioTab() {
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 mb-0.5">
-                          <h4 className="text-xs font-semibold text-label truncate">
+                          <h4 className="text-xs font-semibold text-neutral-900 truncate">
                             {thread.visitor_name}
                           </h4>
-                          <span className="text-[10px] text-muted-foreground shrink-0">
+                          <span className="text-[10px] text-neutral-400 shrink-0">
                             {formattedTime}
                           </span>
                         </div>
-                        <p className="text-[11px] text-muted-foreground truncate leading-relaxed">
+                        <p className="text-[11px] text-neutral-500 truncate leading-relaxed">
                           {thread.last_message || "New chat initiated"}
                         </p>
                         <div className="flex items-center gap-1.5 mt-1.5">
                           <span
-                            className={`text-[9px] px-1.5 py-0.2 rounded-md font-semibold ${
+                            className={`text-[9px] px-1.5 py-0.5 rounded-md font-semibold ${
                               thread.status === "active"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : "bg-slate-100 text-slate-600"
+                                ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
+                                : "bg-neutral-100 text-neutral-600"
                             }`}
                           >
                             {thread.status === "active" ? "Active" : "Resolved"}
                           </span>
                           {thread.page_url && (
-                            <span className="text-[9px] text-slate-400 truncate max-w-[120px]">
+                            <span className="text-[9px] text-neutral-400 truncate max-w-[120px]">
                               {thread.page_url}
                             </span>
                           )}
                           {isUnread && (
-                            <span className="ml-auto size-2 rounded-full bg-[#0066FF]" />
+                            <span className="ml-auto px-1.5 py-0.2 rounded-md bg-[#0071E3] text-white text-[10px] font-bold">
+                              {thread.unread_count}
+                            </span>
                           )}
                         </div>
                       </div>
@@ -631,15 +631,29 @@ export function TidioTab() {
             </div>
           </div>
 
-          {/* Right Column: Active Conversation Message Stream (8 Cols) */}
-          <div className="lg:col-span-8 bg-white rounded-2xl border border-black/8 shadow-xs flex flex-col overflow-hidden">
+          {/* Right Pane: Active Conversation Message Stream (Seamless Messaging Pane) */}
+          <div
+            className={`flex-1 flex flex-col bg-[#FBFBFC] h-full min-w-0 ${
+              !selectedThreadId ? "hidden md:flex" : "flex"
+            }`}
+          >
             {selectedThread ? (
               <>
                 {/* Active Chat Header */}
-                <div className="p-3.5 border-b border-black/6 bg-slate-50/70 flex items-center justify-between shrink-0">
+                <div className="p-3.5 border-b border-black/[0.06] bg-white flex items-center justify-between shrink-0 shadow-2xs">
                   <div className="flex items-center gap-3">
+                    {/* Mobile Back Button */}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedThreadId(null)}
+                      className="md:hidden p-1.5 -ml-1 text-neutral-600 hover:text-neutral-900 rounded-lg hover:bg-neutral-100 transition-colors"
+                      title="Back to chat list"
+                    >
+                      ← Back
+                    </button>
+
                     <div className="relative">
-                      <div className="size-10 rounded-full bg-[#0066FF]/15 text-[#0066FF] flex items-center justify-center font-bold text-sm">
+                      <div className="size-10 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center font-bold text-sm">
                         {selectedThread.visitor_name
                           .split(" ")
                           .map((n) => n[0])
@@ -652,20 +666,20 @@ export function TidioTab() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-xs font-semibold text-label">
+                        <h3 className="text-xs font-semibold text-neutral-900">
                           {selectedThread.visitor_name}
                         </h3>
                         <span
-                          className={`text-[10px] px-2 py-0.2 rounded-full font-semibold ${
+                          className={`text-[10px] px-2 py-0.5 rounded-md font-semibold ${
                             selectedThread.status === "active"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-slate-200 text-slate-700"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : "bg-neutral-100 text-neutral-600"
                           }`}
                         >
                           {selectedThread.status === "active" ? "Live Visitor" : "Resolved"}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-[11px] text-muted-foreground mt-0.5">
+                      <div className="flex items-center gap-2 text-[11px] text-neutral-400 mt-0.5">
                         <span>{selectedThread.visitor_city || selectedThread.visitor_country || "United States"}</span>
                         <span>&middot;</span>
                         <span className="flex items-center gap-1">
@@ -677,7 +691,7 @@ export function TidioTab() {
                           {selectedThread.visitor_device || "Desktop"}
                         </span>
                         <span>&middot;</span>
-                        <span className="text-[#0066FF] font-medium truncate max-w-[160px]">
+                        <span className="text-[#0071E3] font-medium truncate max-w-[160px]">
                           {selectedThread.page_url || "/"}
                         </span>
                       </div>
@@ -689,10 +703,10 @@ export function TidioTab() {
                     <button
                       type="button"
                       onClick={() => handleToggleStatus(selectedThread.id, selectedThread.status)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs ${
                         selectedThread.status === "resolved"
                           ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200"
-                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
                       }`}
                     >
                       <CheckCircle2 className="size-3.5" />
@@ -701,7 +715,7 @@ export function TidioTab() {
                     <button
                       type="button"
                       onClick={() => handleDeleteThread(selectedThread.id)}
-                      className="p-1.5 text-muted-foreground hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
+                      className="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
                       title="Delete conversation"
                     >
                       <Trash2 className="size-4" />
@@ -710,14 +724,13 @@ export function TidioTab() {
                 </div>
 
                 {/* Message Stream */}
-                <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#f8f9fc] text-xs">
+                <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-[#F9F9FB] text-xs">
                   {messages.length === 0 ? (
-                    <div className="p-8 text-center text-xs text-muted-foreground">
+                    <div className="p-8 text-center text-xs text-neutral-400">
                       No messages recorded yet for this session.
                     </div>
                   ) : (
                     messages.map((msg) => {
-                      const isVisitor = msg.sender === "visitor";
                       const isBot = msg.sender === "bot";
                       const isOperator = msg.sender === "operator";
 
@@ -727,12 +740,12 @@ export function TidioTab() {
                           className={`flex ${isOperator ? "justify-end" : "justify-start"}`}
                         >
                           <div
-                            className={`max-w-[78%] rounded-2xl px-4 py-2.5 shadow-xs leading-relaxed ${
+                            className={`max-w-[78%] rounded-2xl px-4 py-2.5 shadow-2xs leading-relaxed ${
                               isOperator
-                                ? "bg-[#0066FF] text-white rounded-br-xs"
+                                ? "bg-[#0071E3] text-white rounded-br-xs"
                                 : isBot
-                                ? "bg-blue-50 text-slate-900 border border-blue-200/70 rounded-bl-xs"
-                                : "bg-white text-slate-900 border border-black/8 rounded-bl-xs"
+                                ? "bg-blue-50 text-neutral-900 border border-blue-200/70 rounded-bl-xs"
+                                : "bg-white text-neutral-900 border border-black/[0.08] rounded-bl-xs"
                             }`}
                           >
                             <div className="flex items-center justify-between gap-3 mb-1">
@@ -741,8 +754,8 @@ export function TidioTab() {
                                   isOperator
                                     ? "text-white/80"
                                     : isBot
-                                    ? "text-[#0066FF]"
-                                    : "text-slate-600"
+                                    ? "text-[#0071E3]"
+                                    : "text-neutral-600"
                                 }`}
                               >
                                 {isOperator
@@ -753,7 +766,7 @@ export function TidioTab() {
                               </span>
                               <span
                                 className={`text-[9px] ${
-                                  isOperator ? "text-white/70" : "text-slate-400"
+                                  isOperator ? "text-white/70" : "text-neutral-400"
                                 }`}
                               >
                                 {new Date(msg.created_at).toLocaleTimeString([], {
@@ -777,9 +790,9 @@ export function TidioTab() {
                 </div>
 
                 {/* Canned Quick Responses Bar */}
-                <div className="p-2.5 bg-white border-t border-black/6 flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
-                  <span className="text-[11px] font-semibold text-muted-foreground mr-1 shrink-0">
-                    Canned Replies:
+                <div className="p-2.5 bg-white border-t border-black/[0.06] flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+                  <span className="text-[11px] font-semibold text-neutral-500 mr-1 shrink-0">
+                    Quick Replies:
                   </span>
                   <button
                     type="button"
@@ -788,7 +801,7 @@ export function TidioTab() {
                         "Hello! We'd love to schedule a quick 15-minute strategy call to review your specifications. Does tomorrow work for you?"
                       )
                     }
-                    className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#0066FF]/8 text-[#0066FF] hover:bg-[#0066FF]/15 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-[#0071E3]/8 text-[#0071E3] hover:bg-[#0071E3]/15 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                   >
                     📅 Discovery Call
                   </button>
@@ -799,7 +812,7 @@ export function TidioTab() {
                         "Our bespoke web development sprint engagements typically range from $4,500 to $18,000 depending on scope and integrations. Would you like a detailed breakdown?"
                       )
                     }
-                    className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#0066FF]/8 text-[#0066FF] hover:bg-[#0066FF]/15 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-[#0071E3]/8 text-[#0071E3] hover:bg-[#0071E3]/15 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                   >
                     💼 Pricing Quote
                   </button>
@@ -810,7 +823,7 @@ export function TidioTab() {
                         "We build with Next.js, React, Tailwind, and high-performance serverless APIs, guaranteeing sub-second Core Web Vitals and 99+ Lighthouse scores."
                       )
                     }
-                    className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#0066FF]/8 text-[#0066FF] hover:bg-[#0066FF]/15 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-[#0071E3]/8 text-[#0071E3] hover:bg-[#0071E3]/15 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                   >
                     ⚡ Tech Stack & SLAs
                   </button>
@@ -821,7 +834,7 @@ export function TidioTab() {
                         "You can also reach our engineering lead directly on WhatsApp at +380 63 640 6783 for expedited real-time chat."
                       )
                     }
-                    className="px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                    className="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors whitespace-nowrap shrink-0 cursor-pointer border border-emerald-200/60"
                   >
                     📲 WhatsApp Fast Track
                   </button>
@@ -833,19 +846,19 @@ export function TidioTab() {
                     e.preventDefault();
                     void handleSendReply();
                   }}
-                  className="p-3 bg-white border-t border-black/6 flex items-center gap-2 shrink-0"
+                  className="p-3 bg-white border-t border-black/[0.06] flex items-center gap-2 shrink-0"
                 >
                   <input
                     type="text"
                     value={operatorInput}
                     onChange={(e) => setOperatorInput(e.target.value)}
                     placeholder="Type your reply to the visitor as Operator... (Press Enter to send)"
-                    className="flex-1 px-3 py-2 text-xs rounded-xl border border-black/10 focus:outline-none focus:ring-1 focus:ring-[#0066FF]"
+                    className="flex-1 px-3.5 py-2 text-xs rounded-xl border border-black/[0.08] bg-neutral-50/50 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:bg-white transition"
                   />
                   <button
                     type="submit"
                     disabled={isSending || !operatorInput.trim()}
-                    className="px-4 py-2 rounded-xl bg-[#0066FF] text-white text-xs font-medium hover:bg-[#0052cc] transition-colors disabled:opacity-40 flex items-center gap-1.5 shrink-0 cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-neutral-900 text-white text-xs font-medium hover:bg-black transition-colors disabled:opacity-40 flex items-center gap-1.5 shrink-0 cursor-pointer shadow-2xs"
                   >
                     <Send className="size-3.5" />
                     <span>Send Reply</span>
@@ -854,19 +867,19 @@ export function TidioTab() {
               </>
             ) : (
               <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-muted-foreground space-y-3">
-                <div className="size-12 rounded-2xl bg-[#0066FF]/10 text-[#0066FF] flex items-center justify-center">
+                <div className="size-12 rounded-2xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center">
                   <MessageSquare className="size-6" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-label">No Conversation Selected</h3>
-                  <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+                  <h3 className="text-sm font-semibold text-neutral-900">No Conversation Selected</h3>
+                  <p className="text-xs text-neutral-500 mt-1 max-w-sm">
                     Select a conversation from the left to read visitor history and reply as the operator, or trigger a test inbound visitor chat.
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={handleSimulateVisitorInbound}
-                  className="px-3.5 py-2 rounded-xl bg-[#0066FF] text-white text-xs font-medium hover:bg-[#0052cc] transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl bg-[#0071E3] text-white text-xs font-medium hover:bg-blue-600 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
                 >
                   <PlusCircle className="size-4" />
                   <span>Start New Test Chat</span>
@@ -882,13 +895,13 @@ export function TidioTab() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Column: Tidio Configuration Form */}
           <div className="lg:col-span-7 space-y-5">
-            <div className="bg-white rounded-2xl border border-black/8 shadow-xs p-6 space-y-5">
-              <div className="flex items-center justify-between border-b border-black/6 pb-4">
+            <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-6 space-y-5">
+              <div className="flex items-center justify-between border-b border-black/[0.06] pb-4">
                 <div>
-                  <h3 className="text-sm font-semibold text-label">
+                  <h3 className="text-sm font-semibold text-neutral-900">
                     Tidio Official CDN Integration
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-neutral-500 mt-0.5">
                     Connect your project public key to route all chats directly through Tidio Cloud.
                   </p>
                 </div>
@@ -896,18 +909,18 @@ export function TidioTab() {
                   href="https://www.tidio.com/panel/"
                   target="_blank"
                   rel="noreferrer"
-                  className="px-3 py-1.5 rounded-xl border border-black/10 bg-slate-50 hover:bg-slate-100 text-xs font-medium text-label flex items-center gap-1.5 transition-colors"
+                  className="px-3 py-1.5 rounded-xl border border-black/[0.08] bg-neutral-50 hover:bg-neutral-100 text-xs font-medium text-neutral-700 flex items-center gap-1.5 transition-colors shadow-2xs"
                 >
                   <span>Open Tidio Panel</span>
-                  <ExternalLink className="size-3 text-muted-foreground" />
+                  <ExternalLink className="size-3 text-neutral-400" />
                 </a>
               </div>
 
               {/* Master Enable Toggle */}
-              <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-black/6">
+              <div className="flex items-center justify-between p-3.5 rounded-xl bg-neutral-50/70 border border-black/[0.06]">
                 <div>
-                  <h4 className="text-xs font-semibold text-label">Live Chat Widget Status</h4>
-                  <p className="text-[11px] text-muted-foreground">
+                  <h4 className="text-xs font-semibold text-neutral-900">Live Chat Widget Status</h4>
+                  <p className="text-[11px] text-neutral-500">
                     When enabled, the chat launcher appears on public pages.
                   </p>
                 </div>
@@ -923,13 +936,13 @@ export function TidioTab() {
                     }
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#0066FF]"></div>
+                  <div className="w-11 h-6 bg-neutral-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#0071E3]"></div>
                 </label>
               </div>
 
               {/* Public Key Field */}
               <div className="space-y-1.5">
-                <label className="block text-xs font-medium text-label">
+                <label className="block text-xs font-medium text-neutral-700">
                   Tidio Project Public Key / Embed Script
                 </label>
                 <div className="flex gap-2">
@@ -943,23 +956,23 @@ export function TidioTab() {
                       }))
                     }
                     placeholder="e.g. abcdefghijklmnopqrstuvwxyz123456 or //code.tidio.co/xxxx.js"
-                    className="flex-1 px-3 py-2 rounded-xl border border-black/10 bg-white text-xs font-mono text-label focus:outline-none focus:ring-2 focus:ring-[#0066FF]/30 focus:border-[#0066FF]"
+                    className="flex-1 px-3 py-2 rounded-xl border border-black/[0.08] bg-white text-xs font-mono text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3]"
                   />
                   <button
                     type="button"
                     onClick={handleTestTidioConnection}
                     disabled={isTesting || !tidioState.publicKey.trim()}
-                    className="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-medium text-label transition-colors disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shrink-0"
+                    className="px-3.5 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-xs font-medium text-neutral-800 transition-colors disabled:opacity-50 flex items-center gap-1.5 cursor-pointer shrink-0 shadow-2xs"
                   >
                     {isTesting ? (
-                      <RefreshCw className="size-3.5 animate-spin text-[#0066FF]" />
+                      <RefreshCw className="size-3.5 animate-spin text-[#0071E3]" />
                     ) : (
                       <Zap className="size-3.5 text-amber-500" />
                     )}
                     <span>Test CDN</span>
                   </button>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
+                <p className="text-[11px] text-neutral-400">
                   Leave empty to use the Studio's built-in Live Chat Engine with zero third-party setup.
                 </p>
               </div>
@@ -989,9 +1002,9 @@ export function TidioTab() {
 
               {/* Advanced Widget Controls */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                <div className="p-3 rounded-xl bg-slate-50 border border-black/6 space-y-1">
+                <div className="p-3 rounded-xl bg-neutral-50/70 border border-black/[0.06] space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-label">Hide on Admin Route</span>
+                    <span className="text-xs font-medium text-neutral-900">Hide on Admin Route</span>
                     <input
                       type="checkbox"
                       checked={tidioState.disableOnAdmin}
@@ -1001,17 +1014,17 @@ export function TidioTab() {
                           disableOnAdmin: e.target.checked,
                         }))
                       }
-                      className="rounded text-[#0066FF] focus:ring-[#0066FF]"
+                      className="rounded text-[#0071E3] focus:ring-[#0071E3]"
                     />
                   </div>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[11px] text-neutral-500">
                     Prevents the widget from floating over CRM controls.
                   </p>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-50 border border-black/6 space-y-1">
+                <div className="p-3 rounded-xl bg-neutral-50/70 border border-black/[0.06] space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-label">Mobile Visibility</span>
+                    <span className="text-xs font-medium text-neutral-900">Mobile Visibility</span>
                     <input
                       type="checkbox"
                       checked={!tidioState.hideOnMobile}
@@ -1021,10 +1034,10 @@ export function TidioTab() {
                           hideOnMobile: !e.target.checked,
                         }))
                       }
-                      className="rounded text-[#0066FF] focus:ring-[#0066FF]"
+                      className="rounded text-[#0071E3] focus:ring-[#0071E3]"
                     />
                   </div>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[11px] text-neutral-500">
                     {tidioState.hideOnMobile ? "Hidden on small screens" : "Visible on mobile & desktop"}
                   </p>
                 </div>
@@ -1032,7 +1045,7 @@ export function TidioTab() {
 
               {/* Placement Preference */}
               <div className="space-y-2 pt-1">
-                <label className="block text-xs font-medium text-label">
+                <label className="block text-xs font-medium text-neutral-700">
                   Widget Corner Placement
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -1041,8 +1054,8 @@ export function TidioTab() {
                     onClick={() => setTidioState((prev) => ({ ...prev, position: "bottom-right" }))}
                     className={`p-3 rounded-xl border text-xs font-medium text-left flex items-center justify-between transition-all cursor-pointer ${
                       tidioState.position === "bottom-right"
-                        ? "border-[#0066FF] bg-[#0066FF]/5 text-[#0066FF]"
-                        : "border-black/10 hover:bg-slate-50 text-label"
+                        ? "border-[#0071E3] bg-[#0071E3]/5 text-[#0071E3]"
+                        : "border-black/[0.08] hover:bg-neutral-50 text-neutral-700"
                     }`}
                   >
                     <span>Bottom-Right</span>
@@ -1053,8 +1066,8 @@ export function TidioTab() {
                     onClick={() => setTidioState((prev) => ({ ...prev, position: "bottom-left" }))}
                     className={`p-3 rounded-xl border text-xs font-medium text-left flex items-center justify-between transition-all cursor-pointer ${
                       tidioState.position === "bottom-left"
-                        ? "border-[#0066FF] bg-[#0066FF]/5 text-[#0066FF]"
-                        : "border-black/10 hover:bg-slate-50 text-label"
+                        ? "border-[#0071E3] bg-[#0071E3]/5 text-[#0071E3]"
+                        : "border-black/[0.08] hover:bg-neutral-50 text-neutral-700"
                     }`}
                   >
                     <span>Bottom-Left</span>
@@ -1065,7 +1078,7 @@ export function TidioTab() {
 
               {/* Welcome Greeting */}
               <div className="space-y-1.5 pt-1">
-                <label className="block text-xs font-medium text-label">
+                <label className="block text-xs font-medium text-neutral-700">
                   Default Welcome Greeting
                 </label>
                 <textarea
@@ -1077,7 +1090,7 @@ export function TidioTab() {
                       welcomeMessage: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 rounded-xl border border-black/10 bg-white text-xs text-label focus:outline-none focus:ring-2 focus:ring-[#0066FF]/30 focus:border-[#0066FF]"
+                  className="w-full px-3 py-2 rounded-xl border border-black/[0.08] bg-white text-xs text-neutral-900 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3]"
                   placeholder="Leave a friendly message for visitors..."
                 />
               </div>
@@ -1088,7 +1101,7 @@ export function TidioTab() {
                   type="button"
                   onClick={handleSaveTidioSettings}
                   disabled={isSaving}
-                  className="px-5 py-2.5 rounded-xl bg-[#0066FF] hover:bg-[#0052cc] text-white text-xs font-medium transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-medium transition-colors shadow-2xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
                   {isSaving ? (
                     <RefreshCw className="size-4 animate-spin" />
@@ -1103,31 +1116,31 @@ export function TidioTab() {
 
           {/* Right Column: Setup Guide & Architecture */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="bg-[#0066FF]/5 border border-[#0066FF]/15 rounded-2xl p-5 space-y-3">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#0066FF]">
+            <div className="bg-[#0071E3]/5 border border-[#0071E3]/15 rounded-2xl p-5 space-y-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#0071E3]">
                 <Sparkles className="size-4" />
                 <span>Dual Engine Architecture</span>
               </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-xs text-neutral-600 leading-relaxed">
                 The studio features two complementary modes:
               </p>
-              <ul className="text-xs text-muted-foreground space-y-2 list-disc list-inside">
+              <ul className="text-xs text-neutral-600 space-y-2 list-disc list-inside">
                 <li>
-                  <strong className="text-label">Studio Built-in Live Chat Engine:</strong> Works out-of-the-box with zero third-party account requirements. All messages are stored permanently in the SQLite database and accessible from the Operator Inbox tab.
+                  <strong className="text-neutral-900">Studio Built-in Live Chat Engine:</strong> Works out-of-the-box with zero third-party account requirements. All messages are stored permanently in the SQLite database and accessible from the Operator Inbox tab.
                 </li>
                 <li>
-                  <strong className="text-label">Tidio Official Cloud:</strong> Enter your free or paid Tidio project key to stream chats to the Tidio mobile app and desktop agents.
+                  <strong className="text-neutral-900">Tidio Official Cloud:</strong> Enter your free or paid Tidio project key to stream chats to the Tidio mobile app and desktop agents.
                 </li>
               </ul>
             </div>
 
-            <div className="bg-white rounded-2xl border border-black/8 p-5 space-y-3 text-xs">
-              <h4 className="font-semibold text-label flex items-center gap-2">
+            <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-5 space-y-3 text-xs">
+              <h4 className="font-semibold text-neutral-900 flex items-center gap-2">
                 <ShieldCheck className="size-4 text-emerald-600" />
                 WhatsApp Coordination Protocol
               </h4>
-              <p className="text-muted-foreground leading-relaxed">
-                When visitors open the Live Chat widget, custom window events (<code className="text-[#0066FF] font-mono">tidio-chat-open</code>) are automatically broadcast, safely collapsing or offsetting the WhatsApp dock to eliminate any visual overlap.
+              <p className="text-neutral-600 leading-relaxed">
+                When visitors open the Live Chat widget, custom window events (<code className="text-[#0071E3] font-mono">tidio-chat-open</code>) are automatically broadcast, safely collapsing or offsetting the WhatsApp dock to eliminate any visual overlap.
               </p>
             </div>
           </div>

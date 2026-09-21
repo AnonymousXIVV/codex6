@@ -66,12 +66,12 @@ export function VisitorsTab({
   const getDeviceIcon = (deviceStr: string) => {
     const d = (deviceStr || "").toLowerCase();
     if (d.includes("mobile") || d.includes("phone")) {
-      return <Smartphone className="size-3.5 text-blue" />;
+      return <Smartphone className="size-3.5 text-[#0071E3]" />;
     }
     if (d.includes("tablet") || d.includes("ipad")) {
       return <Tablet className="size-3.5 text-purple-600" />;
     }
-    return <Monitor className="size-3.5 text-muted-foreground" />;
+    return <Monitor className="size-3.5 text-neutral-400" />;
   };
 
   const formatDuration = (seconds?: number) => {
@@ -140,7 +140,9 @@ export function VisitorsTab({
       const ok = await onClearVisitors(days);
       if (ok) {
         setSelectedIds(new Set());
-        toast.success(days === null ? "All visitor logs purged." : `Pruned logs older than ${days} days.`);
+        toast.success(
+          days === null ? "All visitor logs purged." : `Pruned logs older than ${days} days.`
+        );
       }
     } else {
       toast.error("Prune handler not configured.");
@@ -163,7 +165,12 @@ export function VisitorsTab({
   const handleBulkDelete = async () => {
     const count = selectedIds.size;
     if (count === 0) return;
-    if (!window.confirm(`Are you sure you want to delete ${count} selected visitor session(s)?`)) return;
+    if (
+      !window.confirm(
+        `Are you sure you want to delete ${count} selected visitor session(s)?`
+      )
+    )
+      return;
     if (onBulkDeleteVisitors) {
       const ok = await onBulkDeleteVisitors(Array.from(selectedIds));
       if (ok) {
@@ -175,7 +182,11 @@ export function VisitorsTab({
     }
   };
 
-  const handleDownloadCsv = (items = selectedIds.size > 0 ? filteredVisitors.filter((v) => selectedIds.has(v.id)) : filteredVisitors) => {
+  const handleDownloadCsv = (
+    items = selectedIds.size > 0
+      ? filteredVisitors.filter((v) => selectedIds.has(v.id))
+      : filteredVisitors
+  ) => {
     if (items.length === 0) {
       toast.error("No visitor records to download.");
       return;
@@ -219,11 +230,16 @@ export function VisitorsTab({
       `"${(v.created_at || "").replace(/"/g, '""')}"`,
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `codex_visitors_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute(
+      "download",
+      `codex_visitors_${new Date().toISOString().slice(0, 10)}.csv`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -231,15 +247,24 @@ export function VisitorsTab({
     toast.success(`Exported ${items.length} visitor record(s) to CSV.`);
   };
 
-  const handleExportJson = (items = selectedIds.size > 0 ? filteredVisitors.filter((v) => selectedIds.has(v.id)) : filteredVisitors) => {
+  const handleExportJson = (
+    items = selectedIds.size > 0
+      ? filteredVisitors.filter((v) => selectedIds.has(v.id))
+      : filteredVisitors
+  ) => {
     if (items.length === 0) {
       toast.error("No visitor records to export.");
       return;
     }
-    const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(items, null, 2));
+    const jsonStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(items, null, 2));
     const link = document.createElement("a");
     link.setAttribute("href", jsonStr);
-    link.setAttribute("download", `codex_visitors_${new Date().toISOString().slice(0, 10)}.json`);
+    link.setAttribute(
+      "download",
+      `codex_visitors_${new Date().toISOString().slice(0, 10)}.json`
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -249,127 +274,15 @@ export function VisitorsTab({
 
   return (
     <div className="space-y-4">
-      {/* Top Banner & Actions */}
-      <div className="surface-lift rounded-2xl bg-card border border-black/8 p-5 sm:p-6 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2.5">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-            </span>
-            <h2 className="text-base font-semibold text-label font-display tracking-tight">
-              Live Visitor & Client Stream
-            </h2>
-            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 uppercase">
-              Real Time
-            </span>
-          </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Real visitor telemetry, geographical location, browser badges, session duration, and clickstream paths.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
-          {/* Export / Download CSV dropdown */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setIsExportOpen(!isExportOpen)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-black/10 bg-white hover:bg-fill text-muted-foreground hover:text-label text-xs font-medium transition cursor-pointer shadow-2xs"
-            >
-              <Download className="size-3.5 text-blue" />
-              <span>Export / Download</span>
-              <ChevronDown className="size-3" />
-            </button>
-
-            {isExportOpen && (
-              <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-card border border-black/10 shadow-lg p-1.5 z-30 space-y-1 animate-in fade-in">
-                <button
-                  type="button"
-                  onClick={() => handleDownloadCsv()}
-                  className="w-full text-left px-3 py-2 text-xs text-label hover:bg-fill rounded-xl transition flex items-center gap-2 cursor-pointer"
-                >
-                  <FileSpreadsheet className="size-4 text-emerald-600" />
-                  <div>
-                    <div className="font-medium">Download as CSV</div>
-                    <div className="text-[10px] text-subtle">Spreadsheet table format</div>
-                  </div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleExportJson()}
-                  className="w-full text-left px-3 py-2 text-xs text-label hover:bg-fill rounded-xl transition flex items-center gap-2 cursor-pointer"
-                >
-                  <FileJson className="size-4 text-amber-600" />
-                  <div>
-                    <div className="font-medium">Export as JSON</div>
-                    <div className="text-[10px] text-subtle">Raw JSON records</div>
-                  </div>
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Prune Menu */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setIsPruneOpen(!isPruneOpen)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-black/10 hover:bg-fill text-muted-foreground hover:text-label text-xs font-medium transition cursor-pointer"
-            >
-              <Eraser className="size-3.5" />
-              <span>Prune Logs</span>
-              <ChevronDown className="size-3" />
-            </button>
-
-            {isPruneOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-2xl bg-card border border-black/10 shadow-lg p-1.5 z-30 space-y-1 animate-in fade-in">
-                <button
-                  type="button"
-                  onClick={() => handlePrune(30)}
-                  className="w-full text-left px-3 py-1.5 text-xs text-label hover:bg-fill rounded-xl transition cursor-pointer"
-                >
-                  Delete older than 30 days
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handlePrune(7)}
-                  className="w-full text-left px-3 py-1.5 text-xs text-label hover:bg-fill rounded-xl transition cursor-pointer"
-                >
-                  Delete older than 7 days
-                </button>
-                <div className="border-t border-hairline my-1" />
-                <button
-                  type="button"
-                  onClick={() => handlePrune(null)}
-                  className="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded-xl transition font-medium cursor-pointer"
-                >
-                  Purge All Visitor Records
-                </button>
-              </div>
-            )}
-          </div>
-
-          <button
-            type="button"
-            onClick={onSimulate}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-label hover:bg-black text-paper text-xs font-medium transition-all shadow-sm active:scale-[0.99] cursor-pointer"
-          >
-            <Sparkles className="size-3.5 text-amber-300" />
-            <span>Simulate Ping</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Floating / Sticky Bulk Actions Bar */}
+      {/* Bulk Selection Notification Bar */}
       {selectedIds.size > 0 && (
-        <div className="rounded-2xl bg-label text-paper p-3 px-4 shadow-lg flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2">
+        <div className="bg-neutral-900 text-white rounded-xl p-3 px-4 shadow-md flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-1">
           <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center size-6 rounded-full bg-white/20 text-xs font-bold font-mono">
+            <span className="inline-flex items-center justify-center size-5 rounded-md bg-white/20 text-xs font-bold font-mono">
               {selectedIds.size}
             </span>
             <span className="text-xs font-medium">
-              {selectedIds.size} visitor session(s) selected
+              {selectedIds.size} session{selectedIds.size > 1 ? "s" : ""} selected
             </span>
           </div>
 
@@ -377,15 +290,15 @@ export function VisitorsTab({
             <button
               type="button"
               onClick={() => handleDownloadCsv()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-paper text-xs font-medium transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition cursor-pointer"
             >
               <FileSpreadsheet className="size-3.5 text-emerald-300" />
-              <span>Download CSV</span>
+              <span>Export CSV</span>
             </button>
             <button
               type="button"
               onClick={() => handleExportJson()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-paper text-xs font-medium transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition cursor-pointer"
             >
               <FileJson className="size-3.5 text-amber-300" />
               <span>Export JSON</span>
@@ -393,44 +306,157 @@ export function VisitorsTab({
             <button
               type="button"
               onClick={handleBulkDelete}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition cursor-pointer"
             >
               <Trash2 className="size-3.5" />
-              <span>Bulk Delete</span>
+              <span>Delete Selected</span>
             </button>
             <button
               type="button"
               onClick={() => setSelectedIds(new Set())}
-              className="px-2.5 py-1.5 text-xs text-white/70 hover:text-white transition cursor-pointer"
+              className="px-2.5 py-1.5 text-xs text-neutral-400 hover:text-white transition cursor-pointer"
             >
-              Deselect All
+              Deselect
             </button>
           </div>
         </div>
       )}
 
-      {/* Visitor Table Card */}
-      <div className="surface-lift rounded-2xl bg-card border border-black/8 overflow-hidden shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)]">
-        {/* Search & Header Bar */}
-        <div className="p-4 border-b border-hairline flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-fill-subtle/40">
-          <div className="flex flex-wrap items-center gap-3 flex-1">
+      {/* Single Unified Apple-Style Container */}
+      <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
+        {/* Top Header Section */}
+        <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+              </span>
+              <h2 className="text-base font-semibold text-neutral-900 tracking-tight">
+                Live Visitor & Traffic Stream
+              </h2>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60 uppercase">
+                Real-Time
+              </span>
+            </div>
+            <p className="text-xs text-neutral-500 mt-1">
+              Live IP telemetry, geolocation, browser environment, duration, and user routes.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            {/* Export Dropdown */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsExportOpen(!isExportOpen)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/[0.08] bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-medium transition cursor-pointer shadow-2xs"
+              >
+                <Download className="size-3.5 text-[#0071E3]" />
+                <span>Export</span>
+                <ChevronDown className="size-3 text-neutral-400" />
+              </button>
+
+              {isExportOpen && (
+                <div className="absolute right-0 mt-1.5 w-52 rounded-xl bg-white border border-black/[0.08] shadow-lg p-1.5 z-30 space-y-1 animate-in fade-in">
+                  <button
+                    type="button"
+                    onClick={() => handleDownloadCsv()}
+                    className="w-full text-left px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-100 rounded-lg transition flex items-center gap-2 cursor-pointer"
+                  >
+                    <FileSpreadsheet className="size-4 text-emerald-600" />
+                    <div>
+                      <div className="font-medium">Download as CSV</div>
+                      <div className="text-[10px] text-neutral-400">Spreadsheet table format</div>
+                    </div>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleExportJson()}
+                    className="w-full text-left px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-100 rounded-lg transition flex items-center gap-2 cursor-pointer"
+                  >
+                    <FileJson className="size-4 text-amber-600" />
+                    <div>
+                      <div className="font-medium">Export as JSON</div>
+                      <div className="text-[10px] text-neutral-400">Raw JSON dataset</div>
+                    </div>
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Prune Logs */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsPruneOpen(!isPruneOpen)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/[0.08] bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-medium transition cursor-pointer"
+              >
+                <Eraser className="size-3.5 text-neutral-500" />
+                <span>Prune Logs</span>
+                <ChevronDown className="size-3 text-neutral-400" />
+              </button>
+
+              {isPruneOpen && (
+                <div className="absolute right-0 mt-1.5 w-48 rounded-xl bg-white border border-black/[0.08] shadow-lg p-1.5 z-30 space-y-1 animate-in fade-in">
+                  <button
+                    type="button"
+                    onClick={() => handlePrune(30)}
+                    className="w-full text-left px-3 py-1.5 text-xs text-neutral-800 hover:bg-neutral-100 rounded-lg transition cursor-pointer"
+                  >
+                    Delete older than 30 days
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handlePrune(7)}
+                    className="w-full text-left px-3 py-1.5 text-xs text-neutral-800 hover:bg-neutral-100 rounded-lg transition cursor-pointer"
+                  >
+                    Delete older than 7 days
+                  </button>
+                  <div className="border-t border-black/[0.06] my-1" />
+                  <button
+                    type="button"
+                    onClick={() => handlePrune(null)}
+                    className="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded-lg transition font-medium cursor-pointer"
+                  >
+                    Purge All Visitor Records
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Simulate Button */}
+            <button
+              type="button"
+              onClick={onSimulate}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-medium transition shadow-xs cursor-pointer active:scale-[0.98]"
+            >
+              <Sparkles className="size-3.5 text-amber-200" />
+              <span>Simulate Ping</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Integrated Filter Bar */}
+        <div className="border-t border-black/[0.06] bg-[#F9F9FB] px-4 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 flex-1">
             <div className="relative flex-1 max-w-sm">
-              <Search className="size-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-subtle" />
+              <Search className="size-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
               <input
                 type="text"
-                placeholder="Search IP, country, city, browser, route..."
+                placeholder="Search IP, country, browser, route..."
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="w-full bg-white border border-black/8 focus:border-blue rounded-full pl-9 pr-4 py-2 text-xs text-label placeholder:text-subtle transition-all outline-none"
+                className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl pl-8 pr-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-400 transition-all outline-none"
               />
             </div>
 
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Filter className="size-3.5 text-subtle" />
+            <div className="flex items-center gap-1.5 text-xs text-neutral-500">
+              <Filter className="size-3 text-neutral-400" />
               <select
                 value={browserFilter}
                 onChange={(e) => setBrowserFilter(e.target.value)}
-                className="bg-white border border-black/8 rounded-full px-3 py-1.5 text-xs text-label outline-none cursor-pointer"
+                className="bg-white border border-black/[0.08] rounded-xl px-2.5 py-1.5 text-xs text-neutral-700 outline-none cursor-pointer"
               >
                 <option value="all">All Browsers</option>
                 <option value="chrome">Chrome</option>
@@ -442,55 +468,55 @@ export function VisitorsTab({
             </div>
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-subtle">
-            <span>
-              {filteredVisitors.length} of {visitors.length} sessions
-            </span>
+          <div className="text-xs text-neutral-500 font-medium">
+            {filteredVisitors.length} of {visitors.length} session{visitors.length === 1 ? "" : "s"}
           </div>
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-label">
-            <thead className="bg-fill-subtle/80 text-subtle text-[11px] uppercase font-semibold tracking-wider border-b border-hairline">
+        <div className="overflow-x-auto border-t border-black/[0.06]">
+          <table className="w-full text-left text-xs text-neutral-800">
+            <thead className="bg-[#F9F9FB] text-neutral-500 text-[11px] uppercase font-semibold tracking-wider border-b border-black/[0.06]">
               <tr>
-                <th className="py-3 px-4 w-10 text-center">
+                <th className="py-2.5 px-4 w-10 text-center">
                   <button
                     type="button"
                     onClick={toggleSelectAll}
-                    className="text-muted-foreground hover:text-label transition cursor-pointer"
+                    className="text-neutral-400 hover:text-neutral-700 transition cursor-pointer"
                     title={isAllSelected ? "Deselect all" : "Select all"}
                   >
                     {isAllSelected ? (
-                      <CheckSquare className="size-4 text-blue" />
+                      <CheckSquare className="size-4 text-[#0071E3]" />
                     ) : isSomeSelected ? (
-                      <MinusSquare className="size-4 text-blue" />
+                      <MinusSquare className="size-4 text-[#0071E3]" />
                     ) : (
                       <Square className="size-4" />
                     )}
                   </button>
                 </th>
-                <th className="py-3 px-4">Time & Status</th>
-                <th className="py-3 px-4">Client IP</th>
-                <th className="py-3 px-4">Location (Flag + Country)</th>
-                <th className="py-3 px-4">Browser Type</th>
-                <th className="py-3 px-4">Device</th>
-                <th className="py-3 px-4">Duration & Visits</th>
-                <th className="py-3 px-4">Active Route</th>
-                <th className="py-3 px-4 text-right">Details & Action</th>
+                <th className="py-2.5 px-4 font-medium">Time</th>
+                <th className="py-2.5 px-4 font-medium">Client IP</th>
+                <th className="py-2.5 px-4 font-medium">Location</th>
+                <th className="py-2.5 px-4 font-medium">Browser</th>
+                <th className="py-2.5 px-4 font-medium">Device</th>
+                <th className="py-2.5 px-4 font-medium">Duration</th>
+                <th className="py-2.5 px-4 font-medium">Active Route</th>
+                <th className="py-2.5 px-4 text-right font-medium">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-hairline">
+            <tbody className="divide-y divide-black/[0.04]">
               {filteredVisitors.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="py-16 text-center text-muted-foreground">
+                  <td colSpan={9} className="py-14 text-center text-neutral-500">
                     <div className="max-w-md mx-auto space-y-2">
-                      <div className="size-10 rounded-full bg-black/5 text-subtle flex items-center justify-center mx-auto">
-                        <RefreshCw className="size-5 animate-spin text-subtle" />
+                      <div className="size-9 rounded-xl bg-neutral-100 text-neutral-400 flex items-center justify-center mx-auto">
+                        <RefreshCw className="size-4 animate-spin" />
                       </div>
-                      <p className="text-sm font-semibold text-label">No active visitor sessions yet</p>
-                      <p className="text-xs text-subtle">
-                        Live visitor sessions will populate here in real time as clients browse Codex Dynamics.
+                      <p className="text-sm font-semibold text-neutral-800">
+                        No active visitor sessions
+                      </p>
+                      <p className="text-xs text-neutral-500">
+                        Visitor activity will stream here live as users navigate the website.
                       </p>
                     </div>
                   </td>
@@ -514,19 +540,19 @@ export function VisitorsTab({
                   return (
                     <tr
                       key={v.id}
-                      className={`hover:bg-fill-subtle/50 transition-colors group ${
-                        isSelected ? "bg-blue/5" : ""
+                      className={`hover:bg-neutral-50/70 transition-colors ${
+                        isSelected ? "bg-[#0071E3]/5" : ""
                       }`}
                     >
                       {/* Checkbox */}
-                      <td className="py-3.5 px-4 text-center">
+                      <td className="py-3 px-4 text-center">
                         <button
                           type="button"
                           onClick={() => toggleSelectOne(v.id)}
-                          className="text-muted-foreground hover:text-label transition cursor-pointer"
+                          className="text-neutral-400 hover:text-neutral-700 transition cursor-pointer"
                         >
                           {isSelected ? (
-                            <CheckSquare className="size-4 text-blue" />
+                            <CheckSquare className="size-4 text-[#0071E3]" />
                           ) : (
                             <Square className="size-4" />
                           )}
@@ -534,23 +560,23 @@ export function VisitorsTab({
                       </td>
 
                       {/* Time */}
-                      <td className="py-3.5 px-4 font-mono text-[11px]">
-                        <div className="flex items-center gap-2">
-                          <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-subtle font-medium">
-                            {v.created_at ? v.created_at.slice(11, 19) : "Just now"}
+                      <td className="py-3 px-4 font-mono text-[11px]">
+                        <div className="flex items-center gap-1.5">
+                          <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className="text-neutral-500">
+                            {v.created_at ? v.created_at.slice(11, 19) : "Now"}
                           </span>
                         </div>
                       </td>
 
                       {/* IP */}
-                      <td className="py-3.5 px-4 font-mono text-xs">
+                      <td className="py-3 px-4 font-mono text-xs">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-semibold text-label">{v.ip_address}</span>
+                          <span className="font-semibold text-neutral-900">{v.ip_address}</span>
                           <button
                             type="button"
                             onClick={() => handleCopyIp(v.ip_address)}
-                            className="text-subtle hover:text-label p-1 rounded-md transition-colors cursor-pointer"
+                            className="text-neutral-400 hover:text-neutral-700 p-1 rounded-md transition-colors cursor-pointer"
                             title="Copy IP"
                           >
                             {copiedIp === v.ip_address ? (
@@ -563,7 +589,7 @@ export function VisitorsTab({
                       </td>
 
                       {/* Location */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
                           <CountryFlag
                             flag={geo.flag}
@@ -571,70 +597,70 @@ export function VisitorsTab({
                             country={geo.country}
                           />
                           <div>
-                            <div className="font-medium text-label text-xs">
+                            <div className="font-medium text-neutral-900 text-xs">
                               {geo.city
                                 ? `${geo.city}${geo.region ? `, ${geo.region}` : ""}, ${geo.country}`
                                 : geo.country}
                             </div>
                             {geo.region && !geo.city && (
-                              <div className="text-[10px] text-subtle font-mono">{geo.region}</div>
+                              <div className="text-[10px] text-neutral-400 font-mono">
+                                {geo.region}
+                              </div>
                             )}
                           </div>
                         </div>
                       </td>
 
                       {/* Browser */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <BrowserBadge browser={v.browser} />
                       </td>
 
                       {/* Device */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-1.5 text-xs text-neutral-600">
                           {getDeviceIcon(v.device)}
                           <span>{v.device || "Desktop"}</span>
                         </div>
                       </td>
 
                       {/* Duration */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <div className="flex items-center gap-1.5 text-xs">
-                          <Clock className="size-3 text-subtle" />
-                          <span className="font-medium text-label">
+                          <Clock className="size-3 text-neutral-400" />
+                          <span className="font-medium text-neutral-800">
                             {formatDuration(v.duration_seconds)}
                           </span>
                           {(v.visit_count ?? 0) > 1 && (
-                            <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-blue/10 text-blue font-semibold">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[#0071E3]/10 text-[#0071E3] font-semibold">
                               {v.visit_count}x
                             </span>
                           )}
                         </div>
                       </td>
 
-                      {/* Active Route */}
-                      <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-1.5 max-w-[140px] truncate text-[11px] font-mono text-muted-foreground">
-                          <span className="px-1.5 py-0.5 rounded bg-fill border border-black/5">
-                            {v.page_url || "/"}
-                          </span>
-                        </div>
+                      {/* Route */}
+                      <td className="py-3 px-4">
+                        <span className="px-1.5 py-0.5 rounded-md bg-neutral-100 text-neutral-700 font-mono text-[11px] border border-black/[0.04]">
+                          {v.page_url || "/"}
+                        </span>
                       </td>
 
                       {/* Actions */}
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="py-3 px-4 text-right">
                         <div className="inline-flex items-center justify-end gap-1.5">
                           <button
                             type="button"
                             onClick={() => setSelectedVisitor(v)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-fill hover:bg-black/8 text-label text-xs font-semibold border border-black/10 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-medium transition cursor-pointer"
                           >
-                            <Eye className="size-3.5 text-blue" />
-                            <span>View More</span>
+                            <Eye className="size-3.5 text-[#0071E3]" />
+                            <span>Details</span>
                           </button>
 
                           {isLead ? (
                             <span
-                              className="p-1.5 rounded-full text-emerald-600 bg-emerald-50 border border-emerald-200"
+                              className="p-1.5 rounded-lg text-emerald-600 bg-emerald-50"
                               title="Already added to CRM Leads"
                             >
                               <CheckCircle2 className="size-3.5" />
@@ -643,8 +669,8 @@ export function VisitorsTab({
                             <button
                               type="button"
                               onClick={() => setSelectedVisitor(v)}
-                              className="p-1.5 rounded-full text-blue hover:text-white hover:bg-blue bg-blue/5 border border-blue/20 transition-all cursor-pointer"
-                              title="Add to Leads"
+                              className="p-1.5 rounded-lg text-[#0071E3] hover:bg-[#0071E3]/10 bg-neutral-100 transition cursor-pointer"
+                              title="Convert to Lead"
                             >
                               <UserPlus className="size-3.5" />
                             </button>
@@ -654,7 +680,7 @@ export function VisitorsTab({
                             <button
                               type="button"
                               onClick={() => handleDeleteOne(v.id)}
-                              className="p-1.5 rounded-full text-subtle hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                              className="p-1.5 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
                               title="Delete log"
                             >
                               <Trash2 className="size-3.5" />

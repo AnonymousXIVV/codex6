@@ -87,7 +87,7 @@ function authPopupPlugin(): Plugin {
           }
 
           const host = String(
-            req.headers["x-forwarded-host"] ?? req.headers.host ?? "localhost:8080",
+            req.headers["x-forwarded-host"] ?? req.headers.host ?? "localhost:3000",
           );
           const proto = String(
             req.headers["x-forwarded-proto"] ??
@@ -219,11 +219,11 @@ function preventViteReloadPlugin(): Plugin {
   };
 }
 
-// `0.0.0.0:8080` is the server contract.
+// `0.0.0.0:3000` is the server contract.
 export default defineConfig(({ command, isPreview }) => ({
   server: {
     host: "0.0.0.0",
-    port: 8080,
+    port: 3000,
     strictPort: true,
     allowedHosts: true,
     watch: {

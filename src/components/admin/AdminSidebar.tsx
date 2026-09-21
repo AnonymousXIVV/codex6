@@ -78,25 +78,22 @@ export function AdminSidebar({
           count: null,
           badgeLive: false,
           badgeText: "Theme",
-          badgeColor: "bg-purple-50 text-purple-700 border-purple-200/70",
         },
         {
           id: "layout" as const,
-          label: "Layout & Sections Builder",
+          label: "Layout & Sections",
           icon: Layout,
           count: null,
           badgeLive: false,
-          badgeText: "Reorder",
-          badgeColor: "bg-amber-50 text-amber-700 border-amber-200/70",
+          badgeText: null,
         },
         {
           id: "conversion" as const,
-          label: "Conversion & Floating Docks",
+          label: "Conversion & Docks",
           icon: Megaphone,
           count: null,
           badgeLive: false,
           badgeText: "WhatsApp",
-          badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/70",
         },
         {
           id: "seo_studio" as const,
@@ -104,42 +101,44 @@ export function AdminSidebar({
           icon: Globe,
           count: null,
           badgeLive: false,
-          badgeText: "SERP & OG",
-          badgeColor: "bg-sky-50 text-sky-700 border-sky-200/70",
+          badgeText: "SERP",
         },
         {
           id: "emergency" as const,
-          label: "Emergency & Snapshots",
+          label: "Emergency & Backups",
           icon: AlertTriangle,
           count: null,
           badgeLive: isMaintenance,
-          badgeText: isMaintenance ? "MAINTENANCE" : "Backups",
-          badgeColor: isMaintenance
-            ? "bg-red-600 text-white border-red-600 animate-pulse"
-            : "bg-black/5 text-subtle border-black/5",
+          badgeText: isMaintenance ? "ALERT" : null,
+          badgeAlert: isMaintenance,
         },
         {
           id: "content" as const,
-          label: "Site Contacts & Socials",
+          label: "Contacts & Copy",
           icon: Phone,
           count: null,
           badgeLive: false,
-          badgeText: "Public Copy",
-          badgeColor: "bg-black/5 text-subtle border-black/5",
+          badgeText: null,
         },
       ],
     },
     {
-      group: "Live Chat & Telemetry",
+      group: "Live Telemetry & Chat",
       items: [
         {
           id: "tidio" as const,
-          label: "Live Chat & Tidio",
+          label: "Live Chat & Inbox",
           icon: MessageSquare,
-          count: (stats.unreadChatCount && stats.unreadChatCount > 0) ? stats.unreadChatCount : (stats.activeChatThreads || null),
+          count:
+            stats.unreadChatCount && stats.unreadChatCount > 0
+              ? stats.unreadChatCount
+              : stats.activeChatThreads || null,
           badgeLive: Boolean(stats.activeChatThreads && stats.activeChatThreads > 0),
-          badgeText: (stats.unreadChatCount && stats.unreadChatCount > 0) ? `${stats.unreadChatCount} new` : null,
-          badgeColor: (stats.unreadChatCount && stats.unreadChatCount > 0) ? "bg-red-500 text-white border-red-500" : "bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/20",
+          badgeText:
+            stats.unreadChatCount && stats.unreadChatCount > 0
+              ? `${stats.unreadChatCount} new`
+              : null,
+          badgeAlert: Boolean(stats.unreadChatCount && stats.unreadChatCount > 0),
         },
         {
           id: "visitors" as const,
@@ -148,7 +147,6 @@ export function AdminSidebar({
           count: stats.totalVisitors,
           badgeLive: true,
           badgeText: null,
-          badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/70",
         },
         {
           id: "analytics" as const,
@@ -157,12 +155,11 @@ export function AdminSidebar({
           count: null,
           badgeLive: false,
           badgeText: null,
-          badgeColor: "",
         },
       ],
     },
     {
-      group: "Clients & Inquiries",
+      group: "Clients & Pipeline",
       items: [
         {
           id: "leads" as const,
@@ -171,7 +168,6 @@ export function AdminSidebar({
           count: stats.totalLeads ?? 0,
           badgeLive: (stats.newLeads ?? 0) > 0,
           badgeText: null,
-          badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/70",
         },
         {
           id: "enquiries" as const,
@@ -180,7 +176,6 @@ export function AdminSidebar({
           count: stats.totalEnquiries,
           badgeLive: false,
           badgeText: null,
-          badgeColor: "bg-blue/10 text-blue border-blue/20",
         },
         {
           id: "reviews" as const,
@@ -189,12 +184,11 @@ export function AdminSidebar({
           count: stats.totalReviews,
           badgeLive: false,
           badgeText: null,
-          badgeColor: "bg-amber-50 text-amber-700 border-amber-200/70",
         },
       ],
     },
     {
-      group: "Content & Optimization",
+      group: "Content & Portfolio",
       items: [
         {
           id: "blogs" as const,
@@ -203,7 +197,6 @@ export function AdminSidebar({
           count: stats.totalBlogs,
           badgeLive: false,
           badgeText: null,
-          badgeColor: "bg-blue/10 text-blue border-blue/20",
         },
         {
           id: "backlinks" as const,
@@ -212,21 +205,19 @@ export function AdminSidebar({
           count: stats.totalBacklinks,
           badgeLive: false,
           badgeText: null,
-          badgeColor: "bg-purple-50 text-purple-700 border-purple-200/70",
         },
         {
           id: "projects" as const,
-          label: "Portfolio Projects",
+          label: "Portfolio Showcase",
           icon: Briefcase,
           count: stats.totalProjects,
           badgeLive: false,
           badgeText: null,
-          badgeColor: "bg-black/5 text-subtle border-black/5",
         },
       ],
     },
     {
-      group: "System & Security",
+      group: "System & Settings",
       items: [
         {
           id: "settings" as const,
@@ -235,7 +226,6 @@ export function AdminSidebar({
           count: null,
           badgeLive: false,
           badgeText: "SQLite",
-          badgeColor: "bg-black/5 text-subtle border-black/5",
         },
       ],
     },
@@ -247,29 +237,33 @@ export function AdminSidebar({
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#fbfbfd] border-r border-black/8 select-none">
-      {/* Brand Header */}
-      <div className="p-5 pb-4 border-b border-black/6 flex items-center justify-between">
+    <div className="flex flex-col h-full bg-[#F9F9FB] border-r border-black/[0.08] select-none">
+      {/* Brand Header - Apple Mac/iPad app header style */}
+      <div className="p-4 pb-3.5 border-b border-black/[0.06] flex items-center justify-between">
         <Link
           to="/"
-          className="flex items-center gap-2.5 group"
+          className="flex items-center gap-3 group focus:outline-none"
           onClick={onCloseMobile}
         >
-          <span className="relative flex size-8 shrink-0 items-center justify-center rounded-[10px] bg-blue text-paper shadow-[inset_0_0.5px_0_rgb(255_255_255_/_0.35)] transition-transform duration-200 group-hover:scale-105">
-            <span className="text-sm leading-none font-bold tracking-tight">C</span>
-          </span>
-          <div className="flex flex-col">
+          {/* iOS App Icon Squircle */}
+          <div className="relative flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-gradient-to-b from-[#0077ED] to-[#0066CC] text-white shadow-[0_2px_4px_rgba(0,102,204,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform duration-200 group-hover:scale-105">
+            <span className="text-base font-bold tracking-tight">C</span>
+          </div>
+          <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="font-display font-semibold text-sm tracking-tight text-label">
+              <span className="font-semibold text-sm tracking-tight text-neutral-900">
                 Codex Dynamics
               </span>
-              <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-md bg-blue/10 text-blue border border-blue/20 uppercase">
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-[#0071E3]/10 text-[#0071E3] tracking-wide uppercase">
                 Pro
               </span>
             </div>
-            <span className="text-[11px] text-muted-foreground font-medium">
-              Back Office CRM
-            </span>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[11px] text-neutral-500 font-medium">
+                Admin Console
+              </span>
+            </div>
           </div>
         </Link>
 
@@ -277,7 +271,7 @@ export function AdminSidebar({
         <button
           type="button"
           onClick={onCloseMobile}
-          className="lg:hidden p-1.5 rounded-full text-subtle hover:text-label hover:bg-fill transition-colors cursor-pointer"
+          className="lg:hidden p-2 rounded-lg text-neutral-400 hover:text-neutral-800 hover:bg-black/5 transition-colors cursor-pointer"
           aria-label="Close sidebar"
         >
           <X className="size-4" />
@@ -285,10 +279,11 @@ export function AdminSidebar({
       </div>
 
       {/* Navigation Groups */}
-      <nav className="flex-1 px-3 py-2 space-y-5 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 px-3 py-3 space-y-5 overflow-y-auto custom-scrollbar">
         {navSections.map((section) => (
           <div key={section.group} className="space-y-1">
-            <div className="px-3 text-[10px] font-semibold tracking-wider uppercase text-subtle font-mono">
+            {/* Clear, legible Apple-style section header */}
+            <div className="px-3 pt-1 pb-1 text-[11px] font-semibold tracking-wider uppercase text-neutral-400 font-sans select-none">
               {section.group}
             </div>
 
@@ -301,16 +296,16 @@ export function AdminSidebar({
                     key={item.id}
                     type="button"
                     onClick={() => handleSelectTab(item.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all duration-150 cursor-pointer ${
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 cursor-pointer ${
                       isActive
-                        ? "bg-white text-label font-semibold shadow-xs border border-black/8 ring-1 ring-black/4"
-                        : "text-muted-foreground hover:text-label hover:bg-black/[0.03]"
+                        ? "bg-[#0071E3] text-white shadow-[0_1px_3px_rgba(0,113,227,0.3)] font-semibold"
+                        : "text-neutral-700 hover:text-neutral-900 hover:bg-black/[0.04]"
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="flex items-center gap-3 min-w-0">
                       <Icon
                         className={`size-4 shrink-0 transition-colors ${
-                          isActive ? "text-blue" : "text-subtle"
+                          isActive ? "text-white" : "text-neutral-500"
                         }`}
                       />
                       <span className="truncate">{item.label}</span>
@@ -320,16 +315,22 @@ export function AdminSidebar({
                       {item.badgeLive && (
                         <span className="relative flex h-2 w-2">
                           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                          <span
+                            className={`relative inline-flex rounded-full h-2 w-2 ${
+                              isActive ? "bg-white" : "bg-emerald-500"
+                            }`}
+                          />
                         </span>
                       )}
 
                       {item.badgeText && (
                         <span
-                          className={`text-[9px] px-1.5 py-0.5 rounded font-medium border ${
+                          className={`text-[10px] px-1.5 py-0.5 rounded-md font-medium tracking-wide ${
                             isActive
-                              ? "bg-blue/10 text-blue border-blue/20 font-semibold"
-                              : "bg-black/5 text-subtle border-black/5"
+                              ? "bg-white/20 text-white font-semibold"
+                              : item.badgeAlert
+                                ? "bg-red-500 text-white font-semibold"
+                                : "bg-black/[0.06] text-neutral-600 font-medium"
                           }`}
                         >
                           {item.badgeText}
@@ -338,10 +339,10 @@ export function AdminSidebar({
 
                       {typeof item.count === "number" && (
                         <span
-                          className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${
+                          className={`text-[11px] px-2 py-0.5 rounded-md font-medium font-mono ${
                             isActive
-                              ? "bg-blue/10 text-blue border-blue/20 font-semibold"
-                              : item.badgeColor || "bg-black/5 text-subtle border-black/5"
+                              ? "bg-white/20 text-white font-semibold"
+                              : "bg-black/[0.05] text-neutral-600"
                           }`}
                         >
                           {item.count}
@@ -349,7 +350,7 @@ export function AdminSidebar({
                       )}
 
                       {isActive && (
-                        <ChevronRight className="size-3 text-blue shrink-0 ml-0.5" />
+                        <ChevronRight className="size-3.5 text-white/80 shrink-0 ml-0.5" />
                       )}
                     </div>
                   </button>
@@ -360,18 +361,18 @@ export function AdminSidebar({
         ))}
       </nav>
 
-      {/* Admin User Footer Card */}
-      <div className="p-3 border-t border-black/6 bg-white/60">
-        <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-black/6 shadow-xs">
+      {/* Admin User Footer Card - Apple ID Style */}
+      <div className="p-3 border-t border-black/[0.06] bg-white/70">
+        <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-black/[0.06] shadow-xs">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="size-8 rounded-full bg-label text-paper flex items-center justify-center text-xs font-semibold shrink-0 shadow-xs">
+            <div className="size-8 rounded-lg bg-neutral-900 text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-xs">
               AD
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-xs font-semibold text-label truncate">
+              <span className="text-xs font-semibold text-neutral-900 truncate">
                 Codex Admin
               </span>
-              <span className="text-[10px] text-muted-foreground truncate font-mono">
+              <span className="text-[11px] text-neutral-500 truncate">
                 admin@codexdynamics.com
               </span>
             </div>
@@ -380,7 +381,7 @@ export function AdminSidebar({
           <button
             type="button"
             onClick={onLogout}
-            className="p-1.5 rounded-lg text-subtle hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer shrink-0 ml-1"
+            className="p-1.5 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer shrink-0 ml-1"
             title="Sign Out of Back Office"
             aria-label="Sign Out"
           >
@@ -394,7 +395,7 @@ export function AdminSidebar({
   return (
     <>
       {/* Desktop Persistent Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-64 xl:w-72 fixed inset-y-0 left-0 z-30 shadow-xs">
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 xl:w-72 fixed inset-y-0 left-0 z-30">
         {sidebarContent}
       </aside>
 

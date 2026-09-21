@@ -68,7 +68,7 @@ export function HostingerModal({ isOpen, onClose }: HostingerModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-full text-subtle hover:text-label hover:bg-fill transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 transition-colors cursor-pointer"
           >
             <X className="size-4" />
           </button>
@@ -181,11 +181,11 @@ export function HostingerModal({ isOpen, onClose }: HostingerModalProps) {
           </div>
         </div>
 
-        <div className="pt-3 border-t border-hairline flex justify-end">
+        <div className="pt-3 border-t border-black/[0.06] flex justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-full bg-label hover:bg-black text-paper text-xs font-medium cursor-pointer"
+            className="px-5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-medium cursor-pointer shadow-2xs"
           >
             Done
           </button>

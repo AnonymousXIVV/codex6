@@ -230,10 +230,37 @@ export function SettingsTab({
     }
   };
 
+  const SUBTABS: { id: SubTabId; label: string }[] = [
+    { id: "branding", label: "Branding & Theme" },
+    { id: "layout", label: "Page Layout" },
+    { id: "conversion", label: "Conversion & CTAs" },
+    { id: "seo", label: "SEO & Social" },
+    { id: "emergency", label: "Notice Banner" },
+    { id: "system", label: "System & Credentials" },
+  ];
+
   return (
     <div className="space-y-6">
+      {/* iOS Segmented Navigation Bar */}
+      <div className="bg-white rounded-2xl border border-black/[0.08] p-2 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-center gap-1 overflow-x-auto">
+        {SUBTABS.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            onClick={() => setActiveSubTab(tab.id)}
+            className={`px-3.5 py-2 rounded-xl text-xs font-medium transition-all whitespace-nowrap cursor-pointer ${
+              activeSubTab === tab.id
+                ? "bg-neutral-900 text-white shadow-2xs"
+                : "text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {/* Sleek Action Bar for saving configuration changes */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-card border border-black/8 shadow-2xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-white border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
         <div className="flex items-center gap-2 text-xs">
           {hasUnsavedChanges ? (
             <span className="flex items-center gap-1.5 font-medium text-amber-600">
@@ -241,7 +268,7 @@ export function SettingsTab({
               You have unsaved changes
             </span>
           ) : (
-            <span className="flex items-center gap-1.5 font-medium text-muted-foreground">
+            <span className="flex items-center gap-1.5 font-medium text-neutral-500">
               <span className="size-1.5 rounded-full bg-emerald-500" />
               Configuration up to date
             </span>
@@ -253,9 +280,9 @@ export function SettingsTab({
             <button
               type="button"
               onClick={handleResetConfig}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black/10 bg-white hover:bg-black/5 text-xs font-semibold text-label transition cursor-pointer shadow-2xs"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/[0.08] bg-white hover:bg-neutral-50 text-xs font-medium text-neutral-700 transition cursor-pointer shadow-2xs"
             >
-              <RotateCcw className="size-3.5 text-subtle" />
+              <RotateCcw className="size-3.5 text-neutral-500" />
               Discard
             </button>
           )}
@@ -264,10 +291,10 @@ export function SettingsTab({
             type="button"
             disabled={savingConfig}
             onClick={handleSaveAllConfig}
-            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer shadow-xs ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium transition cursor-pointer shadow-2xs ${
               hasUnsavedChanges
-                ? "bg-blue hover:bg-blue-600 text-white"
-                : "bg-black/90 hover:bg-black text-white"
+                ? "bg-[#0071E3] hover:bg-blue-600 text-white"
+                : "bg-neutral-900 hover:bg-black text-white"
             }`}
           >
             {savingConfig ? (
@@ -282,10 +309,10 @@ export function SettingsTab({
             href="/"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black/10 bg-white hover:bg-black/5 text-xs font-semibold text-label transition cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/[0.08] bg-white hover:bg-neutral-50 text-xs font-medium text-neutral-700 transition cursor-pointer shadow-2xs"
             title="Open public website in new tab"
           >
-            <ExternalLink className="size-3.5 text-subtle" />
+            <ExternalLink className="size-3.5 text-neutral-500" />
             <span>Preview</span>
           </a>
         </div>
@@ -316,23 +343,23 @@ export function SettingsTab({
         <div className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Admin Password Settings */}
-            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)] flex flex-col justify-between">
+            <div className="bg-white rounded-2xl border border-black/[0.08] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between pb-3 border-b border-hairline mb-5">
+                <div className="flex items-center justify-between pb-3 border-b border-black/[0.06] mb-5">
                   <div className="flex items-center gap-2">
-                    <KeyRound className="size-4 text-blue" />
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
+                    <KeyRound className="size-4 text-[#0071E3]" />
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
                       Admin Credentials
                     </h3>
                   </div>
-                  <span className="text-[11px] font-mono text-subtle">
+                  <span className="text-[11px] font-mono text-neutral-400">
                     admin@codexdynamics.com
                   </span>
                 </div>
 
                 <form onSubmit={handlePasswordSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-label mb-1">
+                    <label className="block text-xs font-medium text-neutral-700 mb-1">
                       Current Password
                     </label>
                     <input
@@ -341,12 +368,12 @@ export function SettingsTab({
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
                       placeholder="Enter current password (default: Admin123!)"
-                      className="w-full text-xs rounded-xl border border-black/10 bg-fill/40 px-3.5 py-2.5 text-label placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue transition"
+                      className="w-full text-xs rounded-xl border border-black/[0.08] bg-neutral-50/50 px-3.5 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-label mb-1">
+                    <label className="block text-xs font-medium text-neutral-700 mb-1">
                       New Password
                     </label>
                     <input
@@ -355,12 +382,12 @@ export function SettingsTab({
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Enter new password (min. 6 chars)"
-                      className="w-full text-xs rounded-xl border border-black/10 bg-fill/40 px-3.5 py-2.5 text-label placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue transition"
+                      className="w-full text-xs rounded-xl border border-black/[0.08] bg-neutral-50/50 px-3.5 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-medium text-label mb-1">
+                    <label className="block text-xs font-medium text-neutral-700 mb-1">
                       Confirm New Password
                     </label>
                     <input
@@ -369,7 +396,7 @@ export function SettingsTab({
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Repeat new password"
-                      className="w-full text-xs rounded-xl border border-black/10 bg-fill/40 px-3.5 py-2.5 text-label placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue transition"
+                      className="w-full text-xs rounded-xl border border-black/[0.08] bg-neutral-50/50 px-3.5 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0071E3]/20 focus:border-[#0071E3] transition"
                     />
                   </div>
 
@@ -393,7 +420,7 @@ export function SettingsTab({
                   <button
                     type="submit"
                     disabled={passLoading}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-label text-surface px-4 py-2.5 text-xs font-medium hover:bg-label/90 transition cursor-pointer disabled:opacity-50 shadow-xs"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 text-white px-4 py-2.5 text-xs font-medium hover:bg-black transition cursor-pointer disabled:opacity-50 shadow-2xs"
                   >
                     {passLoading && <RefreshCw className="size-3.5 animate-spin" />}
                     <span>{passLoading ? "Updating Database..." : "Update SQLite Password"}</span>
@@ -401,29 +428,29 @@ export function SettingsTab({
                 </form>
               </div>
 
-              <div className="pt-4 mt-6 border-t border-hairline text-[11px] text-subtle">
+              <div className="pt-4 mt-6 border-t border-black/[0.06] text-[11px] text-neutral-400">
                 Securely encrypted via SHA-256 + cryptographic salt in local SQLite.
               </div>
             </div>
 
             {/* Webhook Settings */}
-            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)] flex flex-col justify-between">
+            <div className="bg-white rounded-2xl border border-black/[0.08] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between pb-3 border-b border-hairline mb-5">
+                <div className="flex items-center justify-between pb-3 border-b border-black/[0.06] mb-5">
                   <div className="flex items-center gap-2">
                     <BellRing className="size-4 text-emerald-600" />
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
                       Lead Dispatch Webhook
                     </h3>
                   </div>
-                  <span className="text-[11px] font-mono text-subtle">
+                  <span className="text-[11px] font-mono text-neutral-400">
                     HTTP POST Payload
                   </span>
                 </div>
 
                 <form onSubmit={handleSaveWebhook} className="space-y-4">
                   <div>
-                    <label className="block text-xs font-medium text-label mb-1">
+                    <label className="block text-xs font-medium text-neutral-700 mb-1">
                       Endpoint URL
                     </label>
                     <input
@@ -431,9 +458,9 @@ export function SettingsTab({
                       value={webhook}
                       onChange={(e) => setWebhook(e.target.value)}
                       placeholder="https://n8n.yourdomain.com/webhook/leads"
-                      className="w-full text-xs font-mono rounded-xl border border-black/10 bg-fill/40 px-3.5 py-2.5 text-label placeholder:text-subtle focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
+                      className="w-full text-xs font-mono rounded-xl border border-black/[0.08] bg-neutral-50/50 px-3.5 py-2.5 text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition"
                     />
-                    <p className="text-[11px] text-subtle mt-1.5">
+                    <p className="text-[11px] text-neutral-400 mt-1.5">
                       Sends real-time JSON payloads for new client inquiries directly to Slack, Discord, Zapier or n8n.
                     </p>
                   </div>
@@ -459,7 +486,7 @@ export function SettingsTab({
                     <button
                       type="submit"
                       disabled={webhookLoading}
-                      className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-label text-surface px-4 py-2.5 text-xs font-medium hover:bg-label/90 transition cursor-pointer disabled:opacity-50 shadow-xs"
+                      className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 text-white px-4 py-2.5 text-xs font-medium hover:bg-black transition cursor-pointer disabled:opacity-50 shadow-2xs"
                     >
                       {webhookLoading && <RefreshCw className="size-3.5 animate-spin" />}
                       <span>Save Webhook</span>
@@ -469,7 +496,7 @@ export function SettingsTab({
                       type="button"
                       disabled={testLoading || !webhook.trim()}
                       onClick={handleTestWebhook}
-                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-black/10 bg-fill/50 hover:bg-fill px-4 py-2.5 text-xs font-medium text-label transition cursor-pointer disabled:opacity-50"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-black/[0.08] bg-white hover:bg-neutral-50 px-4 py-2.5 text-xs font-medium text-neutral-700 transition cursor-pointer disabled:opacity-50 shadow-2xs"
                     >
                       {testLoading ? (
                         <RefreshCw className="size-3.5 animate-spin" />
@@ -482,18 +509,18 @@ export function SettingsTab({
                 </form>
               </div>
 
-              <div className="pt-4 mt-6 border-t border-hairline text-[11px] text-subtle flex items-center justify-between">
+              <div className="pt-4 mt-6 border-t border-black/[0.06] text-[11px] text-neutral-400 flex items-center justify-between">
                 <span>Status: {initialWebhook ? "Configured" : "Inactive"}</span>
                 <span className="font-mono">JSON format</span>
               </div>
             </div>
 
             {/* Public Site Sync Telemetry */}
-            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)]">
-              <div className="flex items-center justify-between pb-3 border-b border-hairline mb-4">
+            <div className="bg-white rounded-2xl border border-black/[0.08] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+              <div className="flex items-center justify-between pb-3 border-b border-black/[0.06] mb-4">
                 <div className="flex items-center gap-2">
                   <Laptop className="size-4 text-purple-600" />
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
                     Live Public Synchronization
                   </h3>
                 </div>
@@ -503,45 +530,45 @@ export function SettingsTab({
                 </span>
               </div>
 
-              <p className="text-xs text-muted-foreground mb-4">
+              <p className="text-xs text-neutral-500 mb-4">
                 Changes saved in the Studio Customizer are stored directly in SQLite and immediately reflected across the public React frontend.
               </p>
 
               <div className="space-y-2 text-xs">
-                <div className="flex items-center justify-between p-3 rounded-xl bg-fill/50 border border-black/5">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-50 border border-black/[0.04]">
                   <div className="flex items-center gap-2.5">
                     <span className="size-2 rounded-full bg-emerald-500" />
-                    <span className="font-medium text-label">Branding & Theme Engine</span>
+                    <span className="font-medium text-neutral-900">Branding & Theme Engine</span>
                   </div>
-                  <span className="text-subtle font-mono">SQLite settings</span>
+                  <span className="text-neutral-400 font-mono">SQLite settings</span>
                 </div>
 
-                <div className="flex items-center justify-between p-3 rounded-xl bg-fill/50 border border-black/5">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-50 border border-black/[0.04]">
                   <div className="flex items-center gap-2.5">
                     <span className="size-2 rounded-full bg-emerald-500" />
-                    <span className="font-medium text-label">Lead Capture Funnel</span>
+                    <span className="font-medium text-neutral-900">Lead Capture Funnel</span>
                   </div>
-                  <span className="text-subtle font-mono">Direct to SQLite</span>
+                  <span className="text-neutral-400 font-mono">Direct to SQLite</span>
                 </div>
               </div>
             </div>
 
             {/* Database & Production Export */}
-            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)] flex flex-col justify-between">
+            <div className="bg-white rounded-2xl border border-black/[0.08] p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between">
               <div>
-                <div className="flex items-center justify-between pb-3 border-b border-hairline mb-4">
+                <div className="flex items-center justify-between pb-3 border-b border-black/[0.06] mb-4">
                   <div className="flex items-center gap-2">
                     <Database className="size-4 text-amber-600" />
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
                       Database & Deployment
                     </h3>
                   </div>
-                  <span className="text-[11px] font-mono text-subtle">
+                  <span className="text-[11px] font-mono text-neutral-400">
                     database.sqlite
                   </span>
                 </div>
 
-                <p className="text-xs text-muted-foreground mb-4">
+                <p className="text-xs text-neutral-500 mb-4">
                   Export complete backups or review Hostinger PHP SQLite deployment instructions for production migration.
                 </p>
 
@@ -549,13 +576,13 @@ export function SettingsTab({
                   <button
                     type="button"
                     onClick={handleExportJson}
-                    className="w-full flex items-center justify-between p-3.5 rounded-xl border border-black/10 bg-fill/50 hover:bg-fill text-label transition text-xs font-medium group cursor-pointer"
+                    className="w-full flex items-center justify-between p-3.5 rounded-xl border border-black/[0.08] bg-neutral-50/60 hover:bg-neutral-100/80 text-neutral-800 transition text-xs font-medium group cursor-pointer"
                   >
                     <div className="flex items-center gap-2.5">
-                      <Download className="size-4 text-blue group-hover:translate-y-0.5 transition" />
+                      <Download className="size-4 text-[#0071E3] group-hover:translate-y-0.5 transition" />
                       <span>Download Full CRM Backup (JSON)</span>
                     </div>
-                    <span className="text-[11px] text-subtle font-mono">Instant Export</span>
+                    <span className="text-[11px] text-neutral-400 font-mono">Instant Export</span>
                   </button>
 
                   <input
@@ -570,34 +597,34 @@ export function SettingsTab({
                     type="button"
                     disabled={restoring}
                     onClick={() => fileInputRef.current?.click()}
-                    className="w-full flex items-center justify-between p-3.5 rounded-xl border border-black/10 bg-fill/50 hover:bg-fill text-label transition text-xs font-medium group cursor-pointer disabled:opacity-50"
+                    className="w-full flex items-center justify-between p-3.5 rounded-xl border border-black/[0.08] bg-neutral-50/60 hover:bg-neutral-100/80 text-neutral-800 transition text-xs font-medium group cursor-pointer disabled:opacity-50"
                   >
                     <div className="flex items-center gap-2.5">
                       {restoring ? (
-                        <RefreshCw className="size-4 text-blue animate-spin" />
+                        <RefreshCw className="size-4 text-[#0071E3] animate-spin" />
                       ) : (
-                        <Upload className="size-4 text-blue group-hover:-translate-y-0.5 transition" />
+                        <Upload className="size-4 text-[#0071E3] group-hover:-translate-y-0.5 transition" />
                       )}
                       <span>{restoring ? "Restoring Database..." : "Restore Database from JSON Backup"}</span>
                     </div>
-                    <span className="text-[11px] text-subtle font-mono">Import File</span>
+                    <span className="text-[11px] text-neutral-400 font-mono">Import File</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={onOpenHostingerModal}
-                    className="w-full flex items-center justify-between p-3.5 rounded-xl border border-black/10 bg-fill/50 hover:bg-fill text-label transition text-xs font-medium group cursor-pointer"
+                    className="w-full flex items-center justify-between p-3.5 rounded-xl border border-black/[0.08] bg-neutral-50/60 hover:bg-neutral-100/80 text-neutral-800 transition text-xs font-medium group cursor-pointer"
                   >
                     <div className="flex items-center gap-2.5">
                       <ExternalLink className="size-4 text-purple-600 group-hover:rotate-12 transition" />
                       <span>Hostinger & PHP Sync Architecture</span>
                     </div>
-                    <span className="text-[11px] text-subtle font-mono">View Docs</span>
+                    <span className="text-[11px] text-neutral-400 font-mono">View Docs</span>
                   </button>
                 </div>
               </div>
 
-              <div className="pt-4 mt-6 border-t border-hairline text-[11px] text-subtle">
+              <div className="pt-4 mt-6 border-t border-black/[0.06] text-[11px] text-neutral-400">
                 Zero external vendor lock-in; lightweight SQLite portable engine.
               </div>
             </div>

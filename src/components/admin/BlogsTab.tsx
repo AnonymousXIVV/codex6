@@ -224,16 +224,18 @@ export function BlogsTab({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* 1. Header & Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl border border-black/[0.08] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-label font-display flex items-center gap-2">
-            <BookOpen className="size-5 text-blue" />
-            <span>Blog & Architectural Teardowns</span>
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Craft, optimize with Rank Math SEO & Power Words, and publish technical insights directly to the Codex Dynamics site.
+          <div className="flex items-center gap-2.5">
+            <BookOpen className="size-4 text-[#0071E3]" />
+            <h2 className="text-base font-semibold text-neutral-900 tracking-tight">
+              Blog & Architectural Publications
+            </h2>
+          </div>
+          <p className="text-xs text-neutral-500 mt-1">
+            Craft, optimize with SEO & Power Words, and publish technical insights directly to the public website.
           </p>
         </div>
 
@@ -241,53 +243,53 @@ export function BlogsTab({
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="px-4 py-2 bg-blue hover:bg-blue-hover text-white text-xs font-semibold rounded-full shadow-xs flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-3.5 py-2 bg-neutral-900 hover:bg-black text-white text-xs font-medium rounded-xl shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer"
           >
-            <Plus className="size-4" />
+            <Plus className="size-3.5" />
             <span>New Blog Article</span>
           </button>
         </div>
       </div>
 
       {/* 2. Key Metrics Bar */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="surface-lift rounded-2xl bg-card border border-black/8 p-4">
-          <span className="text-[11px] font-medium text-subtle uppercase tracking-wider block">Total Articles</span>
-          <span className="text-2xl font-bold text-label font-display mt-1 block">{stats.total}</span>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="bg-white rounded-2xl border border-black/[0.08] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+          <span className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider block">Total Articles</span>
+          <span className="text-2xl font-bold text-neutral-900 tracking-tight mt-1 block">{stats.total}</span>
         </div>
-        <div className="surface-lift rounded-2xl bg-card border border-black/8 p-4">
+        <div className="bg-white rounded-2xl border border-black/[0.08] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
           <span className="text-[11px] font-medium text-emerald-600 uppercase tracking-wider block">Live Published</span>
-          <span className="text-2xl font-bold text-emerald-700 font-display mt-1 block">{stats.published}</span>
+          <span className="text-2xl font-bold text-emerald-700 tracking-tight mt-1 block">{stats.published}</span>
         </div>
-        <div className="surface-lift rounded-2xl bg-card border border-black/8 p-4">
+        <div className="bg-white rounded-2xl border border-black/[0.08] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
           <span className="text-[11px] font-medium text-amber-600 uppercase tracking-wider block">Drafts / In Progress</span>
-          <span className="text-2xl font-bold text-amber-700 font-display mt-1 block">{stats.drafts}</span>
+          <span className="text-2xl font-bold text-amber-700 tracking-tight mt-1 block">{stats.drafts}</span>
         </div>
-        <div className="surface-lift rounded-2xl bg-card border border-black/8 p-4">
-          <span className="text-[11px] font-medium text-blue uppercase tracking-wider block">Total Words Written</span>
-          <span className="text-2xl font-bold text-label font-display mt-1 block">
+        <div className="bg-white rounded-2xl border border-black/[0.08] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+          <span className="text-[11px] font-medium text-[#0071E3] uppercase tracking-wider block">Total Words Written</span>
+          <span className="text-2xl font-bold text-neutral-900 tracking-tight mt-1 block">
             {stats.totalWords.toLocaleString()}
           </span>
         </div>
       </div>
 
       {/* 3. Search, Filters & View Mode Bar */}
-      <div className="surface-lift rounded-2xl bg-card border border-black/8 p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-white rounded-2xl border border-black/[0.08] p-3.5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Search */}
         <div className="relative flex-1 min-w-[220px]">
-          <Search className="size-4 text-subtle absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="size-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by title, keyword, slug, or content..."
-            className="w-full pl-9 pr-4 py-2 text-xs bg-fill/50 hover:bg-fill border border-black/8 rounded-xl focus:border-blue focus:bg-white outline-none transition-all"
+            className="w-full pl-9 pr-4 py-1.5 text-xs bg-[#F9F9FB] hover:bg-[#F2F2F7] border border-black/[0.08] rounded-xl focus:border-[#0071E3] focus:bg-white outline-none transition-all"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-subtle hover:text-label cursor-pointer"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-700 cursor-pointer"
             >
               <X className="size-3.5" />
             </button>
@@ -300,7 +302,7 @@ export function BlogsTab({
           <select
             value={selectedStatusFilter}
             onChange={(e) => setSelectedStatusFilter(e.target.value as any)}
-            className="px-3 py-1.5 text-xs bg-fill/50 border border-black/8 rounded-xl text-label font-medium focus:border-blue outline-none cursor-pointer"
+            className="px-3 py-1.5 text-xs bg-[#F9F9FB] border border-black/[0.08] rounded-xl text-neutral-700 font-medium focus:border-[#0071E3] outline-none cursor-pointer"
           >
             <option value="all">All Statuses ({blogs.length})</option>
             <option value="published">Published ({stats.published})</option>
@@ -312,7 +314,7 @@ export function BlogsTab({
           <select
             value={selectedCategoryFilter}
             onChange={(e) => setSelectedCategoryFilter(e.target.value)}
-            className="px-3 py-1.5 text-xs bg-fill/50 border border-black/8 rounded-xl text-label font-medium focus:border-blue outline-none cursor-pointer"
+            className="px-3 py-1.5 text-xs bg-[#F9F9FB] border border-black/[0.08] rounded-xl text-neutral-700 font-medium focus:border-[#0071E3] outline-none cursor-pointer"
           >
             <option value="all">All Categories</option>
             {categoriesList.map((c) => (
@@ -326,7 +328,7 @@ export function BlogsTab({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-3 py-1.5 text-xs bg-fill/50 border border-black/8 rounded-xl text-label font-medium focus:border-blue outline-none cursor-pointer"
+            className="px-3 py-1.5 text-xs bg-[#F9F9FB] border border-black/[0.08] rounded-xl text-neutral-700 font-medium focus:border-[#0071E3] outline-none cursor-pointer"
           >
             <option value="newest">Sort: Newest First</option>
             <option value="oldest">Sort: Oldest First</option>
@@ -335,12 +337,12 @@ export function BlogsTab({
           </select>
 
           {/* View Toggle */}
-          <div className="flex items-center rounded-xl bg-fill/60 p-1 border border-black/6">
+          <div className="flex items-center rounded-xl bg-neutral-100 p-0.5 border border-black/[0.04]">
             <button
               type="button"
               onClick={() => setViewLayout("grid")}
               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                viewLayout === "grid" ? "bg-white text-blue shadow-xs" : "text-subtle hover:text-label"
+                viewLayout === "grid" ? "bg-white text-[#0071E3] shadow-2xs font-semibold" : "text-neutral-500 hover:text-neutral-800"
               }`}
               title="Grid Cards View"
             >
@@ -350,7 +352,7 @@ export function BlogsTab({
               type="button"
               onClick={() => setViewLayout("table")}
               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                viewLayout === "table" ? "bg-white text-blue shadow-xs" : "text-subtle hover:text-label"
+                viewLayout === "table" ? "bg-white text-[#0071E3] shadow-2xs font-semibold" : "text-neutral-500 hover:text-neutral-800"
               }`}
               title="Detailed Table View"
             >
@@ -362,13 +364,13 @@ export function BlogsTab({
 
       {/* 4. Main Articles Content */}
       {filteredBlogs.length === 0 ? (
-        <div className="surface-lift rounded-3xl bg-card border border-black/8 p-12 text-center space-y-4">
-          <div className="size-14 rounded-full bg-blue/10 text-blue flex items-center justify-center mx-auto">
-            <FileText className="size-6" />
+        <div className="bg-white rounded-2xl border border-black/[0.08] p-12 text-center space-y-4">
+          <div className="size-12 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center mx-auto">
+            <FileText className="size-5" />
           </div>
           <div className="space-y-1">
-            <h3 className="text-base font-bold text-label font-display">No articles found</h3>
-            <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+            <h3 className="text-base font-semibold text-neutral-900">No articles found</h3>
+            <p className="text-xs text-neutral-500 max-w-sm mx-auto">
               {searchQuery || selectedStatusFilter !== "all" || selectedCategoryFilter !== "all"
                 ? "Try adjusting your search terms or filter criteria."
                 : "Your publication studio is clean. Create your first architectural teardown or case study."}
@@ -377,15 +379,15 @@ export function BlogsTab({
           <button
             type="button"
             onClick={handleOpenCreate}
-            className="px-4 py-2 bg-blue text-white rounded-full text-xs font-semibold hover:bg-blue-hover shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+            className="px-3.5 py-2 bg-neutral-900 text-white rounded-xl text-xs font-medium hover:bg-black shadow-2xs cursor-pointer inline-flex items-center gap-1.5"
           >
-            <Plus className="size-4" />
+            <Plus className="size-3.5" />
             <span>Create Article</span>
           </button>
         </div>
       ) : viewLayout === "grid" ? (
         /* GRID VIEW */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredBlogs.map((b) => {
             const readingTime = calculateReadingTime(b.content || "");
             const wordCount = (b.content || "").split(/\s+/).filter(Boolean).length;
@@ -395,10 +397,10 @@ export function BlogsTab({
             return (
               <div
                 key={b.id}
-                className="surface-lift rounded-3xl bg-card border border-black/8 overflow-hidden flex flex-col hover:border-black/20 hover:shadow-md transition-all group"
+                className="bg-white rounded-2xl border border-black/[0.08] overflow-hidden flex flex-col hover:border-black/[0.16] shadow-[0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-sm transition-all group"
               >
                 {/* Card Cover Image Header */}
-                <div className="relative aspect-[16/9] bg-fill overflow-hidden">
+                <div className="relative aspect-[16/9] bg-neutral-100 overflow-hidden">
                   {b.cover_image ? (
                     <img
                       src={b.cover_image}
@@ -407,8 +409,8 @@ export function BlogsTab({
                       loading="lazy"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue/5 via-black/5 to-blue/10">
-                      <FileText className="size-10 text-muted-foreground/40" />
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-neutral-50 to-neutral-100">
+                      <FileText className="size-8 text-neutral-300" />
                     </div>
                   )}
 
@@ -422,19 +424,19 @@ export function BlogsTab({
                           onToggleStatus(b.id, next);
                         }
                       }}
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide uppercase shadow-xs cursor-pointer transition-transform active:scale-95 ${
+                      className={`px-2 py-0.5 rounded-md text-[10px] font-semibold tracking-wide uppercase shadow-2xs cursor-pointer transition-transform active:scale-95 ${
                         isPublished
                           ? "bg-emerald-500 text-white"
                           : b.status === "draft"
                           ? "bg-amber-500 text-white"
-                          : "bg-zinc-600 text-white"
+                          : "bg-neutral-600 text-white"
                       }`}
                       title="Click to toggle status"
                     >
                       {b.status || "published"}
                     </button>
                     {powerAnalysis.headlineHasPowerWord && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-600 text-white shadow-xs flex items-center gap-1">
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-purple-600 text-white shadow-2xs flex items-center gap-1">
                         <Zap className="size-2.5" />
                         <span>Power</span>
                       </span>
@@ -443,7 +445,7 @@ export function BlogsTab({
 
                   {/* Category Pill */}
                   <div className="absolute bottom-3 left-3">
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-black/70 text-white backdrop-blur-xs">
+                    <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-black/75 text-white backdrop-blur-xs">
                       {b.category || "Engineering"}
                     </span>
                   </div>
@@ -532,11 +534,11 @@ export function BlogsTab({
         </div>
       ) : (
         /* TABLE VIEW */
-        <div className="surface-lift rounded-3xl bg-card border border-black/8 overflow-hidden">
+        <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-black/8 bg-fill/40 text-subtle uppercase text-[10px] font-semibold tracking-wider font-mono">
+                <tr className="border-b border-black/[0.08] bg-[#F9F9FB] text-neutral-500 uppercase text-[10px] font-semibold tracking-wider font-mono">
                   <th className="py-3.5 px-4">Article Title & Keyword</th>
                   <th className="py-3.5 px-4">Category</th>
                   <th className="py-3.5 px-4">Status</th>
@@ -545,14 +547,14 @@ export function BlogsTab({
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-black/6">
+              <tbody className="divide-y divide-black/[0.06]">
                 {filteredBlogs.map((b) => {
                   const readingTime = calculateReadingTime(b.content || "");
                   const wordCount = (b.content || "").split(/\s+/).filter(Boolean).length;
                   const power = analyzePowerWords(b.title || "", b.content || "");
 
                   return (
-                    <tr key={b.id} className="hover:bg-fill/30 transition-colors group">
+                    <tr key={b.id} className="hover:bg-neutral-50/60 transition-colors group">
                       <td className="py-3 px-4 max-w-xs sm:max-w-sm">
                         <div className="flex items-center gap-3">
                           {b.cover_image && (
@@ -563,10 +565,10 @@ export function BlogsTab({
                             />
                           )}
                           <div className="min-w-0">
-                            <span className="font-semibold text-label block truncate group-hover:text-blue transition-colors">
+                            <span className="font-semibold text-neutral-900 block truncate group-hover:text-[#0071E3] transition-colors">
                               {b.title}
                             </span>
-                            <div className="flex items-center gap-2 text-[11px] text-muted-foreground font-mono truncate">
+                            <div className="flex items-center gap-2 text-[11px] text-neutral-400 font-mono truncate">
                               <span>/blog?slug={b.slug}</span>
                               {power.headlineHasPowerWord && (
                                 <span className="text-purple-600 font-bold flex items-center gap-0.5">
@@ -579,7 +581,7 @@ export function BlogsTab({
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-fill border border-black/8">
+                        <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-neutral-100 text-neutral-700 border border-black/[0.04]">
                           {b.category || "Engineering"}
                         </span>
                       </td>
@@ -592,12 +594,12 @@ export function BlogsTab({
                               onToggleStatus(b.id, next);
                             }
                           }}
-                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-transform active:scale-95 ${
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider cursor-pointer transition-transform active:scale-95 ${
                             b.status === "published" || !b.status
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : b.status === "draft"
                               ? "bg-amber-50 text-amber-700 border border-amber-200"
-                              : "bg-zinc-100 text-zinc-600"
+                              : "bg-neutral-100 text-neutral-600"
                           }`}
                           title="Click to toggle status"
                         >

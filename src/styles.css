@@ -7,23 +7,23 @@
     "Segoe UI", ui-sans-serif, system-ui, sans-serif;
 
   --color-background: #f5f5f7;
-  --color-foreground: #1d1d1f;
+  --color-foreground: #111113;
   --color-card: #ffffff;
-  --color-card-foreground: #1d1d1f;
+  --color-card-foreground: #111113;
   --color-popover: #ffffff;
-  --color-popover-foreground: #1d1d1f;
+  --color-popover-foreground: #111113;
   --color-primary: #0071e3;
   --color-primary-foreground: #ffffff;
-  --color-secondary: #f5f5f7;
-  --color-secondary-foreground: #1d1d1f;
-  --color-muted: #e8e8ed;
-  --color-muted-foreground: #6e6e73;
+  --color-secondary: #f2f2f7;
+  --color-secondary-foreground: #111113;
+  --color-muted: #e5e5ea;
+  --color-muted-foreground: #5c5c62;
   --color-accent: #0071e3;
   --color-accent-foreground: #ffffff;
   --color-destructive: #ff3b30;
   --color-destructive-foreground: #ffffff;
-  --color-border: #d2d2d7;
-  --color-input: #e8e8ed;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-input: #f2f2f7;
   --color-ring: #0071e3;
 
   --color-hero-black: #050506;
@@ -31,14 +31,14 @@
   --color-hero-ash: #3a3c40;
   --color-ink: #000000;
   --color-paper: #ffffff;
-  --color-fill: #f5f5f7;
-  --color-fill-elevated: #fbfbfd;
-  --color-label: #1d1d1f;
+  --color-fill: #f2f2f7;
+  --color-fill-elevated: #fafafc;
+  --color-label: #111113;
   --color-subtle: #86868b;
   --color-blue: #0071e3;
   --color-blue-hover: #0077ed;
   --color-live: #30d158;
-  --color-hairline: rgb(0 0 0 / 0.08);
+  --color-hairline: rgb(0 0 0 / 0.06);
   --color-hairline-on-dark: rgb(255 255 255 / 0.14);
 
   --radius-sm: 8px;
@@ -48,11 +48,13 @@
   --radius-2xl: 36px;
 
   --shadow-border:
-    0 0 0 1px rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06),
-    0 2px 4px 0 rgb(0 0 0 / 0.04);
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    0 4px 16px -2px rgba(0, 0, 0, 0.03),
+    0 12px 28px -4px rgba(0, 0, 0, 0.025);
   --shadow-border-hover:
-    0 0 0 1px rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08),
-    0 12px 32px 0 rgb(0 0 0 / 0.1);
+    0 2px 6px rgba(0, 0, 0, 0.03),
+    0 12px 32px -4px rgba(0, 0, 0, 0.06),
+    0 24px 54px -8px rgba(0, 0, 0, 0.04);
 
   --ease-out-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -157,13 +159,13 @@
 }
 
 .ios-island-light {
-  background: rgb(255 255 255 / 0.72);
-  backdrop-filter: saturate(190%) blur(32px);
-  -webkit-backdrop-filter: saturate(190%) blur(32px);
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(190%) blur(24px);
+  -webkit-backdrop-filter: saturate(190%) blur(24px);
   box-shadow:
-    0 0 0 0.5px rgb(0 0 0 / 0.08),
-    inset 0 0.5px 0 rgb(255 255 255 / 0.9),
-    0 8px 28px rgb(0 0 0 / 0.1);
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 8px 32px rgba(0, 0, 0, 0.04);
 }
 
 .ios-island-scrolled.ios-island-dark {
@@ -171,7 +173,11 @@
 }
 
 .ios-island-scrolled.ios-island-light {
-  background: rgb(255 255 255 / 0.84);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 12px 36px rgba(0, 0, 0, 0.06);
 }
 
 .ios-island-open {
