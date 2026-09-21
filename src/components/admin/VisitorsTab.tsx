@@ -14,6 +14,13 @@ import {
   Trash2,
   ChevronDown,
   Eraser,
+  Download,
+  FileSpreadsheet,
+  FileJson,
+  CheckSquare,
+  Square,
+  MinusSquare,
+  RefreshCw,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { Visitor } from "@/types/crm";
@@ -27,6 +34,7 @@ interface VisitorsTabProps {
   onSimulate: () => void;
   onAddToLeads?: (visitor: Visitor, customData?: any) => Promise<void>;
   onDeleteVisitor?: (id: number) => Promise<boolean>;
+  onBulkDeleteVisitors?: (ids: number[]) => Promise<boolean>;
   onClearVisitors?: (olderThanDays: number | null) => Promise<boolean>;
   leadsSessionIds?: Set<string>;
 }
@@ -36,6 +44,7 @@ export function VisitorsTab({
   onSimulate,
   onAddToLeads,
   onDeleteVisitor,
+  onBulkDeleteVisitors,
   onClearVisitors,
   leadsSessionIds = new Set(),
 }: VisitorsTabProps) {
@@ -44,6 +53,8 @@ export function VisitorsTab({
   const [copiedIp, setCopiedIp] = useState<string | null>(null);
   const [selectedVisitor, setSelectedVisitor] = useState<Visitor | null>(null);
   const [isPruneOpen, setIsPruneOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   const handleCopyIp = (ip: string) => {
     navigator.clipboard.writeText(ip);
@@ -71,34 +82,6 @@ export function VisitorsTab({
     return `${mins}m ${secs}s`;
   };
 
-  const handlePrune = async (days: number | null) => {
-    setIsPruneOpen(false);
-    const promptText = days === null
-      ? "Are you sure you want to clear ALL visitor telemetry logs from SQLite?"
-      : `Are you sure you want to delete visitor logs older than ${days} days?`;
-
-    if (!window.confirm(promptText)) return;
-
-    if (onClearVisitors) {
-      const ok = await onClearVisitors(days);
-      if (ok) {
-        toast.success(days === null ? "All visitor logs purged." : `Pruned logs older than ${days} days.`);
-      }
-    } else {
-      toast.error("Prune handler not configured.");
-    }
-  };
-
-  const handleDeleteOne = async (id: number) => {
-    if (!window.confirm(`Delete visitor session #${id}?`)) return;
-    if (onDeleteVisitor) {
-      const ok = await onDeleteVisitor(id);
-      if (ok) {
-        toast.info("Visitor session deleted.");
-      }
-    }
-  };
-
   const filteredVisitors = visitors.filter((v) => {
     const q = filter.toLowerCase();
     const matchesQuery =
@@ -120,9 +103,153 @@ export function VisitorsTab({
     return true;
   });
 
+  const allFilteredIds = filteredVisitors.map((v) => v.id);
+  const isAllSelected =
+    allFilteredIds.length > 0 && allFilteredIds.every((id) => selectedIds.has(id));
+  const isSomeSelected =
+    selectedIds.size > 0 && (!isAllSelected || selectedIds.size < allFilteredIds.length);
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(allFilteredIds));
+    }
+  };
+
+  const toggleSelectOne = (id: number) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    setSelectedIds(next);
+  };
+
+  const handlePrune = async (days: number | null) => {
+    setIsPruneOpen(false);
+    const promptText =
+      days === null
+        ? "Are you sure you want to clear ALL visitor telemetry logs from SQLite?"
+        : `Are you sure you want to delete visitor logs older than ${days} days?`;
+
+    if (!window.confirm(promptText)) return;
+
+    if (onClearVisitors) {
+      const ok = await onClearVisitors(days);
+      if (ok) {
+        setSelectedIds(new Set());
+        toast.success(days === null ? "All visitor logs purged." : `Pruned logs older than ${days} days.`);
+      }
+    } else {
+      toast.error("Prune handler not configured.");
+    }
+  };
+
+  const handleDeleteOne = async (id: number) => {
+    if (!window.confirm(`Delete visitor session #${id}?`)) return;
+    if (onDeleteVisitor) {
+      const ok = await onDeleteVisitor(id);
+      if (ok) {
+        const next = new Set(selectedIds);
+        next.delete(id);
+        setSelectedIds(next);
+        toast.info("Visitor session deleted.");
+      }
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    const count = selectedIds.size;
+    if (count === 0) return;
+    if (!window.confirm(`Are you sure you want to delete ${count} selected visitor session(s)?`)) return;
+    if (onBulkDeleteVisitors) {
+      const ok = await onBulkDeleteVisitors(Array.from(selectedIds));
+      if (ok) {
+        toast.success(`Deleted ${count} visitor session(s).`);
+        setSelectedIds(new Set());
+      }
+    } else {
+      toast.error("Bulk delete handler not configured.");
+    }
+  };
+
+  const handleDownloadCsv = (items = selectedIds.size > 0 ? filteredVisitors.filter((v) => selectedIds.has(v.id)) : filteredVisitors) => {
+    if (items.length === 0) {
+      toast.error("No visitor records to download.");
+      return;
+    }
+    const headers = [
+      "ID",
+      "Session ID",
+      "IP Address",
+      "Country",
+      "Country Code",
+      "City",
+      "Region",
+      "Browser",
+      "Device",
+      "Active Route",
+      "Referrer",
+      "Duration (Seconds)",
+      "Visit Count",
+      "Is Returning",
+      "Email",
+      "Name",
+      "Created At",
+    ];
+    const rows = items.map((v) => [
+      v.id,
+      `"${(v.session_id || "").replace(/"/g, '""')}"`,
+      `"${(v.ip_address || "").replace(/"/g, '""')}"`,
+      `"${(v.country || "").replace(/"/g, '""')}"`,
+      `"${(v.country_code || "").replace(/"/g, '""')}"`,
+      `"${(v.city || "").replace(/"/g, '""')}"`,
+      `"${(v.region || "").replace(/"/g, '""')}"`,
+      `"${(v.browser || "").replace(/"/g, '""')}"`,
+      `"${(v.device || "").replace(/"/g, '""')}"`,
+      `"${(v.page_url || "").replace(/"/g, '""')}"`,
+      `"${(v.referrer || "").replace(/"/g, '""')}"`,
+      v.duration_seconds || 0,
+      v.visit_count || 1,
+      v.is_returning ? "Yes" : "No",
+      `"${(v.email || "").replace(/"/g, '""')}"`,
+      `"${(v.name || "").replace(/"/g, '""')}"`,
+      `"${(v.created_at || "").replace(/"/g, '""')}"`,
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `codex_visitors_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setIsExportOpen(false);
+    toast.success(`Exported ${items.length} visitor record(s) to CSV.`);
+  };
+
+  const handleExportJson = (items = selectedIds.size > 0 ? filteredVisitors.filter((v) => selectedIds.has(v.id)) : filteredVisitors) => {
+    if (items.length === 0) {
+      toast.error("No visitor records to export.");
+      return;
+    }
+    const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(items, null, 2));
+    const link = document.createElement("a");
+    link.setAttribute("href", jsonStr);
+    link.setAttribute("download", `codex_visitors_${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setIsExportOpen(false);
+    toast.success(`Exported ${items.length} visitor record(s) to JSON.`);
+  };
+
   return (
     <div className="space-y-4">
-      {/* Top Banner & Action */}
+      {/* Top Banner & Actions */}
       <div className="surface-lift rounded-2xl bg-card border border-black/8 p-5 sm:p-6 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
@@ -134,15 +261,55 @@ export function VisitorsTab({
               Live Visitor & Client Stream
             </h2>
             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 uppercase">
-              Tidio & Analytics Mode
+              Real Time
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Real-time client telemetry, flags, browser badges, cookie tracking, visit durations, and clickstream paths.
+            Real visitor telemetry, geographical location, browser badges, session duration, and clickstream paths.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {/* Export / Download CSV dropdown */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setIsExportOpen(!isExportOpen)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-black/10 bg-white hover:bg-fill text-muted-foreground hover:text-label text-xs font-medium transition cursor-pointer shadow-2xs"
+            >
+              <Download className="size-3.5 text-blue" />
+              <span>Export / Download</span>
+              <ChevronDown className="size-3" />
+            </button>
+
+            {isExportOpen && (
+              <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-card border border-black/10 shadow-lg p-1.5 z-30 space-y-1 animate-in fade-in">
+                <button
+                  type="button"
+                  onClick={() => handleDownloadCsv()}
+                  className="w-full text-left px-3 py-2 text-xs text-label hover:bg-fill rounded-xl transition flex items-center gap-2 cursor-pointer"
+                >
+                  <FileSpreadsheet className="size-4 text-emerald-600" />
+                  <div>
+                    <div className="font-medium">Download as CSV</div>
+                    <div className="text-[10px] text-subtle">Spreadsheet table format</div>
+                  </div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleExportJson()}
+                  className="w-full text-left px-3 py-2 text-xs text-label hover:bg-fill rounded-xl transition flex items-center gap-2 cursor-pointer"
+                >
+                  <FileJson className="size-4 text-amber-600" />
+                  <div>
+                    <div className="font-medium">Export as JSON</div>
+                    <div className="text-[10px] text-subtle">Raw JSON records</div>
+                  </div>
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Prune Menu */}
           <div className="relative">
             <button
@@ -188,11 +355,59 @@ export function VisitorsTab({
             onClick={onSimulate}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-label hover:bg-black text-paper text-xs font-medium transition-all shadow-sm active:scale-[0.99] cursor-pointer"
           >
-            <Sparkles className="size-3.5" />
-            <span>Simulate Visitor Ping</span>
+            <Sparkles className="size-3.5 text-amber-300" />
+            <span>Simulate Ping</span>
           </button>
         </div>
       </div>
+
+      {/* Floating / Sticky Bulk Actions Bar */}
+      {selectedIds.size > 0 && (
+        <div className="rounded-2xl bg-label text-paper p-3 px-4 shadow-lg flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-2.5">
+            <span className="inline-flex items-center justify-center size-6 rounded-full bg-white/20 text-xs font-bold font-mono">
+              {selectedIds.size}
+            </span>
+            <span className="text-xs font-medium">
+              {selectedIds.size} visitor session(s) selected
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => handleDownloadCsv()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-paper text-xs font-medium transition cursor-pointer"
+            >
+              <FileSpreadsheet className="size-3.5 text-emerald-300" />
+              <span>Download CSV</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleExportJson()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-paper text-xs font-medium transition cursor-pointer"
+            >
+              <FileJson className="size-3.5 text-amber-300" />
+              <span>Export JSON</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleBulkDelete}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs"
+            >
+              <Trash2 className="size-3.5" />
+              <span>Bulk Delete</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedIds(new Set())}
+              className="px-2.5 py-1.5 text-xs text-white/70 hover:text-white transition cursor-pointer"
+            >
+              Deselect All
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Visitor Table Card */}
       <div className="surface-lift rounded-2xl bg-card border border-black/8 overflow-hidden shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)]">
@@ -228,7 +443,9 @@ export function VisitorsTab({
           </div>
 
           <div className="flex items-center gap-3 text-xs text-subtle">
-            <span>{filteredVisitors.length} of {visitors.length} sessions</span>
+            <span>
+              {filteredVisitors.length} of {visitors.length} sessions
+            </span>
           </div>
         </div>
 
@@ -237,6 +454,22 @@ export function VisitorsTab({
           <table className="w-full text-left text-xs text-label">
             <thead className="bg-fill-subtle/80 text-subtle text-[11px] uppercase font-semibold tracking-wider border-b border-hairline">
               <tr>
+                <th className="py-3 px-4 w-10 text-center">
+                  <button
+                    type="button"
+                    onClick={toggleSelectAll}
+                    className="text-muted-foreground hover:text-label transition cursor-pointer"
+                    title={isAllSelected ? "Deselect all" : "Select all"}
+                  >
+                    {isAllSelected ? (
+                      <CheckSquare className="size-4 text-blue" />
+                    ) : isSomeSelected ? (
+                      <MinusSquare className="size-4 text-blue" />
+                    ) : (
+                      <Square className="size-4" />
+                    )}
+                  </button>
+                </th>
                 <th className="py-3 px-4">Time & Status</th>
                 <th className="py-3 px-4">Client IP</th>
                 <th className="py-3 px-4">Location (Flag + Country)</th>
@@ -250,8 +483,16 @@ export function VisitorsTab({
             <tbody className="divide-y divide-hairline">
               {filteredVisitors.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-subtle">
-                    No visitor records match your filter.
+                  <td colSpan={9} className="py-16 text-center text-muted-foreground">
+                    <div className="max-w-md mx-auto space-y-2">
+                      <div className="size-10 rounded-full bg-black/5 text-subtle flex items-center justify-center mx-auto">
+                        <RefreshCw className="size-5 animate-spin text-subtle" />
+                      </div>
+                      <p className="text-sm font-semibold text-label">No active visitor sessions yet</p>
+                      <p className="text-xs text-subtle">
+                        Live visitor sessions will populate here in real time as clients browse Codex Dynamics.
+                      </p>
+                    </div>
                   </td>
                 </tr>
               ) : (
@@ -268,12 +509,30 @@ export function VisitorsTab({
                   });
 
                   const isLead = Boolean(v.is_lead || leadsSessionIds.has(v.session_id));
+                  const isSelected = selectedIds.has(v.id);
 
                   return (
                     <tr
                       key={v.id}
-                      className="hover:bg-fill-subtle/50 transition-colors group"
+                      className={`hover:bg-fill-subtle/50 transition-colors group ${
+                        isSelected ? "bg-blue/5" : ""
+                      }`}
                     >
+                      {/* Checkbox */}
+                      <td className="py-3.5 px-4 text-center">
+                        <button
+                          type="button"
+                          onClick={() => toggleSelectOne(v.id)}
+                          className="text-muted-foreground hover:text-label transition cursor-pointer"
+                        >
+                          {isSelected ? (
+                            <CheckSquare className="size-4 text-blue" />
+                          ) : (
+                            <Square className="size-4" />
+                          )}
+                        </button>
+                      </td>
+
                       {/* Time */}
                       <td className="py-3.5 px-4 font-mono text-[11px]">
                         <div className="flex items-center gap-2">
@@ -306,14 +565,20 @@ export function VisitorsTab({
                       {/* Location */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2">
-                          <CountryFlag flag={geo.flag} countryCode={geo.country_code || geo.countryCode} country={geo.country} />
+                          <CountryFlag
+                            flag={geo.flag}
+                            countryCode={geo.country_code || geo.countryCode}
+                            country={geo.country}
+                          />
                           <div>
                             <div className="font-medium text-label text-xs">
-                              {geo.city ? `${geo.city}, ${geo.country}` : geo.country}
+                              {geo.city
+                                ? `${geo.city}${geo.region ? `, ${geo.region}` : ""}, ${geo.country}`
+                                : geo.country}
                             </div>
-                            <div className="text-[10px] text-subtle font-mono truncate max-w-[160px]" title={geo.street}>
-                              {geo.street}
-                            </div>
+                            {geo.region && !geo.city && (
+                              <div className="text-[10px] text-subtle font-mono">{geo.region}</div>
+                            )}
                           </div>
                         </div>
                       </td>
@@ -335,7 +600,9 @@ export function VisitorsTab({
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-1.5 text-xs">
                           <Clock className="size-3 text-subtle" />
-                          <span className="font-medium text-label">{formatDuration(v.duration_seconds)}</span>
+                          <span className="font-medium text-label">
+                            {formatDuration(v.duration_seconds)}
+                          </span>
                           {(v.visit_count ?? 0) > 1 && (
                             <span className="text-[10px] px-1.5 py-0.2 rounded-md bg-blue/10 text-blue font-semibold">
                               {v.visit_count}x
@@ -414,7 +681,11 @@ export function VisitorsTab({
             await onAddToLeads(vis, custom);
           }
         }}
-        isAlreadyLead={selectedVisitor ? Boolean(selectedVisitor.is_lead || leadsSessionIds.has(selectedVisitor.session_id)) : false}
+        isAlreadyLead={
+          selectedVisitor
+            ? Boolean(selectedVisitor.is_lead || leadsSessionIds.has(selectedVisitor.session_id))
+            : false
+        }
       />
     </div>
   );

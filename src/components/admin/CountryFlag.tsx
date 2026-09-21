@@ -10,7 +10,7 @@ export interface CountryFlagProps {
 
 // Normalize country string or country code to standard 2-letter uppercase code
 function normalizeCountryCode(countryOrCode?: any): string {
-  if (!countryOrCode) return "US";
+  if (!countryOrCode) return "GLOBAL";
   let raw = "";
   if (typeof countryOrCode === "string") {
     raw = countryOrCode;

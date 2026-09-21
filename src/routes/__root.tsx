@@ -6,6 +6,7 @@ import { ContactModalProvider } from "@/context/ContactModalContext";
 import { PreviewHostBridge } from "@/components/preview-host-bridge";
 import { Toaster } from "sonner";
 import { TidioWidget } from "@/components/TidioWidget";
+import { GlobalVisitorTracker } from "@/components/GlobalVisitorTracker";
 import appCss from "../styles.css?url";
 
 const APP_NAME = "Codex Dynamics";
@@ -72,6 +73,7 @@ export const Route = createRootRoute({
         <ThemeProvider>
           <ContactModalProvider>
             <SiteConfigProvider>
+              <GlobalVisitorTracker />
               <TidioWidget />
               <AuthProvider>
                 <Outlet />

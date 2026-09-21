@@ -383,6 +383,7 @@ function AdminCRM() {
                 onSimulate={handleSimulateVisitor}
                 onAddToLeads={handleAddVisitorToLeads}
                 onDeleteVisitor={(id) => dispatchAction("delete_visitor", { id })}
+                onBulkDeleteVisitors={(ids) => dispatchAction("bulk_delete_visitors", { ids })}
                 onClearVisitors={(olderThanDays) => dispatchAction("clear_visitors", { olderThanDays })}
                 leadsSessionIds={
                   new Set(
@@ -405,6 +406,7 @@ function AdminCRM() {
                 onUpdateStatus={handleUpdateLeadStatus}
                 onUpdateNotes={handleUpdateLeadNotes}
                 onDeleteLead={handleDeleteLead}
+                onBulkDeleteLeads={(ids) => dispatchAction("bulk_delete_leads", { ids })}
               />
             )}
 
@@ -423,6 +425,7 @@ function AdminCRM() {
                 enquiries={enquiries}
                 onUpdateStatus={(id, status) => dispatchAction("update_enquiry_status", { id, status })}
                 onDelete={(id) => dispatchAction("delete_enquiry", { id })}
+                onBulkDeleteEnquiries={(ids) => dispatchAction("bulk_delete_enquiries", { ids })}
               />
             )}
 

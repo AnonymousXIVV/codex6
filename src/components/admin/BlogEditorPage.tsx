@@ -39,7 +39,7 @@ import { toast } from "sonner";
 import { calculateReadingTime } from "@/lib/reading-time";
 import { analyzePowerWords, POWER_WORDS_DICTIONARY } from "@/lib/power-words";
 import { getStoredCategories, addCategory, type BlogCategory } from "@/lib/categories";
-import { ImagePickerModal, type ImageSelectionMeta } from "./ImagePickerModal";
+import { ImagePickerModal } from "./ImagePickerModal";
 import type { BlogPost } from "@/types/crm";
 
 interface BlogEditorPageProps {

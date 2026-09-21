@@ -1,20 +1,19 @@
-import { resolveGeoLocation } from "./geo-utils";
-
 export interface VisitorData {
   session_id: string;
   ip_address: string;
   country: string;
+  country_code?: string;
   flag: string;
+  city?: string;
+  region?: string;
+  postal_code?: string;
+  street?: string;
   browser: string;
   device: string;
   user_agent: string;
   page_url: string;
   referrer?: string;
   created_at?: string;
-  city?: string;
-  region?: string;
-  postal_code?: string;
-  street?: string;
   duration_seconds?: number;
   visit_count?: number;
   is_returning?: number;
@@ -27,11 +26,11 @@ export interface VisitorData {
 }
 
 export function detectBrowser(ua: string): string {
-  if (/edg/i.test(ua)) return "Edge 124";
-  if (/opr|opera/i.test(ua)) return "Opera 109";
-  if (/chrome|crios/i.test(ua)) return "Chrome 125";
-  if (/firefox|fxios/i.test(ua)) return "Firefox 126";
-  if (/safari/i.test(ua)) return "Safari 17.4";
+  if (/edg/i.test(ua)) return "Edge";
+  if (/opr|opera/i.test(ua)) return "Opera";
+  if (/chrome|crios/i.test(ua)) return "Chrome";
+  if (/firefox|fxios/i.test(ua)) return "Firefox";
+  if (/safari/i.test(ua)) return "Safari";
   return "Modern Browser";
 }
 
@@ -43,6 +42,15 @@ export function detectDevice(ua: string): string {
   if (/windows/i.test(ua)) return "Desktop (Windows)";
   if (/linux/i.test(ua)) return "Desktop (Linux)";
   return "Desktop";
+}
+
+export function getFlagEmoji(countryCode?: string): string {
+  if (!countryCode || countryCode.length !== 2) return "🌐";
+  const codePoints = countryCode
+    .toUpperCase()
+    .split("")
+    .map((char) => 127397 + char.charCodeAt(0));
+  return String.fromCodePoint(...codePoints);
 }
 
 // Cookie Helper Functions
@@ -75,6 +83,69 @@ export function getAllCookiesMap(): Record<string, string> {
   return result;
 }
 
+function guessCountryFromTimeZone(tz: string): { country: string; countryCode: string; flag: string } {
+  if (!tz) return { country: "Direct Visitor", countryCode: "GL", flag: "🌐" };
+  const tzLower = tz.toLowerCase();
+  if (tzLower.includes("harare") || tzLower.includes("zimbabwe")) return { country: "Zimbabwe", countryCode: "ZW", flag: "🇿🇼" };
+  if (tzLower.includes("johannesburg") || tzLower.includes("south_africa")) return { country: "South Africa", countryCode: "ZA", flag: "🇿🇦" };
+  if (tzLower.includes("london")) return { country: "United Kingdom", countryCode: "GB", flag: "🇬🇧" };
+  if (tzLower.includes("new_york") || tzLower.includes("los_angeles") || tzLower.includes("chicago") || tzLower.includes("denver")) return { country: "United States", countryCode: "US", flag: "🇺🇸" };
+  if (tzLower.includes("toronto") || tzLower.includes("vancouver") || tzLower.includes("montreal")) return { country: "Canada", countryCode: "CA", flag: "🇨🇦" };
+  if (tzLower.includes("berlin") || tzLower.includes("frankfurt")) return { country: "Germany", countryCode: "DE", flag: "🇩🇪" };
+  if (tzLower.includes("paris")) return { country: "France", countryCode: "FR", flag: "🇫🇷" };
+  if (tzLower.includes("kiev") || tzLower.includes("kyiv")) return { country: "Ukraine", countryCode: "UA", flag: "🇺🇦" };
+  if (tzLower.includes("tokyo")) return { country: "Japan", countryCode: "JP", flag: "🇯🇵" };
+  if (tzLower.includes("sydney") || tzLower.includes("melbourne")) return { country: "Australia", countryCode: "AU", flag: "🇦🇺" };
+  if (tzLower.includes("dubai")) return { country: "United Arab Emirates", countryCode: "AE", flag: "🇦🇪" };
+  if (tzLower.includes("singapore")) return { country: "Singapore", countryCode: "SG", flag: "🇸🇬" };
+  if (tzLower.includes("nairobi")) return { country: "Kenya", countryCode: "KE", flag: "🇰🇪" };
+  if (tzLower.includes("lagos")) return { country: "Nigeria", countryCode: "NG", flag: "🇳🇬" };
+  if (tzLower.includes("cairo")) return { country: "Egypt", countryCode: "EG", flag: "🇪🇬" };
+  if (tzLower.includes("delhi") || tzLower.includes("kolkata") || tzLower.includes("mumbai")) return { country: "India", countryCode: "IN", flag: "🇮🇳" };
+  if (tzLower.includes("sao_paulo")) return { country: "Brazil", countryCode: "BR", flag: "🇧🇷" };
+  const rawCity = tz.split("/")[1]?.replace(/_/g, " ") || "";
+  return { country: rawCity || "Direct Visitor", countryCode: "GL", flag: "🌐" };
+}
+
+async function fetchClientGeo(): Promise<{ ip?: string; country: string; countryCode: string; flag: string; city: string; region: string } | null> {
+  if (typeof window === "undefined") return null;
+  try {
+    const cached = sessionStorage.getItem("__cdx_geo_cache");
+    if (cached) {
+      return JSON.parse(cached);
+    }
+  // eslint-disable-next-line no-empty
+  } catch {}
+
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 2000);
+    const res = await fetch("https://ipapi.co/json/", { signal: controller.signal });
+    clearTimeout(timeout);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.country_name) {
+        const geo = {
+          ip: data.ip || "",
+          country: data.country_name,
+          countryCode: data.country_code || "",
+          flag: getFlagEmoji(data.country_code),
+          city: data.city || "",
+          region: data.region || "",
+        };
+        try {
+          sessionStorage.setItem("__cdx_geo_cache", JSON.stringify(geo));
+        // eslint-disable-next-line no-empty
+        } catch {}
+        return geo;
+      }
+    }
+  // eslint-disable-next-line no-empty
+  } catch {}
+
+  return null;
+}
+
 // State tracking in memory during active browser session
 let sessionStartTime = Date.now();
 let heartbeatInterval: NodeJS.Timeout | null = null;
@@ -98,7 +169,7 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
 
   const activeUrl = page || window.location.pathname + window.location.hash || "/";
   const now = Date.now();
-  if (activeUrl === lastTrackedUrl && now - lastTrackedTime < 3000) {
+  if (activeUrl === lastTrackedUrl && now - lastTrackedTime < 2500) {
     return;
   }
   lastTrackedUrl = activeUrl;
@@ -161,7 +232,6 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
       pagesHistory = [];
     }
 
-    const activeUrl = page || window.location.pathname + window.location.hash || "/";
     const lastPage = pagesHistory[pagesHistory.length - 1];
     if (!lastPage || lastPage.url !== activeUrl) {
       pagesHistory.push({
@@ -169,7 +239,6 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
         title: document.title || "Codex Dynamics",
         timestamp: new Date().toISOString(),
       });
-      // Cap at 15 most recent for cookie size safety
       if (pagesHistory.length > 15) {
         pagesHistory = pagesHistory.slice(pagesHistory.length - 15);
       }
@@ -177,9 +246,8 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
       setCookie("__cdx_pages_history", historyStr, 30);
       try {
         sessionStorage.setItem("cdx_pages_history", historyStr);
-      } catch {
-        // Storage safe
-      }
+      // eslint-disable-next-line no-empty
+      } catch {}
     }
 
     // 7. Calculate Time Spent / Duration
@@ -191,35 +259,21 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
     const browser = detectBrowser(ua);
     const device = detectDevice(ua);
 
-    // Timezone based country estimate
-    let countryGuess = "United States";
-    let flagGuess = "🇺🇸";
+    // Try real IP Geo, or fallback to real timezone
+    const realGeo = await fetchClientGeo();
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-    if (tz.includes("Europe/Kiev") || tz.includes("Kyiv")) {
-      countryGuess = "Ukraine";
-      flagGuess = "🇺🇦";
-    } else if (tz.includes("London") || tz.includes("Europe/London")) {
-      countryGuess = "United Kingdom";
-      flagGuess = "🇬🇧";
-    } else if (tz.includes("Berlin") || tz.includes("Europe/Berlin") || tz.includes("Paris") || tz.includes("Europe")) {
-      countryGuess = "Germany";
-      flagGuess = "🇩🇪";
-    } else if (tz.includes("Dubai") || tz.includes("Asia/Dubai")) {
-      countryGuess = "United Arab Emirates";
-      flagGuess = "🇦🇪";
-    } else if (tz.includes("Toronto") || tz.includes("Vancouver") || tz.includes("America/Toronto")) {
-      countryGuess = "Canada";
-      flagGuess = "🇨🇦";
-    } else if (tz.includes("Tokyo") || tz.includes("Asia/Tokyo")) {
-      countryGuess = "Japan";
-      flagGuess = "🇯🇵";
-    }
+    const tzFallback = guessCountryFromTimeZone(tz);
 
-    const geo = resolveGeoLocation(countryGuess, flagGuess);
+    const country = realGeo?.country || tzFallback.country;
+    const countryCode = realGeo?.countryCode || tzFallback.countryCode;
+    const flag = realGeo?.flag || tzFallback.flag;
+    const city = realGeo?.city || "";
+    const region = realGeo?.region || "";
+    const ip = realGeo?.ip || "";
 
     const referrer = document.referrer ? new URL(document.referrer).hostname : "Direct";
 
-    // Gather all cookies for full telemetry inspection in the CRM modal
+    // Gather cookies map for inspection
     const allCookies = getAllCookiesMap();
     allCookies.__cdx_screen = `${window.screen.width}x${window.screen.height} (${window.devicePixelRatio}x DPR)`;
     allCookies.__cdx_lang = navigator.language;
@@ -231,14 +285,15 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
 
     const payload = {
       session_id: sessionId,
+      ip: ip,
       page: activeUrl,
-      country: geo.country,
-      country_code: geo.countryCode,
-      flag: geo.flag,
-      city: geo.city,
-      region: geo.region,
-      postal_code: geo.postalCode,
-      street: geo.street,
+      country,
+      country_code: countryCode,
+      flag,
+      city,
+      region,
+      postal_code: "",
+      street: "",
       browser,
       device,
       referrer,
@@ -252,7 +307,7 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
       phone,
     };
 
-    // Send to SQLite API
+    // Send to SQLite API endpoint
     await fetch("/api/track-visitor.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -263,7 +318,7 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
     if (!isTrackerInitialized && typeof window !== "undefined") {
       isTrackerInitialized = true;
 
-      // Listen to browser back/forward page changes only if pathname changes
+      // Listen to browser back/forward page changes
       let lastKnownPathname = window.location.pathname;
       window.addEventListener("popstate", () => {
         if (window.location.pathname !== lastKnownPathname) {
@@ -292,4 +347,9 @@ export async function trackCurrentVisitor(page = "/"): Promise<void> {
   } catch {
     // Non-blocking
   }
+}
+
+export function initVisitorTracker(): void {
+  if (typeof window === "undefined") return;
+  void trackCurrentVisitor(window.location.pathname + window.location.hash);
 }

@@ -53,46 +53,55 @@ export function AnalyticsTab({
 
   // Aggregate regions from filtered visitors
   const regions = useMemo(() => {
-    if (timeRange === "all" || filteredVisitors.length === 0) return initialRegions;
+    const list = filteredVisitors.length > 0 ? filteredVisitors : (timeRange === "all" ? visitors : []);
+    if (list.length === 0) {
+      return timeRange === "all" ? initialRegions : [];
+    }
 
     const map = new Map<string, { country: string; flag: string; count: number }>();
-    for (const v of filteredVisitors) {
-      const c = v.country || "United States";
-      const f = v.flag || "🇺🇸";
+    for (const v of list) {
+      const c = v.country || "Unknown";
+      const f = v.flag || "🌐";
       const curr = map.get(c) || { country: c, flag: f, count: 0 };
       curr.count += 1;
       map.set(c, curr);
     }
     return Array.from(map.values()).sort((a, b) => b.count - a.count);
-  }, [filteredVisitors, initialRegions, timeRange]);
+  }, [filteredVisitors, visitors, initialRegions, timeRange]);
 
   // Aggregate browsers from filtered visitors
   const browsers = useMemo(() => {
-    if (timeRange === "all" || filteredVisitors.length === 0) return initialBrowsers;
+    const list = filteredVisitors.length > 0 ? filteredVisitors : (timeRange === "all" ? visitors : []);
+    if (list.length === 0) {
+      return timeRange === "all" ? initialBrowsers : [];
+    }
 
     const map = new Map<string, number>();
-    for (const v of filteredVisitors) {
-      const b = v.browser || "Chrome";
+    for (const v of list) {
+      const b = v.browser || "Unknown";
       map.set(b, (map.get(b) || 0) + 1);
     }
     return Array.from(map.entries())
       .map(([browser, count]) => ({ browser, count }))
       .sort((a, b) => b.count - a.count);
-  }, [filteredVisitors, initialBrowsers, timeRange]);
+  }, [filteredVisitors, visitors, initialBrowsers, timeRange]);
 
   // Aggregate devices from filtered visitors
   const devices = useMemo(() => {
-    if (timeRange === "all" || filteredVisitors.length === 0) return initialDevices;
+    const list = filteredVisitors.length > 0 ? filteredVisitors : (timeRange === "all" ? visitors : []);
+    if (list.length === 0) {
+      return timeRange === "all" ? initialDevices : [];
+    }
 
     const map = new Map<string, number>();
-    for (const v of filteredVisitors) {
-      const d = v.device || "Desktop";
+    for (const v of list) {
+      const d = v.device || "Unknown";
       map.set(d, (map.get(d) || 0) + 1);
     }
     return Array.from(map.entries())
       .map(([device, count]) => ({ device, count }))
       .sort((a, b) => b.count - a.count);
-  }, [filteredVisitors, initialDevices, timeRange]);
+  }, [filteredVisitors, visitors, initialDevices, timeRange]);
 
   // Referrer channels breakdown
   const referrers = useMemo(() => {
@@ -109,9 +118,7 @@ export function AnalyticsTab({
     }
 
     if (map.size === 0) {
-      map.set("Direct Navigation", 68);
-      map.set("Google Search", 24);
-      map.set("Social Acquisition", 14);
+      return [];
     }
 
     const total = Array.from(map.values()).reduce((a, b) => a + b, 0) || 1;
@@ -135,10 +142,7 @@ export function AnalyticsTab({
     }
 
     if (map.size === 0) {
-      map.set("/", 84);
-      map.set("/#work", 46);
-      map.set("/#services", 32);
-      map.set("/#contact", 28);
+      return [];
     }
 
     const total = Array.from(map.values()).reduce((a, b) => a + b, 0) || 1;
@@ -231,10 +235,10 @@ export function AnalyticsTab({
             <Share2 className="size-3.5 text-purple-600" />
           </div>
           <div className="text-lg font-bold font-display text-label truncate">
-            {referrers[0]?.source || "Direct Navigation"}
+            {referrers[0]?.source || (currentCount === 0 ? "No Traffic" : "Direct")}
           </div>
           <p className="text-[11px] text-subtle mt-0.5">
-            {referrers[0]?.pct || 65}% of inbound visitors
+            {referrers[0] ? `${referrers[0].pct}% of inbound visitors` : "Awaiting visitor sessions"}
           </p>
         </div>
 
@@ -244,12 +248,13 @@ export function AnalyticsTab({
             <TrendingUp className="size-3.5 text-amber-600" />
           </div>
           <div className="text-2xl font-bold font-display text-label tabular-nums">
-            {Math.round(
-              ((devices.find((d) => d.device.toLowerCase().includes("mobile"))?.count || 0) /
-                totalDeviceCount) *
-                100
-            )}
-            %
+            {devices.length > 0
+              ? `${Math.round(
+                  ((devices.find((d) => d.device.toLowerCase().includes("mobile"))?.count || 0) /
+                    totalDeviceCount) *
+                    100
+                )}%`
+              : "0%"}
           </div>
           <p className="text-[11px] text-subtle mt-0.5">Handheld viewports</p>
         </div>
@@ -425,23 +430,29 @@ export function AnalyticsTab({
           </div>
 
           <div className="space-y-3.5">
-            {referrers.map((ref, i) => (
-              <div key={ref.source || i} className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-medium text-label">{ref.source}</span>
-                  <div className="flex items-center gap-2 font-mono text-[11px]">
-                    <span className="font-semibold text-label">{ref.count}</span>
-                    <span className="text-subtle">({ref.pct}%)</span>
+            {referrers.length === 0 ? (
+              <div className="py-8 text-center text-xs text-subtle">
+                No referral channels recorded yet.
+              </div>
+            ) : (
+              referrers.map((ref, i) => (
+                <div key={ref.source || i} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-label">{ref.source}</span>
+                    <div className="flex items-center gap-2 font-mono text-[11px]">
+                      <span className="font-semibold text-label">{ref.count}</span>
+                      <span className="text-subtle">({ref.pct}%)</span>
+                    </div>
+                  </div>
+                  <div className="w-full bg-fill rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-blue h-1.5 rounded-full transition-all duration-500"
+                      style={{ width: `${Math.max(ref.pct, 4)}%` }}
+                    />
                   </div>
                 </div>
-                <div className="w-full bg-fill rounded-full h-1.5 overflow-hidden">
-                  <div
-                    className="bg-blue h-1.5 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.max(ref.pct, 4)}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
@@ -460,25 +471,31 @@ export function AnalyticsTab({
           </div>
 
           <div className="space-y-3.5">
-            {topPages.map((tp, i) => (
-              <div key={tp.page || i} className="space-y-1.5">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-mono text-xs text-label bg-fill px-1.5 py-0.5 rounded">
-                    {tp.page}
-                  </span>
-                  <div className="flex items-center gap-2 font-mono text-[11px]">
-                    <span className="font-semibold text-label">{tp.count}</span>
-                    <span className="text-subtle">({tp.pct}%)</span>
+            {topPages.length === 0 ? (
+              <div className="py-8 text-center text-xs text-subtle">
+                No page views recorded yet.
+              </div>
+            ) : (
+              topPages.map((tp, i) => (
+                <div key={tp.page || i} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-mono text-xs text-label bg-fill px-1.5 py-0.5 rounded">
+                      {tp.page}
+                    </span>
+                    <div className="flex items-center gap-2 font-mono text-[11px]">
+                      <span className="font-semibold text-label">{tp.count}</span>
+                      <span className="text-subtle">({tp.pct}%)</span>
+                    </div>
+                  </div>
+                  <div className="w-full bg-fill rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500"
+                      style={{ width: `${Math.max(tp.pct, 4)}%` }}
+                    />
                   </div>
                 </div>
-                <div className="w-full bg-fill rounded-full h-1.5 overflow-hidden">
-                  <div
-                    className="bg-emerald-600 h-1.5 rounded-full transition-all duration-500"
-                    style={{ width: `${Math.max(tp.pct, 4)}%` }}
-                  />
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       </div>

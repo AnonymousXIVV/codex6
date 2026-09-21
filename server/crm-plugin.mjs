@@ -29,7 +29,10 @@ import {
   toggleProjectPublish,
   deleteProject,
   deleteVisitor,
+  bulkDeleteVisitors,
   clearVisitors,
+  bulkDeleteLeads,
+  bulkDeleteEnquiries,
   restoreBackup,
   getPublicContent,
   getBlogPostBySlug,
@@ -484,6 +487,8 @@ export function crmApiPlugin() {
               deleteProject(payload.id);
             } else if (action === "delete_visitor") {
               deleteVisitor(payload.id);
+            } else if (action === "bulk_delete_visitors") {
+              bulkDeleteVisitors(payload.ids || []);
             } else if (action === "clear_visitors") {
               clearVisitors(payload.olderThanDays);
             } else if (action === "restore_backup") {
@@ -504,6 +509,8 @@ export function crmApiPlugin() {
               updateEnquiryStatus(payload.id, payload.status);
             } else if (action === "delete_enquiry") {
               deleteEnquiry(payload.id);
+            } else if (action === "bulk_delete_enquiries") {
+              bulkDeleteEnquiries(payload.ids || []);
             } else if (action === "add_visitor_to_leads") {
               addVisitorToLeads(payload.visitor_id, payload.lead_data || {});
             } else if (action === "create_lead") {
@@ -514,6 +521,8 @@ export function crmApiPlugin() {
               updateLeadNotes(payload.id, payload.notes);
             } else if (action === "delete_lead") {
               deleteLead(payload.id);
+            } else if (action === "bulk_delete_leads") {
+              bulkDeleteLeads(payload.ids || []);
             } else if (action === "subscribe_blog_reader") {
               createLead({
                 name: payload.name || "Blog Reader",
@@ -580,8 +589,8 @@ export function crmApiPlugin() {
           return;
         }
 
-        // Track Visitor Endpoint (same as PHP endpoint)
-        if (url.startsWith("/api/track-visitor.php") && req.method === "POST") {
+        // Track Visitor Endpoint (supports both /api/track-visitor and /api/track-visitor.php)
+        if ((url.startsWith("/api/track-visitor.php") || url.startsWith("/api/track-visitor")) && req.method === "POST") {
           try {
             const body = await parseJsonBody(req);
             const ip = req.headers["x-forwarded-for"]?.split(",")[0]?.trim() || req.socket.remoteAddress || "127.0.0.1";
@@ -591,13 +600,13 @@ export function crmApiPlugin() {
             recordVisitor({
               sessionId: body.session_id,
               ip: body.ip || ip,
-              country: body.country || "United States",
-              countryCode: body.country_code || "US",
-              flag: body.flag || "🇺🇸",
-              city: body.city || "San Francisco",
-              region: body.region || "California",
-              postalCode: body.postal_code || "94105",
-              street: body.street || "101 Market St, Financial District",
+              country: body.country || (ip === "127.0.0.1" || ip === "::1" ? "Local Session" : "Global Visitor"),
+              countryCode: body.country_code || (ip === "127.0.0.1" || ip === "::1" ? "LOC" : "GL"),
+              flag: body.flag || "🌐",
+              city: body.city || (ip === "127.0.0.1" || ip === "::1" ? "Direct" : "Online"),
+              region: body.region || "",
+              postalCode: body.postal_code || "",
+              street: body.street || "",
               browser: body.browser || (userAgent.includes("Safari") && !userAgent.includes("Chrome") ? "Safari" : userAgent.includes("Firefox") ? "Firefox" : "Chrome"),
               device: body.device || (/Mobile|iPhone|Android/i.test(userAgent) ? "Mobile" : "Desktop"),
               userAgent,

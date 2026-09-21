@@ -6,12 +6,8 @@ import {
   FileText,
   Star,
   Briefcase,
-  Database,
-  Radio,
-  ExternalLink,
   LogOut,
   X,
-  Sparkles,
   ChevronRight,
   Shield,
   Users,
@@ -64,8 +60,8 @@ export function AdminSidebar({
   stats,
   isOpenMobile,
   onCloseMobile,
-  onOpenHostingerModal,
-  onSimulateVisitor,
+  onOpenHostingerModal: _onOpenHostingerModal,
+  onSimulateVisitor: _onSimulateVisitor,
   onLogout,
 }: AdminSidebarProps) {
   const { config } = useSiteConfig();
@@ -362,45 +358,6 @@ export function AdminSidebar({
             </div>
           </div>
         ))}
-
-        {/* Quick Tools Section */}
-        <div className="space-y-1 pt-2 border-t border-hairline">
-          <div className="px-3 text-[10px] font-semibold tracking-wider uppercase text-subtle font-mono">
-            System & Tools
-          </div>
-
-          <div className="space-y-0.5">
-            <button
-              type="button"
-              onClick={onSimulateVisitor}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-muted-foreground hover:text-label hover:bg-black/[0.03] transition-colors cursor-pointer text-left"
-            >
-              <Radio className="size-4 text-emerald-600 shrink-0" />
-              <span>Simulate Visitor Ping</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={onOpenHostingerModal}
-              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium text-muted-foreground hover:text-label hover:bg-black/[0.03] transition-colors cursor-pointer text-left"
-            >
-              <Database className="size-4 text-blue shrink-0" />
-              <span>Hostinger & SQLite Guide</span>
-            </button>
-
-            <Link
-              to="/"
-              target="_blank"
-              className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-muted-foreground hover:text-label hover:bg-black/[0.03] transition-colors text-left"
-            >
-              <div className="flex items-center gap-2.5">
-                <ExternalLink className="size-4 text-subtle shrink-0" />
-                <span>View Public Site</span>
-              </div>
-              <Sparkles className="size-3 text-amber-500" />
-            </Link>
-          </div>
-        </div>
       </nav>
 
       {/* Admin User Footer Card */}
