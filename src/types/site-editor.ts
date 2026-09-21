@@ -261,7 +261,6 @@ export interface SnapshotItem {
   id: string;
   name: string;
   timestamp: string;
-  createdAt?: string;
   config: Partial<SiteConfig>;
 }
 

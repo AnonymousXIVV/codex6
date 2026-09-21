@@ -70,8 +70,8 @@ export function AdminMetrics({ stats, activeTab, setActiveTab }: AdminMetricsPro
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] p-1.5 sm:p-2">
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1 sm:gap-1.5">
+    <div className="bg-white/95 backdrop-blur-sm rounded-2xl border border-black/[0.06] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_4px_12px_rgba(0,0,0,0.02)] p-2 transition-all">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-1.5 sm:gap-2">
         {items.map((item) => {
           const Icon = item.icon;
           const isSelected = activeTab === item.id;
@@ -80,30 +80,34 @@ export function AdminMetrics({ stats, activeTab, setActiveTab }: AdminMetricsPro
               key={item.id}
               type="button"
               onClick={() => setActiveTab(item.id)}
-              className={`group flex flex-col p-3 rounded-xl text-left transition-all duration-150 cursor-pointer ${
+              className={`group flex flex-col p-3.5 rounded-xl text-left transition-all duration-200 cursor-pointer ${
                 isSelected
-                  ? "bg-[#0071E3] text-white shadow-[0_2px_6px_rgba(0,113,227,0.25)]"
-                  : "hover:bg-neutral-100/80 text-neutral-800"
+                  ? "bg-[#0071E3] text-white shadow-[0_2px_8px_rgba(0,113,227,0.28)]"
+                  : "bg-neutral-50/50 hover:bg-neutral-100/90 text-neutral-800 hover:shadow-2xs hover:-translate-y-0.5 border border-transparent hover:border-black/[0.04]"
               }`}
             >
-              <div className="flex items-center justify-between gap-1 mb-1.5">
+              <div className="flex items-center justify-between gap-1 mb-2">
                 <span
                   className={`text-[11px] font-medium tracking-wide truncate ${
-                    isSelected ? "text-white/80" : "text-neutral-500 group-hover:text-neutral-700"
+                    isSelected ? "text-white/85" : "text-neutral-500 group-hover:text-neutral-700"
                   }`}
                 >
                   {item.title}
                 </span>
-                <Icon
-                  className={`size-3.5 shrink-0 ${
-                    isSelected ? "text-white" : "text-neutral-400 group-hover:text-neutral-600"
+                <div
+                  className={`size-6 rounded-lg flex items-center justify-center transition-colors shrink-0 ${
+                    isSelected
+                      ? "bg-white/15 text-white"
+                      : "bg-white text-neutral-500 group-hover:text-neutral-700 shadow-2xs border border-black/[0.04]"
                   }`}
-                />
+                >
+                  <Icon className="size-3.5" />
+                </div>
               </div>
 
               <div className="flex items-baseline gap-1.5">
                 <span
-                  className={`text-xl sm:text-2xl font-bold tracking-tight ${
+                  className={`text-xl sm:text-2xl font-bold tracking-tight font-sans tabular-nums ${
                     isSelected ? "text-white" : "text-neutral-900"
                   }`}
                 >
@@ -112,8 +116,8 @@ export function AdminMetrics({ stats, activeTab, setActiveTab }: AdminMetricsPro
               </div>
 
               <div
-                className={`text-[11px] mt-0.5 truncate font-medium ${
-                  isSelected ? "text-white/80" : "text-neutral-400"
+                className={`text-[11px] mt-1 truncate font-medium ${
+                  isSelected ? "text-white/80" : "text-neutral-400 group-hover:text-neutral-500"
                 }`}
               >
                 {item.subValue}

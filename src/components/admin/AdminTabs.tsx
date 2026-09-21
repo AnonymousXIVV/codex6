@@ -64,7 +64,7 @@ export function AdminTabs({ activeTab, setActiveTab, stats }: AdminTabsProps) {
 
   return (
     <div className="w-full overflow-x-auto no-scrollbar pb-1">
-      <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[#F2F2F7] border border-black/[0.04] shadow-2xs backdrop-blur-md min-w-max">
+      <div className="inline-flex items-center gap-1.5 p-1.5 rounded-full bg-[#e8e8ed]/90 border border-black/6 shadow-inner backdrop-blur-md min-w-max">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -73,13 +73,13 @@ export function AdminTabs({ activeTab, setActiveTab, stats }: AdminTabsProps) {
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 cursor-pointer whitespace-nowrap ${
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium transition-all duration-150 cursor-pointer whitespace-nowrap ${
                 isActive
-                  ? "bg-white text-neutral-900 shadow-2xs font-semibold ring-1 ring-black/[0.04]"
-                  : "text-neutral-500 hover:text-neutral-900 hover:bg-black/[0.02]"
+                  ? "bg-white text-label shadow-sm font-semibold ring-1 ring-black/5"
+                  : "text-muted-foreground hover:text-label hover:bg-white/40"
               }`}
             >
-              <Icon className={`size-3.5 ${isActive ? "text-[#0071E3]" : "text-neutral-400"}`} />
+              <Icon className={`size-3.5 ${isActive ? "text-blue" : "text-subtle"}`} />
               <span>{tab.label}</span>
 
               {tab.badgeLive && (
@@ -91,10 +91,10 @@ export function AdminTabs({ activeTab, setActiveTab, stats }: AdminTabsProps) {
 
               {typeof tab.count === "number" && (
                 <span
-                  className={`text-[10px] px-1.5 py-0.5 rounded-md font-medium tabular-nums ${
+                  className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
                     isActive
-                      ? "bg-[#0071E3]/10 text-[#0071E3] font-semibold"
-                      : "bg-black/[0.04] text-neutral-500"
+                      ? "bg-blue/10 text-blue font-semibold"
+                      : "bg-black/5 text-subtle"
                   }`}
                 >
                   {tab.count}

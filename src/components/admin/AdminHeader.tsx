@@ -1,5 +1,10 @@
+import { Link } from "@tanstack/react-router";
 import {
+  RefreshCw,
+  ExternalLink,
   Menu,
+  Database,
+  Download,
   Activity,
   BarChart3,
   Inbox,
@@ -16,7 +21,6 @@ import {
   Layout,
   Megaphone,
   AlertTriangle,
-  RotateCw,
 } from "lucide-react";
 import type { AdminTabKey } from "./AdminSidebar";
 
@@ -32,94 +36,94 @@ interface AdminHeaderProps {
 
 const tabMeta: Record<AdminTabKey, { label: string; icon: any; subtitle: string }> = {
   customizer: {
-    label: "Studio Customizer",
+    label: "Studio Customizer & Visual Architecture",
     icon: Sparkles,
-    subtitle: "Complete visual branding, section order, conversion docks, and SEO controls",
+    subtitle: "Complete visual branding, section order, conversion docks, SEO and emergency controls",
   },
   branding: {
     label: "Visual Branding & Themes",
     icon: Palette,
-    subtitle: "Colorways, custom primary accents, corner radius, typography, and logos",
+    subtitle: "Colorways, custom HEX primary accents, corner radius tokens, typography and logos",
   },
   layout: {
     label: "Layout & Sections Builder",
     icon: Layout,
-    subtitle: "Reorder homepage sections, toggle visibility, and configure header styles",
+    subtitle: "Reorder homepage sections with up/down controls, toggle visibility, and hero & header styles",
   },
   conversion: {
-    label: "Conversion & Floating Docks",
+    label: "Conversion Tools & Floating Docks",
     icon: Megaphone,
-    subtitle: "Global announcement bar, WhatsApp floating dock, and lead qualification",
+    subtitle: "Global announcement bar, WhatsApp floating dock, multi-channel flyout, and lead form qualification",
   },
   seo_studio: {
     label: "SEO & Social Sharing Studio",
     icon: Globe,
-    subtitle: "Meta tags, Google SERP preview, OpenGraph social card, and telemetry",
+    subtitle: "Meta tags with character counters, live Google SERP preview, OpenGraph social card, and GA4 telemetry",
   },
   emergency: {
-    label: "Emergency Mode & Backups",
+    label: "Emergency Mode & Snapshots",
     icon: AlertTriangle,
-    subtitle: "Maintenance mode toggle, SQLite database snapshots, and safety settings",
+    subtitle: "Public maintenance countdown screen, 1-click SQLite configuration snapshots, and code injection",
   },
   tidio: {
-    label: "Live Chat & Tidio Inbox",
+    label: "Tidio Live Chat",
     icon: MessageSquare,
-    subtitle: "Real-time client chat automation, lead triggers, and conversation desk",
+    subtitle: "Live customer chat automation, lead triggers, and visitor conversation desk",
   },
   content: {
-    label: "Site Contacts & Socials",
+    label: "Site Contacts, Socials & Copy",
     icon: Globe,
-    subtitle: "Public phone numbers, WhatsApp, addresses, social profiles, and hero copy",
+    subtitle: "Manage live phone numbers, WhatsApp, addresses, header social icons, and site hero copy",
   },
   site_content: {
-    label: "Site Contacts & Socials",
+    label: "Site Contacts, Socials & Copy",
     icon: Globe,
-    subtitle: "Public phone numbers, WhatsApp, addresses, social profiles, and hero copy",
+    subtitle: "Manage live phone numbers, WhatsApp, addresses, header social icons, and site hero copy",
   },
   visitors: {
     label: "Live Visitors",
     icon: Activity,
-    subtitle: "Real-time traffic telemetry, IP geolocation, and clickstream logging",
+    subtitle: "Real-time traffic telemetry and IP location logging",
   },
   leads: {
-    label: "CRM Leads & Pipeline",
+    label: "CRM Leads Database",
     icon: Users,
-    subtitle: "Qualified prospects from visitor telemetry, contact forms, and inquiries",
+    subtitle: "Qualified prospects from visitor telemetry, contact forms, and blog readers",
   },
   analytics: {
-    label: "Analytics & Demographics",
+    label: "Analytics & Regions",
     icon: BarChart3,
-    subtitle: "Audience countries, browser distribution, and device metrics",
+    subtitle: "Audience demographics, browser share, and device metrics",
   },
   enquiries: {
-    label: "Inquiries & Submissions",
+    label: "Inquiries & Leads",
     icon: Inbox,
-    subtitle: "Direct contact form submissions and project estimate requests",
+    subtitle: "Client project estimates and direct contact submissions",
   },
   backlinks: {
     label: "SEO Backlinks",
     icon: Link2,
-    subtitle: "Referring domains, authority scores, and indexed citation monitoring",
+    subtitle: "High-authority referring domains and citation tracking",
   },
   blogs: {
     label: "Blogs & Rank Math",
     icon: FileText,
-    subtitle: "Published articles, on-page SEO analysis, and search snippets",
+    subtitle: "On-page SEO scoring and search snippet optimization",
   },
   reviews: {
     label: "Client Reviews",
     icon: Star,
-    subtitle: "Verified customer testimonials and 5-star rating showcases",
+    subtitle: "Verified customer testimonials and social proof ratings",
   },
   projects: {
     label: "Portfolio Projects",
     icon: Briefcase,
-    subtitle: "Featured client websites, agency case studies, and live deliverables",
+    subtitle: "Featured production websites and client case studies",
   },
   settings: {
     label: "Security & Database",
     icon: Shield,
-    subtitle: "Admin credentials, lead alert webhooks, and database backup controls",
+    subtitle: "Security credentials, instant lead webhooks, and database backups",
   },
 };
 
@@ -128,12 +132,22 @@ export function AdminHeader({
   loading,
   onRefresh,
   onOpenMobileSidebar,
+  onOpenHostingerModal,
+  onSelectTab,
 }: AdminHeaderProps) {
   const current = tabMeta[activeTab] || tabMeta.visitors;
   const TabIcon = current.icon;
+  const isCustomizerActive =
+    activeTab === "customizer" ||
+    activeTab === "branding" ||
+    activeTab === "layout" ||
+    activeTab === "conversion" ||
+    activeTab === "seo_studio" ||
+    activeTab === "emergency";
+  const isContentActive = activeTab === "content" || activeTab === "site_content";
 
   return (
-    <header className="sticky top-0 z-20 bg-white/85 backdrop-blur-xl border-b border-black/[0.08] px-4 sm:px-6 lg:px-8 py-3 transition-colors">
+    <header className="sticky top-0 z-20 bg-white/90 backdrop-blur-xl border-b border-black/[0.06] px-4 sm:px-6 lg:px-8 py-3.5 transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
       <div className="flex items-center justify-between gap-4">
         {/* Left Side: Mobile Menu Button & Section Breadcrumb */}
         <div className="flex items-center gap-3 min-w-0">
@@ -141,47 +155,103 @@ export function AdminHeader({
           <button
             type="button"
             onClick={onOpenMobileSidebar}
-            className="lg:hidden p-2 rounded-xl text-neutral-600 hover:text-neutral-900 hover:bg-black/5 border border-black/[0.08] transition-colors cursor-pointer shrink-0"
+            className="lg:hidden p-2 rounded-xl text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 border border-black/[0.06] transition-colors cursor-pointer shrink-0"
             aria-label="Open sidebar menu"
           >
-            <Menu className="size-4" />
+            <Menu className="size-4 text-neutral-800" />
           </button>
 
           {/* Current Tab Info */}
           <div className="flex items-center gap-3 min-w-0">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-[#0071E3]/10 text-[#0071E3] shrink-0">
+            <div className="hidden sm:flex size-8 rounded-xl bg-[#0071E3]/10 text-[#0071E3] items-center justify-center shrink-0 border border-[#0071E3]/15 shadow-2xs">
               <TabIcon className="size-4" />
             </div>
             <div className="flex flex-col min-w-0">
-              <h1 className="text-sm sm:text-base font-semibold text-neutral-900 truncate leading-tight tracking-tight">
-                {current.label}
-              </h1>
-              <p className="hidden sm:block text-[11px] text-neutral-500 truncate leading-tight mt-0.5">
+              <div className="flex items-center gap-2 text-xs text-neutral-400">
+                <span className="hidden sm:inline font-medium text-neutral-400">Codex CRM</span>
+                <span className="hidden sm:inline text-neutral-300">/</span>
+                <span className="text-neutral-900 font-semibold truncate text-sm sm:text-xs tracking-tight">
+                  {current.label}
+                </span>
+              </div>
+              <p className="hidden md:block text-[11px] text-neutral-500 truncate mt-0.5">
                 {current.subtitle}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Right Side: Status & Refresh */}
-        <div className="flex items-center gap-2.5 shrink-0">
-          <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-neutral-100/80 border border-black/[0.04] text-[11px] text-neutral-600 font-medium">
-            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>SQLite Active</span>
-          </div>
+        {/* Right Side: Quick Actions */}
+        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+          {onSelectTab && (
+            <>
+              <button
+                type="button"
+                onClick={() => onSelectTab("customizer")}
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all hover:shadow-xs cursor-pointer ${
+                  isCustomizerActive
+                    ? "bg-[#0071E3] text-white border-[#0071E3] shadow-xs"
+                    : "bg-[#0071E3]/10 hover:bg-[#0071E3]/15 text-[#0071E3] border-[#0071E3]/20"
+                }`}
+                title="Open Studio Customizer (Branding, Layout, WhatsApp, SEO & Emergency)"
+              >
+                <Sparkles className="size-3.5" />
+                <span>Studio Customizer</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectTab("content")}
+                className={`hidden xl:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all hover:shadow-xs cursor-pointer ${
+                  isContentActive
+                    ? "bg-neutral-900 text-white border-neutral-900 shadow-xs"
+                    : "bg-white hover:bg-neutral-50 text-neutral-700 border-black/[0.08]"
+                }`}
+                title="Edit live phone, WhatsApp, email, addresses, header social buttons & site copy"
+              >
+                <Globe className="size-3.5 text-neutral-500" />
+                <span>Contacts & Copy</span>
+              </button>
+            </>
+          )}
+
+          <button
+            type="button"
+            onClick={onOpenHostingerModal}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#0071E3]/10 hover:bg-[#0071E3]/15 text-[#0071E3] text-xs font-semibold border border-[#0071E3]/20 transition-all hover:shadow-xs cursor-pointer"
+            title="Download Hostinger public_html ZIP Package"
+          >
+            <Download className="size-3.5 text-[#0071E3]" />
+            <span>Hostinger ZIP</span>
+          </button>
 
           <button
             type="button"
             onClick={onRefresh}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-100 border border-black/[0.08] text-neutral-700 text-xs font-medium transition-all shadow-2xs cursor-pointer disabled:opacity-50"
-            title="Refresh database data"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-medium border border-black/[0.08] transition-all hover:shadow-xs cursor-pointer disabled:opacity-50"
+            title="Sync data with SQLite database"
           >
-            <RotateCw className={`size-3.5 text-neutral-500 ${loading ? "animate-spin" : ""}`} />
-            <span className="hidden sm:inline">Refresh</span>
+            <RefreshCw
+              className={`size-3.5 text-neutral-500 ${
+                loading ? "animate-spin text-[#0071E3]" : ""
+              }`}
+            />
+            <span className="hidden sm:inline">Sync DB</span>
           </button>
+
+          <Link
+            to="/"
+            target="_blank"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-medium border border-black/[0.08] transition-all hover:shadow-xs"
+            title="Open public website in new tab"
+          >
+            <ExternalLink className="size-3.5 text-neutral-500" />
+            <span className="hidden sm:inline">Public Site</span>
+          </Link>
         </div>
       </div>
     </header>
   );
 }
+

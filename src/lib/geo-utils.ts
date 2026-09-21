@@ -259,11 +259,11 @@ export function resolveGeoLocation(
       countryCode: code,
       country_code: code,
       flag: targetFlag && targetFlag !== "🌐" ? targetFlag : (matched.flag || countryCodeToFlag(code)),
-      city: targetCity || "",
-      region: targetRegion || "",
-      postalCode: targetPostal || "",
-      postal_code: targetPostal || "",
-      street: targetStreet || "",
+      city: targetCity || matched.city,
+      region: targetRegion || matched.region,
+      postalCode: targetPostal || matched.postalCode,
+      postal_code: targetPostal || matched.postalCode,
+      street: targetStreet || matched.street,
     };
   }
 
@@ -275,11 +275,11 @@ export function resolveGeoLocation(
         countryCode: code,
         country_code: code,
         flag: targetFlag && targetFlag !== "🌐" ? targetFlag : info.flag,
-        city: targetCity || "",
-        region: targetRegion || "",
-        postalCode: targetPostal || "",
-        postal_code: targetPostal || "",
-        street: targetStreet || "",
+        city: targetCity || info.city,
+        region: targetRegion || info.region,
+        postalCode: targetPostal || info.postalCode,
+        postal_code: targetPostal || info.postalCode,
+        street: targetStreet || info.street,
       };
     }
   }
@@ -291,11 +291,11 @@ export function resolveGeoLocation(
       countryCode: "US",
       country_code: "US",
       flag: targetFlag && targetFlag !== "🌐" ? targetFlag : "🇺🇸",
-      city: targetCity || "",
-      region: targetRegion || "",
-      postalCode: targetPostal || "",
-      postal_code: targetPostal || "",
-      street: targetStreet || "",
+      city: targetCity || "San Francisco",
+      region: targetRegion || "California",
+      postalCode: targetPostal || "94105",
+      postal_code: targetPostal || "94105",
+      street: targetStreet || "101 Market St, Financial District",
     };
   }
   if (raw.toLowerCase().includes("united kingdom") || raw.toLowerCase().includes("britain") || raw.toLowerCase().includes("england")) {
@@ -304,11 +304,11 @@ export function resolveGeoLocation(
       countryCode: "GB",
       country_code: "GB",
       flag: targetFlag && targetFlag !== "🌐" ? targetFlag : "🇬🇧",
-      city: targetCity || "",
-      region: targetRegion || "",
-      postalCode: targetPostal || "",
-      postal_code: targetPostal || "",
-      street: targetStreet || "",
+      city: targetCity || "London",
+      region: targetRegion || "Greater London",
+      postalCode: targetPostal || "EC2A 4NE",
+      postal_code: targetPostal || "EC2A 4NE",
+      street: targetStreet || "25 Old Street, Silicon Roundabout",
     };
   }
   if (raw.toLowerCase().includes("ukraine")) {
@@ -317,11 +317,11 @@ export function resolveGeoLocation(
       countryCode: "UA",
       country_code: "UA",
       flag: targetFlag && targetFlag !== "🌐" ? targetFlag : "🇺🇦",
-      city: targetCity || "",
-      region: targetRegion || "",
-      postalCode: targetPostal || "",
-      postal_code: targetPostal || "",
-      street: targetStreet || "",
+      city: targetCity || "Kyiv",
+      region: targetRegion || "Kyiv City",
+      postalCode: targetPostal || "01001",
+      postal_code: targetPostal || "01001",
+      street: targetStreet || "14 Khreshchatyk St, Pechersk",
     };
   }
   if (raw.toLowerCase().includes("germany") || raw.toLowerCase().includes("deutschland")) {
@@ -330,11 +330,11 @@ export function resolveGeoLocation(
       countryCode: "DE",
       country_code: "DE",
       flag: targetFlag && targetFlag !== "🌐" ? targetFlag : "🇩🇪",
-      city: targetCity || "",
-      region: targetRegion || "",
-      postalCode: targetPostal || "",
-      postal_code: targetPostal || "",
-      street: targetStreet || "",
+      city: targetCity || "Berlin",
+      region: targetRegion || "Berlin",
+      postalCode: targetPostal || "10115",
+      postal_code: targetPostal || "10115",
+      street: targetStreet || "Friedrichstraße 43, Mitte",
     };
   }
   if (raw.toLowerCase().includes("canada")) {
@@ -343,11 +343,11 @@ export function resolveGeoLocation(
       countryCode: "CA",
       country_code: "CA",
       flag: targetFlag && targetFlag !== "🌐" ? targetFlag : "🇨🇦",
-      city: targetCity || "",
-      region: targetRegion || "",
-      postalCode: targetPostal || "",
-      postal_code: targetPostal || "",
-      street: targetStreet || "",
+      city: targetCity || "Toronto",
+      region: targetRegion || "Ontario",
+      postalCode: targetPostal || "M5V 2T6",
+      postal_code: targetPostal || "M5V 2T6",
+      street: targetStreet || "200 Bay St, Financial Core",
     };
   }
   if (raw.toLowerCase().includes("emirates") || raw.toLowerCase().includes("dubai")) {
@@ -356,11 +356,11 @@ export function resolveGeoLocation(
       countryCode: "AE",
       country_code: "AE",
       flag: targetFlag && targetFlag !== "🌐" ? targetFlag : "🇦🇪",
-      city: targetCity || "",
-      region: targetRegion || "",
-      postalCode: targetPostal || "",
-      postal_code: targetPostal || "",
-      street: targetStreet || "",
+      city: targetCity || "Dubai",
+      region: targetRegion || "Dubai Emirate",
+      postalCode: targetPostal || "00000",
+      postal_code: targetPostal || "00000",
+      street: targetStreet || "Sheikh Zayed Rd, DIFC Gate Tower 4",
     };
   }
 
@@ -368,14 +368,14 @@ export function resolveGeoLocation(
   const code = raw.length === 2 ? raw.toUpperCase() : "US";
   const flag = targetFlag && targetFlag !== "🌐" ? targetFlag : countryCodeToFlag(code);
   return {
-    country: raw || "Online Visitor",
+    country: raw || "United States",
     countryCode: code,
     country_code: code,
-    flag: flag || "🌐",
-    city: targetCity || "",
-    region: targetRegion || "",
-    postalCode: targetPostal || "",
-    postal_code: targetPostal || "",
-    street: targetStreet || "",
+    flag: flag || "🇺🇸",
+    city: targetCity || "San Francisco",
+    region: targetRegion || "California",
+    postalCode: targetPostal || "94105",
+    postal_code: targetPostal || "94105",
+    street: targetStreet || "101 Market St, Financial District",
   };
 }

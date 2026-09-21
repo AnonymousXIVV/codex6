@@ -114,7 +114,7 @@ export function AdminLogin({
 
             <button
               type="submit"
-              className="w-full mt-2 bg-neutral-900 hover:bg-black text-white font-medium py-3 rounded-xl text-sm transition-all duration-200 shadow-2xs active:scale-[0.99] flex items-center justify-center gap-2 group cursor-pointer"
+              className="w-full mt-2 bg-label hover:bg-black text-paper font-medium py-3 rounded-full text-sm transition-all duration-200 shadow-sm active:scale-[0.99] flex items-center justify-center gap-2 group cursor-pointer"
             >
               <span>Authenticate to CRM</span>
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />

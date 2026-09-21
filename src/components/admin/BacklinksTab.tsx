@@ -59,12 +59,14 @@ export function BacklinksTab({
   return (
     <div className="space-y-4">
       {/* Unified Apple-Style Container */}
-      <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
+      <div className="bg-white rounded-2xl border border-black/[0.06] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_4px_16px_rgba(0,0,0,0.02)] overflow-hidden">
         {/* Header Section */}
-        <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <Link2 className="size-4 text-[#0071E3]" />
+              <div className="size-7 rounded-lg bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center border border-[#0071E3]/15 shadow-2xs">
+                <Link2 className="size-4" />
+              </div>
               <h2 className="text-base font-semibold text-neutral-900 tracking-tight">
                 SEO Backlinks & Referring Domains
               </h2>
@@ -80,7 +82,7 @@ export function BacklinksTab({
               setIsOpen(!isOpen);
               setEditingBacklink(null);
             }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-medium transition-all shadow-2xs active:scale-[0.99] cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-medium transition-all shadow-2xs active:scale-[0.99] cursor-pointer shrink-0"
           >
             <Plus className="size-3.5" />
             <span>{isOpen ? "Close Form" : "Add Backlink"}</span>
@@ -89,12 +91,12 @@ export function BacklinksTab({
 
         {/* Add Backlink Inline Panel */}
         {isOpen && (
-          <div className="border-t border-b border-black/[0.06] bg-[#F9F9FB] p-5">
+          <div className="border-t border-b border-black/[0.06] bg-[#FBFBFC] p-5 sm:p-6">
             <h3 className="text-xs font-semibold text-neutral-900 mb-3">
               Register New Referring Source
             </h3>
 
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-[11px] font-medium text-neutral-500 mb-1">
                   Publisher / Platform Name
@@ -105,7 +107,7 @@ export function BacklinksTab({
                   placeholder="e.g. Forbes Tech / GitHub / ProductHunt"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl px-3 py-2 text-xs text-neutral-900 outline-none transition"
+                  className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
                 />
               </div>
 
@@ -119,7 +121,7 @@ export function BacklinksTab({
                   placeholder="https://example.com/article"
                   value={form.url}
                   onChange={(e) => setForm({ ...form, url: e.target.value })}
-                  className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl px-3 py-2 text-xs text-neutral-900 outline-none transition font-mono"
+                  className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 outline-none transition font-mono shadow-2xs"
                 />
               </div>
 
@@ -132,7 +134,7 @@ export function BacklinksTab({
                   placeholder="e.g. DoFollow link on 'Custom Engineering', DA: 82"
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                  className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl px-3 py-2 text-xs text-neutral-900 outline-none transition"
+                  className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] focus:ring-2 focus:ring-[#0071E3]/15 rounded-xl px-3.5 py-2.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
                 />
               </div>
 
@@ -140,13 +142,13 @@ export function BacklinksTab({
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="px-3 py-1.5 rounded-xl border border-black/[0.08] hover:bg-neutral-100 text-neutral-600 text-xs font-medium transition cursor-pointer"
+                  className="px-3.5 py-2 rounded-xl border border-black/[0.08] hover:bg-neutral-100 text-neutral-600 text-xs font-medium transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-medium transition cursor-pointer shadow-2xs"
+                  className="px-4 py-2 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-medium transition cursor-pointer shadow-xs"
                 >
                   Save Backlink
                 </button>
@@ -157,14 +159,14 @@ export function BacklinksTab({
 
         {/* Backlinks Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-neutral-800">
-            <thead className="bg-[#F9F9FB] text-neutral-500 text-[11px] font-medium border-t border-b border-black/[0.06]">
+          <table className="w-full text-left text-xs text-neutral-800 border-collapse">
+            <thead className="bg-neutral-50/70 text-neutral-400 text-[10px] uppercase font-semibold font-mono tracking-wider border-t border-b border-black/[0.05]">
               <tr>
-                <th className="py-2.5 px-4 font-medium">Publisher / Source</th>
-                <th className="py-2.5 px-4 font-medium">Live URL</th>
-                <th className="py-2.5 px-4 font-medium">Anchor Text & SEO Notes</th>
-                <th className="py-2.5 px-4 font-medium">Date Indexed</th>
-                <th className="py-2.5 px-4 text-right font-medium">Actions</th>
+                <th className="py-3 px-4 font-semibold">Publisher / Source</th>
+                <th className="py-3 px-4 font-semibold">Live URL</th>
+                <th className="py-3 px-4 font-semibold">Anchor Text & SEO Notes</th>
+                <th className="py-3 px-4 font-semibold">Date Indexed</th>
+                <th className="py-3 px-4 text-right font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-black/[0.06]">

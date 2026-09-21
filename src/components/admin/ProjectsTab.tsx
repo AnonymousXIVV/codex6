@@ -277,16 +277,16 @@ export function ProjectsTab({
       />
 
       {/* Header Banner */}
-      <div className="bg-white rounded-2xl border border-black/[0.08] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="surface-lift rounded-2xl bg-card border border-black/8 p-5 sm:p-6 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2.5">
-            <Briefcase className="size-4 text-[#0071E3]" />
-            <h2 className="text-base font-semibold text-neutral-900 tracking-tight">
-              Portfolio & Client Deliverables
+          <div className="flex items-center gap-2">
+            <Briefcase className="size-5 text-blue" />
+            <h2 className="text-base font-semibold text-label font-display tracking-tight">
+              Completed Projects & Client Works Showcase
             </h2>
           </div>
-          <p className="text-xs text-neutral-500 mt-1">
-            Client deliverables, live links, visual showcases, and custom categorization.
+          <p className="text-xs text-muted-foreground mt-1">
+            Publish client site links, live deliverables, high-res project pictures, and custom categories. Visitors on the public site will see these in real-time.
           </p>
         </div>
 
@@ -296,7 +296,7 @@ export function ProjectsTab({
             setIsOpen(!isOpen);
             setEditingProject(null);
           }}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-medium transition-all shadow-2xs active:scale-[0.99] cursor-pointer shrink-0"
+          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-label hover:bg-black text-paper text-xs font-medium transition-all shadow-sm active:scale-[0.99] cursor-pointer shrink-0"
         >
           <Plus className="size-3.5" />
           <span>{isOpen ? "Close Form" : "Post Project"}</span>
@@ -305,16 +305,16 @@ export function ProjectsTab({
 
       {/* Add Project Form */}
       {isOpen && (
-        <div className="bg-white rounded-2xl border border-black/[0.08] p-6 shadow-sm space-y-5 animate-in fade-in duration-200">
-          <div className="flex items-center justify-between pb-2 border-b border-black/[0.06]">
+        <div className="surface-lift rounded-3xl bg-card border border-blue/30 p-6 sm:p-8 shadow-sm space-y-5 animate-in fade-in duration-200">
+          <div className="flex items-center justify-between pb-2 border-b border-hairline">
             <div className="flex items-center gap-2">
-              <Sparkles className="size-4 text-[#0071E3]" />
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-800">
+              <Sparkles className="size-4 text-blue" />
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                 Post Completed Client Project
               </h3>
             </div>
-            <span className="text-[11px] text-neutral-400">
-              Visuals & custom categories reflect instantly on visitor portfolio
+            <span className="text-[11px] text-muted-foreground">
+              Images & custom categories reflect instantly on visitor portfolio
             </span>
           </div>
 
@@ -417,7 +417,7 @@ export function ProjectsTab({
                             setCustomCategoryInput(sug);
                             setForm({ ...form, category: sug });
                           }}
-                          className="text-[10px] px-2 py-0.5 rounded-md bg-neutral-100 hover:bg-[#0071E3]/10 hover:text-[#0071E3] border border-black/[0.06] transition cursor-pointer"
+                          className="text-[10px] px-2 py-0.5 rounded-full bg-fill hover:bg-blue/10 hover:text-blue border border-black/8 transition cursor-pointer"
                         >
                           {sug}
                         </button>
@@ -480,15 +480,15 @@ export function ProjectsTab({
                       setPickerTarget("add");
                       setIsImagePickerOpen(true);
                     }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-neutral-50 text-neutral-800 border border-black/[0.08] text-[11px] font-medium transition shadow-2xs cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white hover:bg-fill text-label border border-black/10 text-[11px] font-medium transition shadow-xs cursor-pointer"
                   >
-                    <Sparkles className="size-3 text-[#0071E3]" />
+                    <Sparkles className="size-3 text-blue" />
                     <span>Presets & Library</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowDirectUrlInput(!showDirectUrlInput)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100 text-[11px] font-medium transition cursor-pointer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full text-subtle hover:text-label hover:bg-fill text-[11px] font-medium transition cursor-pointer"
                   >
                     <LinkIcon className="size-3" />
                     <span>{showDirectUrlInput ? "Hide URL" : "Paste URL"}</span>
@@ -509,7 +509,7 @@ export function ProjectsTab({
                   </div>
                   <div className="flex-1 min-w-0 space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                         Picture Attached
                       </span>
                       <span className="text-[11px] text-muted-foreground truncate font-mono">
@@ -524,7 +524,7 @@ export function ProjectsTab({
                         type="button"
                         onClick={() => addFileInputRef.current?.click()}
                         disabled={isUploading}
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-medium border border-black/[0.06] transition cursor-pointer"
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-fill hover:bg-fill-elevated text-label text-xs font-medium border border-black/8 transition cursor-pointer"
                       >
                         {isUploading ? <Loader2 className="size-3 animate-spin" /> : <Upload className="size-3" />}
                         <span>Upload New</span>
@@ -535,15 +535,15 @@ export function ProjectsTab({
                           setPickerTarget("add");
                           setIsImagePickerOpen(true);
                         }}
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-xs font-medium border border-black/[0.06] transition cursor-pointer"
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-fill hover:bg-fill-elevated text-label text-xs font-medium border border-black/8 transition cursor-pointer"
                       >
-                        <Sparkles className="size-3 text-[#0071E3]" />
+                        <Sparkles className="size-3 text-blue" />
                         <span>Change Preset</span>
                       </button>
                       <button
                         type="button"
                         onClick={() => setForm({ ...form, image_url: "" })}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-red-600 hover:bg-red-50 text-xs font-medium transition cursor-pointer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-red-600 hover:bg-red-50 text-xs font-medium transition cursor-pointer"
                       >
                         <Trash2 className="size-3" />
                         <span>Remove</span>
@@ -615,14 +615,14 @@ export function ProjectsTab({
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-black/[0.08] hover:bg-neutral-100 text-neutral-600 text-xs font-medium transition cursor-pointer"
+                  className="px-4 py-2 rounded-full border border-black/10 hover:bg-fill text-muted-foreground text-xs font-medium transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isUploading}
-                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-medium transition-all shadow-2xs active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-blue hover:bg-blue-hover text-paper text-xs font-medium transition-all shadow-sm active:scale-[0.99] cursor-pointer disabled:opacity-50"
                 >
                   <Check className="size-3.5" />
                   <span>Save Project to Portfolio</span>
@@ -635,19 +635,19 @@ export function ProjectsTab({
 
       {/* Edit Project Modal */}
       {editingProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30 backdrop-blur-xs animate-in fade-in duration-150 overflow-y-auto">
-          <div className="w-full max-w-xl rounded-2xl bg-white border border-black/[0.08] p-6 shadow-xl space-y-4 my-8">
-            <div className="flex items-center justify-between pb-3 border-b border-black/[0.06]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs animate-in fade-in duration-150 overflow-y-auto">
+          <div className="surface-lift w-full max-w-xl rounded-3xl bg-card border border-black/10 p-6 sm:p-8 shadow-2xl space-y-4 my-8">
+            <div className="flex items-center justify-between pb-3 border-b border-hairline">
               <div className="flex items-center gap-2">
-                <Edit3 className="size-4 text-[#0071E3]" />
-                <h3 className="text-sm font-semibold text-neutral-900">
+                <Edit3 className="size-4 text-blue" />
+                <h3 className="text-sm font-semibold text-label">
                   Edit Portfolio Project #{editingProject.id}
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => setEditingProject(null)}
-                className="p-1 text-neutral-400 hover:text-neutral-700 rounded-lg hover:bg-neutral-100 transition cursor-pointer"
+                className="p-1.5 text-subtle hover:text-label rounded-full hover:bg-fill transition cursor-pointer"
               >
                 <X className="size-4" />
               </button>
@@ -787,9 +787,9 @@ export function ProjectsTab({
                       type="button"
                       onClick={() => editFileInputRef.current?.click()}
                       disabled={isUploading}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-neutral-50 text-neutral-800 border border-black/[0.08] text-[11px] font-medium transition shadow-2xs cursor-pointer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white hover:bg-fill text-label border border-black/10 text-[11px] font-medium transition cursor-pointer"
                     >
-                      {isUploading ? <Loader2 className="size-3 animate-spin" /> : <Upload className="size-3 text-[#0071E3]" />}
+                      {isUploading ? <Loader2 className="size-3 animate-spin" /> : <Upload className="size-3 text-blue" />}
                       <span>Upload Picture</span>
                     </button>
                     <button
@@ -798,15 +798,15 @@ export function ProjectsTab({
                         setPickerTarget("edit");
                         setIsImagePickerOpen(true);
                       }}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-neutral-50 text-neutral-800 border border-black/[0.08] text-[11px] font-medium transition shadow-2xs cursor-pointer"
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white hover:bg-fill text-label border border-black/10 text-[11px] font-medium transition cursor-pointer"
                     >
-                      <Sparkles className="size-3 text-[#0071E3]" />
+                      <Sparkles className="size-3 text-blue" />
                       <span>Presets</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowEditDirectUrlInput(!showEditDirectUrlInput)}
-                      className="text-neutral-500 hover:text-neutral-900 text-[11px] p-1"
+                      className="text-subtle hover:text-label text-[11px] p-1"
                     >
                       <LinkIcon className="size-3" />
                     </button>
@@ -874,14 +874,14 @@ export function ProjectsTab({
                   <button
                     type="button"
                     onClick={() => setEditingProject(null)}
-                    className="px-3.5 py-1.5 rounded-xl border border-black/[0.08] hover:bg-neutral-100 text-neutral-600 text-xs font-medium transition cursor-pointer"
+                    className="px-4 py-2 rounded-full border border-black/10 hover:bg-fill text-muted-foreground text-xs font-medium transition cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isUploading}
-                    className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-medium transition shadow-2xs cursor-pointer disabled:opacity-50"
+                    className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full bg-blue hover:bg-blue-hover text-paper text-xs font-medium transition shadow-sm cursor-pointer disabled:opacity-50"
                   >
                     <Check className="size-3.5" />
                     <span>Save Changes</span>
@@ -896,18 +896,18 @@ export function ProjectsTab({
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {projects.length === 0 ? (
-          <div className="md:col-span-3 bg-white rounded-2xl border border-black/[0.08] p-12 text-center text-xs text-neutral-400">
+          <div className="md:col-span-3 surface-lift rounded-2xl bg-card border border-black/8 p-12 text-center text-xs text-subtle">
             No projects added yet. Click "Post Project" to feature client work.
           </div>
         ) : (
           projects.map((p) => (
             <div
               key={p.id}
-              className="bg-white rounded-2xl border border-black/[0.08] p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col justify-between space-y-4 hover:border-black/[0.15] transition-all"
+              className="surface-lift rounded-2xl bg-card border border-black/8 p-5 sm:p-6 shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)] flex flex-col justify-between space-y-4 hover:border-black/15 transition-all"
             >
               <div className="space-y-2.5">
                 {p.image_url ? (
-                  <div className="w-full h-36 rounded-xl overflow-hidden bg-neutral-100 border border-black/[0.06] relative group">
+                  <div className="w-full h-36 rounded-xl overflow-hidden bg-black/5 border border-black/8 relative group">
                     <img
                       src={p.image_url}
                       alt={p.title}
@@ -916,14 +916,14 @@ export function ProjectsTab({
                     />
                   </div>
                 ) : (
-                  <div className="w-full h-24 rounded-xl bg-neutral-50 border border-dashed border-black/[0.08] flex flex-col items-center justify-center text-neutral-400 text-xs gap-1">
+                  <div className="w-full h-24 rounded-xl bg-fill/40 border border-dashed border-black/10 flex flex-col items-center justify-center text-subtle text-xs gap-1">
                     <ImageIcon className="size-4 opacity-40" />
-                    <span className="text-[11px] text-neutral-400">No picture attached</span>
+                    <span className="text-[11px] text-muted-foreground">No picture attached</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between gap-2">
-                  <span className="px-2 py-0.5 rounded-md bg-[#0071E3]/10 text-[#0071E3] border border-[#0071E3]/20 text-[10px] font-semibold uppercase tracking-wider truncate max-w-[70%]">
+                  <span className="px-2.5 py-0.5 rounded-full bg-blue/10 text-blue border border-blue/20 text-[10px] font-semibold uppercase tracking-wider truncate max-w-[70%]">
                     {p.category}
                   </span>
                   <button
@@ -932,37 +932,37 @@ export function ProjectsTab({
                       await onToggleProject(p.id, !p.is_published);
                       toast.success(`Project ${p.is_published ? "hidden" : "published"}.`);
                     }}
-                    className={`text-[10px] px-2 py-0.5 rounded-md font-medium transition-colors cursor-pointer shrink-0 ${
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-medium transition-colors cursor-pointer shrink-0 ${
                       p.is_published
-                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
-                        : "bg-neutral-100 text-neutral-500 border border-neutral-200"
+                        ? "bg-emerald-50 text-emerald-700"
+                        : "bg-black/5 text-subtle"
                     }`}
                   >
                     {p.is_published ? "● Live" : "○ Draft"}
                   </button>
                 </div>
 
-                <h3 className="font-semibold text-sm text-neutral-900 leading-snug line-clamp-2">
+                <h3 className="font-semibold text-sm text-label font-display leading-snug line-clamp-2">
                   {p.title}
                 </h3>
                 {p.site_name && (
-                  <div className="text-xs text-neutral-500 font-medium">
+                  <div className="text-xs text-subtle font-medium">
                     {p.site_name}
                   </div>
                 )}
                 {p.description && (
-                  <p className="text-xs text-neutral-600 line-clamp-3 leading-relaxed">
+                  <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
                     {p.description}
                   </p>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-black/[0.06] flex items-center justify-between">
+              <div className="pt-3 border-t border-hairline flex items-center justify-between">
                 <a
                   href={p.site_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-[#0071E3] text-xs font-medium border border-black/[0.06] transition"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-fill hover:bg-fill-elevated text-blue text-xs font-medium border border-black/8 transition-all hover:shadow-sm"
                 >
                   <span>Visit Site</span>
                   <ExternalLink className="size-3" />
@@ -972,7 +972,7 @@ export function ProjectsTab({
                   <button
                     type="button"
                     onClick={() => handleStartEdit(p)}
-                    className="p-1.5 text-neutral-400 hover:text-neutral-900 rounded-lg hover:bg-neutral-100 transition-colors cursor-pointer"
+                    className="p-1.5 text-subtle hover:text-blue rounded-full hover:bg-blue/10 transition-colors cursor-pointer"
                     title="Edit project"
                   >
                     <Edit3 className="size-3.5" />
@@ -984,7 +984,7 @@ export function ProjectsTab({
                       await onDeleteProject(p.id);
                       toast.info("Project deleted.");
                     }}
-                    className="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                    className="p-1.5 text-subtle hover:text-red-600 rounded-full hover:bg-red-50 transition-colors cursor-pointer"
                     title="Delete project"
                   >
                     <Trash2 className="size-3.5" />

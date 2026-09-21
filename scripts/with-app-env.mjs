@@ -105,13 +105,23 @@ export function isMainModule(moduleUrl) {
 }
 
 function main(argv) {
-  const [command, ...args] = argv;
+  const [command, ...rawArgs] = argv;
   if (!command) {
     console.error("usage: node scripts/with-app-env.mjs <command> [args…]");
     process.exit(2);
   }
+  // Strip accidental positional args injected by npm when npm run dev is invoked with flags
+  const args = rawArgs.filter((arg) => {
+    if (command === "vite" && (arg === "3000" || arg === "8080" || arg === "0.0.0.0" || arg === "127.0.0.1")) {
+      return false;
+    }
+    return true;
+  });
   const env = mergeAppEnv(readAppEnv(projectRoot()), process.env);
-  const child = spawn(command, args, { stdio: "inherit", env });
+  const binPath = join(projectRoot(), "node_modules", ".bin");
+  const pathWithBin = binPath + ":" + (process.env.PATH || "");
+  const mergedEnv = { ...env, PATH: pathWithBin };
+  const child = spawn(command, args, { stdio: "inherit", env: mergedEnv, shell: true });
   // The dev server is long-running and is stopped by signalling this wrapper.
   for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
     process.on(signal, () => child.kill(signal));

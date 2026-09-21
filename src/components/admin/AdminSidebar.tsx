@@ -237,16 +237,16 @@ export function AdminSidebar({
   };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-[#F9F9FB] border-r border-black/[0.08] select-none">
+    <div className="flex flex-col h-full bg-[#FBFBFC] border-r border-black/[0.06] select-none">
       {/* Brand Header - Apple Mac/iPad app header style */}
-      <div className="p-4 pb-3.5 border-b border-black/[0.06] flex items-center justify-between">
+      <div className="p-4 pb-3.5 border-b border-black/[0.05] flex items-center justify-between bg-white/50 backdrop-blur-sm">
         <Link
           to="/"
           className="flex items-center gap-3 group focus:outline-none"
           onClick={onCloseMobile}
         >
           {/* iOS App Icon Squircle */}
-          <div className="relative flex size-9 shrink-0 items-center justify-center rounded-[10px] bg-gradient-to-b from-[#0077ED] to-[#0066CC] text-white shadow-[0_2px_4px_rgba(0,102,204,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform duration-200 group-hover:scale-105">
+          <div className="relative flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-gradient-to-b from-[#0077ED] to-[#0066CC] text-white shadow-[0_2px_5px_rgba(0,102,204,0.25),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform duration-200 group-hover:scale-105">
             <span className="text-base font-bold tracking-tight">C</span>
           </div>
           <div className="flex flex-col min-w-0">
@@ -279,11 +279,11 @@ export function AdminSidebar({
       </div>
 
       {/* Navigation Groups */}
-      <nav className="flex-1 px-3 py-3 space-y-5 overflow-y-auto custom-scrollbar">
+      <nav className="flex-1 px-3 py-3.5 space-y-5 overflow-y-auto custom-scrollbar">
         {navSections.map((section) => (
           <div key={section.group} className="space-y-1">
             {/* Clear, legible Apple-style section header */}
-            <div className="px-3 pt-1 pb-1 text-[11px] font-semibold tracking-wider uppercase text-neutral-400 font-sans select-none">
+            <div className="px-3 pt-1 pb-1 text-[10px] font-bold tracking-wider uppercase text-neutral-400 font-sans select-none">
               {section.group}
             </div>
 
@@ -298,14 +298,14 @@ export function AdminSidebar({
                     onClick={() => handleSelectTab(item.id)}
                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 cursor-pointer ${
                       isActive
-                        ? "bg-[#0071E3] text-white shadow-[0_1px_3px_rgba(0,113,227,0.3)] font-semibold"
-                        : "text-neutral-700 hover:text-neutral-900 hover:bg-black/[0.04]"
+                        ? "bg-[#0071E3] text-white shadow-[0_1px_4px_rgba(0,113,227,0.25)] font-semibold"
+                        : "text-neutral-700 hover:text-neutral-900 hover:bg-black/[0.035]"
                     }`}
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <Icon
                         className={`size-4 shrink-0 transition-colors ${
-                          isActive ? "text-white" : "text-neutral-500"
+                          isActive ? "text-white" : "text-neutral-400"
                         }`}
                       />
                       <span className="truncate">{item.label}</span>
@@ -330,7 +330,7 @@ export function AdminSidebar({
                               ? "bg-white/20 text-white font-semibold"
                               : item.badgeAlert
                                 ? "bg-red-500 text-white font-semibold"
-                                : "bg-black/[0.06] text-neutral-600 font-medium"
+                                : "bg-black/[0.05] text-neutral-600 font-medium"
                           }`}
                         >
                           {item.badgeText}
@@ -342,7 +342,7 @@ export function AdminSidebar({
                           className={`text-[11px] px-2 py-0.5 rounded-md font-medium font-mono ${
                             isActive
                               ? "bg-white/20 text-white font-semibold"
-                              : "bg-black/[0.05] text-neutral-600"
+                              : "bg-black/[0.04] text-neutral-600"
                           }`}
                         >
                           {item.count}
@@ -362,10 +362,10 @@ export function AdminSidebar({
       </nav>
 
       {/* Admin User Footer Card - Apple ID Style */}
-      <div className="p-3 border-t border-black/[0.06] bg-white/70">
-        <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-black/[0.06] shadow-xs">
+      <div className="p-3 border-t border-black/[0.05] bg-white/60">
+        <div className="flex items-center justify-between p-2 rounded-xl bg-white border border-black/[0.05] shadow-2xs">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="size-8 rounded-lg bg-neutral-900 text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-xs">
+            <div className="size-8 rounded-lg bg-neutral-900 text-white flex items-center justify-center text-xs font-semibold shrink-0 shadow-2xs">
               AD
             </div>
             <div className="flex flex-col min-w-0">

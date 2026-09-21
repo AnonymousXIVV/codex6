@@ -153,19 +153,19 @@ export function VisitorDetailModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-md animate-in fade-in duration-200">
       <div
-        className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-3xl shadow-2xl border border-black/10 overflow-hidden flex flex-col"
+        className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.15)] border border-black/[0.08] overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-6 border-b border-black/8 bg-gradient-to-b from-fill-subtle to-white flex items-start justify-between gap-4">
+        <div className="p-6 border-b border-black/[0.06] bg-gradient-to-b from-neutral-50/80 to-white flex items-start justify-between gap-4">
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2.5">
               <CountryFlag country={country} countryCode={visitor.country_code} flag={flag} size="lg" />
-              <h2 className="text-lg font-bold text-label font-display tracking-tight flex items-center gap-2">
+              <h2 className="text-lg font-bold text-neutral-900 tracking-tight flex items-center gap-2">
                 <span>{country}</span>
-                <span className="text-xs font-normal text-muted-foreground">({city})</span>
+                <span className="text-xs font-normal text-neutral-500">({city})</span>
               </h2>
 
               <BrowserBadge browser={visitor.browser} showFull />
@@ -183,21 +183,21 @@ export function VisitorDetailModal({
               )}
 
               {visitor.is_lead || isAlreadyLead ? (
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue/10 text-blue border border-blue/20">
+                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#0071E3]/10 text-[#0071E3] border border-[#0071E3]/20">
                   <CheckCircle2 className="size-3" />
                   In CRM Leads
                 </span>
               ) : null}
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground font-mono">
+            <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-500 font-mono">
               <span className="flex items-center gap-1">
-                <span className="text-subtle">IP:</span>
-                <strong className="text-label">{visitor.ip_address}</strong>
+                <span className="text-neutral-400">IP:</span>
+                <strong className="text-neutral-900">{visitor.ip_address}</strong>
                 <button
                   type="button"
                   onClick={() => handleCopyText("ip", visitor.ip_address)}
-                  className="hover:text-label transition-colors cursor-pointer ml-0.5"
+                  className="hover:text-neutral-900 transition-colors cursor-pointer ml-0.5"
                   title="Copy IP"
                 >
                   {copiedKey === "ip" ? (
@@ -209,13 +209,13 @@ export function VisitorDetailModal({
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <span className="text-subtle">Session:</span>
-                <strong className="text-label">{visitor.session_id}</strong>
+                <span className="text-neutral-400">Session:</span>
+                <strong className="text-neutral-900">{visitor.session_id}</strong>
               </span>
               <span>•</span>
               <span className="flex items-center gap-1">
-                <Clock className="size-3 text-subtle" />
-                <span className="text-subtle">Time on site:</span>
+                <Clock className="size-3 text-neutral-400" />
+                <span className="text-neutral-400">Time on site:</span>
                 <strong className="text-emerald-600">{formatDuration(durationSec)}</strong>
               </span>
             </div>
@@ -224,7 +224,7 @@ export function VisitorDetailModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-full text-subtle hover:text-label hover:bg-black/5 transition-colors cursor-pointer"
+            className="p-2 rounded-full text-neutral-400 hover:text-neutral-900 hover:bg-neutral-100 transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="size-5" />
@@ -232,14 +232,14 @@ export function VisitorDetailModal({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-1 px-6 border-b border-black/8 bg-fill-subtle/30 overflow-x-auto">
+        <div className="flex items-center gap-1 px-6 border-b border-black/[0.06] bg-neutral-50/50 overflow-x-auto">
           <button
             type="button"
             onClick={() => setActiveTab("overview")}
             className={`px-4 py-3 text-xs font-semibold border-b-2 whitespace-nowrap transition-colors cursor-pointer flex items-center gap-2 ${
               activeTab === "overview"
-                ? "border-label text-label"
-                : "border-transparent text-muted-foreground hover:text-label"
+                ? "border-neutral-900 text-neutral-900"
+                : "border-transparent text-neutral-500 hover:text-neutral-900"
             }`}
           >
             <MapPin className="size-3.5" />
@@ -251,8 +251,8 @@ export function VisitorDetailModal({
             onClick={() => setActiveTab("pages")}
             className={`px-4 py-3 text-xs font-semibold border-b-2 whitespace-nowrap transition-colors cursor-pointer flex items-center gap-2 ${
               activeTab === "pages"
-                ? "border-label text-label"
-                : "border-transparent text-muted-foreground hover:text-label"
+                ? "border-neutral-900 text-neutral-900"
+                : "border-transparent text-neutral-500 hover:text-neutral-900"
             }`}
           >
             <Navigation className="size-3.5" />
@@ -264,8 +264,8 @@ export function VisitorDetailModal({
             onClick={() => setActiveTab("cookies")}
             className={`px-4 py-3 text-xs font-semibold border-b-2 whitespace-nowrap transition-colors cursor-pointer flex items-center gap-2 ${
               activeTab === "cookies"
-                ? "border-label text-label"
-                : "border-transparent text-muted-foreground hover:text-label"
+                ? "border-neutral-900 text-neutral-900"
+                : "border-transparent text-neutral-500 hover:text-neutral-900"
             }`}
           >
             <Cookie className="size-3.5" />
@@ -277,8 +277,8 @@ export function VisitorDetailModal({
             onClick={() => setActiveTab("lead")}
             className={`px-4 py-3 text-xs font-semibold border-b-2 whitespace-nowrap transition-colors cursor-pointer flex items-center gap-2 ml-auto ${
               activeTab === "lead"
-                ? "border-blue text-blue"
-                : "border-transparent text-blue hover:text-blue-700"
+                ? "border-[#0071E3] text-[#0071E3]"
+                : "border-transparent text-[#0071E3] hover:text-[#0077ED]"
             }`}
           >
             <UserPlus className="size-3.5" />
@@ -291,36 +291,36 @@ export function VisitorDetailModal({
           {activeTab === "overview" && (
             <div className="space-y-6">
               {/* Location Card */}
-              <div className="p-5 rounded-2xl bg-fill-subtle/50 border border-black/8 space-y-4">
+              <div className="p-5 rounded-2xl bg-neutral-50/50 border border-black/[0.06] space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                    <MapPin className="size-4 text-blue" />
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-500">
+                    <MapPin className="size-4 text-[#0071E3]" />
                     <span>Granular Geographic Location</span>
                   </div>
-                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue/10 text-blue">
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-[#0071E3]/10 text-[#0071E3]">
                     GPS / IP Resolved
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Street Address</span>
-                    <p className="text-xs font-semibold text-label mt-1">{streetAddress}</p>
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Street Address</span>
+                    <p className="text-xs font-semibold text-neutral-900 mt-1">{streetAddress}</p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">City & Region</span>
-                    <p className="text-xs font-semibold text-label mt-1">{city}, {region}</p>
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">City & Region</span>
+                    <p className="text-xs font-semibold text-neutral-900 mt-1">{city}, {region}</p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Postal / ZIP Code</span>
-                    <p className="text-xs font-mono font-bold text-label mt-1">{postalCode}</p>
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Postal / ZIP Code</span>
+                    <p className="text-xs font-mono font-bold text-neutral-900 mt-1">{postalCode}</p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Country</span>
-                    <div className="text-xs font-semibold text-label mt-1 flex items-center gap-2">
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Country</span>
+                    <div className="text-xs font-semibold text-neutral-900 mt-1 flex items-center gap-2">
                       <CountryFlag country={country} countryCode={visitor.country_code} flag={flag} size="md" />
                       <span>{country}</span>
                     </div>
@@ -329,16 +329,16 @@ export function VisitorDetailModal({
               </div>
 
               {/* Engagement & Visit History Card */}
-              <div className="p-5 rounded-2xl bg-fill-subtle/50 border border-black/8 space-y-4">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="p-5 rounded-2xl bg-neutral-50/50 border border-black/[0.06] space-y-4">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-500">
                   <Clock className="size-4 text-emerald-600" />
                   <span>Visit History & Session Engagement</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Visitor Type</span>
-                    <p className="text-xs font-bold text-label mt-1 flex items-center gap-1.5">
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Visitor Type</span>
+                    <p className="text-xs font-bold text-neutral-900 mt-1 flex items-center gap-1.5">
                       {visitor.is_returning || (visitor.visit_count && visitor.visit_count > 1) ? (
                         <>
                           <span className="size-2 rounded-full bg-purple-500" />
@@ -351,43 +351,43 @@ export function VisitorDetailModal({
                         </>
                       )}
                     </p>
-                    <p className="text-[11px] text-subtle mt-0.5">
+                    <p className="text-[11px] text-neutral-500 mt-0.5">
                       Total sessions recorded: <strong>{visitor.visit_count || 1}</strong>
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Time Spent on Site</span>
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Time Spent on Site</span>
                     <p className="text-sm font-mono font-bold text-emerald-600 mt-1">
                       {formatDuration(durationSec)}
                     </p>
-                    <p className="text-[11px] text-subtle mt-0.5">
+                    <p className="text-[11px] text-neutral-500 mt-0.5">
                       Active heartbeat recorded via cookie telemetry
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Pages Clicked / Visited</span>
-                    <p className="text-sm font-mono font-bold text-blue mt-1">
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Pages Clicked / Visited</span>
+                    <p className="text-sm font-mono font-bold text-[#0071E3] mt-1">
                       {pagesList.length} page(s)
                     </p>
-                    <p className="text-[11px] text-subtle mt-0.5">
-                      Initial route: <code className="text-[10px] bg-fill px-1 py-0.5 rounded">{visitor.page_url || "/"}</code>
+                    <p className="text-[11px] text-neutral-500 mt-0.5">
+                      Initial route: <code className="text-[10px] bg-neutral-100 px-1 py-0.5 rounded">{visitor.page_url || "/"}</code>
                     </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Traffic Acquisition / Referrer</span>
-                    <p className="text-xs font-semibold text-label mt-1">
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Traffic Acquisition / Referrer</span>
+                    <p className="text-xs font-semibold text-neutral-900 mt-1">
                       {visitor.referrer || "Direct / Organic Search"}
                     </p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">First Recorded Visit</span>
-                    <p className="text-xs font-mono text-label mt-1">
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">First Recorded Visit</span>
+                    <p className="text-xs font-mono text-neutral-900 mt-1">
                       {visitor.created_at || "Recent active session"}
                     </p>
                   </div>
@@ -395,28 +395,28 @@ export function VisitorDetailModal({
               </div>
 
               {/* Hardware & Environment */}
-              <div className="p-5 rounded-2xl bg-fill-subtle/50 border border-black/8 space-y-4">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="p-5 rounded-2xl bg-neutral-50/50 border border-black/[0.06] space-y-4">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-500">
                   <Laptop className="size-4 text-purple-600" />
                   <span>Browser & Hardware Fingerprint</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Browser Client</span>
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Browser Client</span>
                     <div className="mt-1.5">
                       <BrowserBadge browser={visitor.browser} showFull />
                     </div>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">Device Category</span>
-                    <p className="text-xs font-semibold text-label mt-1">{visitor.device || "Desktop"}</p>
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">Device Category</span>
+                    <p className="text-xs font-semibold text-neutral-900 mt-1">{visitor.device || "Desktop"}</p>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-white border border-black/6">
-                    <span className="text-[11px] text-muted-foreground uppercase font-medium">User Agent String</span>
-                    <p className="text-[11px] font-mono text-subtle truncate mt-1" title={visitor.user_agent}>
+                  <div className="p-3.5 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
+                    <span className="text-[11px] text-neutral-500 uppercase font-medium">User Agent String</span>
+                    <p className="text-[11px] font-mono text-neutral-500 truncate mt-1" title={visitor.user_agent}>
                       {visitor.user_agent || "Mozilla/5.0"}
                     </p>
                   </div>
@@ -430,40 +430,40 @@ export function VisitorDetailModal({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-label">Clickstream & Navigation Journey</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <h3 className="text-sm font-bold text-neutral-900">Clickstream & Navigation Journey</h3>
+                  <p className="text-xs text-neutral-500 mt-0.5">
                     Chronological audit of routes and sections clicked by this visitor during their session.
                   </p>
                 </div>
-                <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-fill border border-black/8">
+                <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-neutral-100 border border-black/[0.06]">
                   {pagesList.length} pages recorded
                 </span>
               </div>
 
-              <div className="border border-black/8 rounded-2xl overflow-hidden divide-y divide-black/8 bg-white">
+              <div className="border border-black/[0.06] rounded-2xl overflow-hidden divide-y divide-black/[0.04] bg-white shadow-2xs">
                 {pagesList.map((p, idx) => (
-                  <div key={idx} className="p-4 flex items-start gap-3.5 hover:bg-fill-subtle/40 transition-colors">
-                    <div className="size-6 rounded-full bg-blue/10 text-blue font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
+                  <div key={idx} className="p-4 flex items-start gap-3.5 hover:bg-neutral-50/50 transition-colors">
+                    <div className="size-6 rounded-full bg-[#0071E3]/10 text-[#0071E3] font-mono text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
                       {idx + 1}
                     </div>
 
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-semibold text-label">{p.title || "Codex Dynamics"}</span>
-                        <span className="text-[11px] font-mono text-subtle">
+                        <span className="text-xs font-semibold text-neutral-900">{p.title || "Codex Dynamics"}</span>
+                        <span className="text-[11px] font-mono text-neutral-400">
                           {p.timestamp ? new Date(p.timestamp).toLocaleTimeString() : `Step ${idx + 1}`}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <code className="text-xs font-mono font-medium text-blue bg-blue/5 px-2 py-0.5 rounded border border-blue/15">
+                        <code className="text-xs font-mono font-medium text-[#0071E3] bg-[#0071E3]/5 px-2 py-0.5 rounded border border-[#0071E3]/15">
                           {p.url}
                         </code>
                         <a
                           href={p.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-subtle hover:text-label transition-colors p-1"
+                          className="text-neutral-400 hover:text-neutral-900 transition-colors p-1"
                           title="Open route"
                         >
                           <ExternalLink className="size-3" />
@@ -481,8 +481,8 @@ export function VisitorDetailModal({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-label">Collected Cookie Vault</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <h3 className="text-sm font-bold text-neutral-900">Collected Cookie Vault</h3>
+                  <p className="text-xs text-neutral-500 mt-0.5">
                     Inspect every cookie, local storage key, and tracking token collected from this client's browser.
                   </p>
                 </div>
@@ -496,15 +496,15 @@ export function VisitorDetailModal({
                 {Object.entries(cookiesMap).map(([k, v]) => (
                   <div
                     key={k}
-                    className="p-3.5 rounded-xl bg-fill-subtle/50 border border-black/8 hover:border-black/20 transition-all flex flex-col justify-between"
+                    className="p-3.5 rounded-xl bg-neutral-50/50 border border-black/[0.06] hover:border-black/[0.15] transition-all flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-xs font-bold text-label">{k}</span>
+                        <span className="font-mono text-xs font-bold text-neutral-900">{k}</span>
                         <button
                           type="button"
                           onClick={() => handleCopyText(k, v)}
-                          className="text-subtle hover:text-label p-1 rounded transition-colors cursor-pointer"
+                          className="text-neutral-400 hover:text-neutral-900 p-1 rounded transition-colors cursor-pointer"
                           title="Copy value"
                         >
                           {copiedKey === k ? (
@@ -514,12 +514,12 @@ export function VisitorDetailModal({
                           )}
                         </button>
                       </div>
-                      <p className="text-[11px] font-mono text-muted-foreground break-all mt-1 bg-white p-2 rounded border border-black/5">
+                      <p className="text-[11px] font-mono text-neutral-600 break-all mt-1 bg-white p-2 rounded border border-black/[0.05]">
                         {v}
                       </p>
                     </div>
 
-                    <div className="mt-2 pt-2 border-t border-black/5 text-[10px] text-subtle">
+                    <div className="mt-2 pt-2 border-t border-black/[0.05] text-[10px] text-neutral-400">
                       {k.includes("vid")
                         ? "Unique persistent visitor identifier"
                         : k.includes("session")
@@ -541,13 +541,13 @@ export function VisitorDetailModal({
           {/* Add to Leads Tab */}
           {activeTab === "lead" && (
             <form onSubmit={handleAddLeadSubmit} className="space-y-4">
-              <div className="p-4 rounded-2xl bg-blue/5 border border-blue/20 flex items-start gap-3">
-                <UserPlus className="size-5 text-blue shrink-0 mt-0.5" />
+              <div className="p-4 rounded-2xl bg-[#0071E3]/5 border border-[#0071E3]/15 flex items-start gap-3">
+                <UserPlus className="size-5 text-[#0071E3] shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="text-xs font-bold text-label uppercase tracking-wide">
+                  <h4 className="text-xs font-bold text-neutral-900 uppercase tracking-wide">
                     Promote Visitor to CRM Lead
                   </h4>
-                  <p className="text-xs text-muted-foreground mt-0.5">
+                  <p className="text-xs text-neutral-500 mt-0.5">
                     Converts this visitor session into a qualified prospect inside your CRM Leads pipeline. Their location ({city}, {country}), street address, and engagement history will automatically attach.
                   </p>
                 </div>
@@ -555,8 +555,8 @@ export function VisitorDetailModal({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-label flex items-center gap-1.5">
-                    <User className="size-3.5 text-subtle" />
+                  <label className="text-xs font-semibold text-neutral-800 flex items-center gap-1.5">
+                    <User className="size-3.5 text-neutral-400" />
                     <span>Lead Full Name *</span>
                   </label>
                   <input
@@ -565,13 +565,13 @@ export function VisitorDetailModal({
                     value={leadName}
                     onChange={(e) => setLeadName(e.target.value)}
                     placeholder={`e.g. Lead from ${city || country}`}
-                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-black/15 rounded-xl focus:border-blue outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FBFBFC] border border-black/[0.08] focus:border-[#0071E3] focus:bg-white rounded-xl outline-none transition shadow-2xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-label flex items-center gap-1.5">
-                    <Mail className="size-3.5 text-subtle" />
+                  <label className="text-xs font-semibold text-neutral-800 flex items-center gap-1.5">
+                    <Mail className="size-3.5 text-neutral-400" />
                     <span>Contact Email Address *</span>
                   </label>
                   <input
@@ -580,13 +580,13 @@ export function VisitorDetailModal({
                     value={leadEmail}
                     onChange={(e) => setLeadEmail(e.target.value)}
                     placeholder="prospect@company.com"
-                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-black/15 rounded-xl focus:border-blue outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FBFBFC] border border-black/[0.08] focus:border-[#0071E3] focus:bg-white rounded-xl outline-none transition shadow-2xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-label flex items-center gap-1.5">
-                    <Phone className="size-3.5 text-subtle" />
+                  <label className="text-xs font-semibold text-neutral-800 flex items-center gap-1.5">
+                    <Phone className="size-3.5 text-neutral-400" />
                     <span>Phone Number (Optional)</span>
                   </label>
                   <input
@@ -594,13 +594,13 @@ export function VisitorDetailModal({
                     value={leadPhone}
                     onChange={(e) => setLeadPhone(e.target.value)}
                     placeholder="+1 (555) 000-0000"
-                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-black/15 rounded-xl focus:border-blue outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FBFBFC] border border-black/[0.08] focus:border-[#0071E3] focus:bg-white rounded-xl outline-none transition shadow-2xs"
                   />
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-label flex items-center gap-1.5">
-                    <Building className="size-3.5 text-subtle" />
+                  <label className="text-xs font-semibold text-neutral-800 flex items-center gap-1.5">
+                    <Building className="size-3.5 text-neutral-400" />
                     <span>Company Name (Optional)</span>
                   </label>
                   <input
@@ -608,13 +608,13 @@ export function VisitorDetailModal({
                     value={leadCompany}
                     onChange={(e) => setLeadCompany(e.target.value)}
                     placeholder="Acme Corp"
-                    className="w-full px-3.5 py-2.5 text-xs bg-white border border-black/15 rounded-xl focus:border-blue outline-none"
+                    className="w-full px-3.5 py-2.5 text-xs bg-[#FBFBFC] border border-black/[0.08] focus:border-[#0071E3] focus:bg-white rounded-xl outline-none transition shadow-2xs"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-label">
+                <label className="text-xs font-semibold text-neutral-800">
                   Internal Notes & Sales Strategy
                 </label>
                 <textarea
@@ -622,7 +622,7 @@ export function VisitorDetailModal({
                   value={leadNotes}
                   onChange={(e) => setLeadNotes(e.target.value)}
                   placeholder={`High-interest visitor spent ${formatDuration(durationSec)} browsing ${pagesList.length} page(s).`}
-                  className="w-full px-3.5 py-2.5 text-xs bg-white border border-black/15 rounded-xl focus:border-blue outline-none resize-none"
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#FBFBFC] border border-black/[0.08] focus:border-[#0071E3] focus:bg-white rounded-xl outline-none transition shadow-2xs resize-none"
                 />
               </div>
 
@@ -630,7 +630,7 @@ export function VisitorDetailModal({
                 <button
                   type="button"
                   onClick={() => setActiveTab("overview")}
-                  className="px-4 py-2 rounded-full border border-black/10 text-xs font-medium text-label hover:bg-black/5 transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl border border-black/[0.08] text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -638,7 +638,7 @@ export function VisitorDetailModal({
                 <button
                   type="submit"
                   disabled={isSubmittingLead}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer disabled:opacity-50 active:scale-[0.98]"
                 >
                   <UserPlus className="size-3.5" />
                   <span>{isSubmittingLead ? "Adding to CRM..." : "Confirm & Add to Leads"}</span>
@@ -649,22 +649,22 @@ export function VisitorDetailModal({
         </div>
 
         {/* Footer Action Bar */}
-        <div className="p-4 px-6 border-t border-black/8 bg-fill-subtle/40 flex items-center justify-between gap-4">
-          <div className="text-xs text-subtle">
-            Session: <span className="font-mono text-label">{visitor.session_id}</span> • Location: <span className="text-label">{city}, {country}</span>
+        <div className="p-4 px-6 border-t border-black/[0.06] bg-neutral-50/60 flex items-center justify-between gap-4">
+          <div className="text-xs text-neutral-500">
+            Session: <span className="font-mono text-neutral-900">{visitor.session_id}</span> • Location: <span className="text-neutral-900">{city}, {country}</span>
           </div>
 
           <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-full border border-black/10 text-xs font-medium text-label hover:bg-black/5 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-xl border border-black/[0.08] text-xs font-medium text-neutral-700 hover:bg-neutral-100 transition-colors cursor-pointer"
             >
               Close
             </button>
 
             {visitor.is_lead || isAlreadyLead ? (
-              <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
+              <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-semibold">
                 <CheckCircle2 className="size-3.5" />
                 <span>Already in Leads</span>
               </span>
@@ -672,7 +672,7 @@ export function VisitorDetailModal({
               <button
                 type="button"
                 onClick={() => setActiveTab("lead")}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer active:scale-[0.98]"
               >
                 <UserPlus className="size-3.5" />
                 <span>Add to Leads</span>

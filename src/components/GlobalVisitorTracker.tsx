@@ -1,21 +1,15 @@
 import { useEffect } from "react";
 import { useRouterState } from "@tanstack/react-router";
-import { trackCurrentVisitor, initVisitorTracker } from "@/lib/visitor-tracker";
+import { trackCurrentVisitor } from "@/lib/visitor-tracker";
 
 export function GlobalVisitorTracker() {
   const routerState = useRouterState();
-  const currentPath = routerState.location.pathname + (routerState.location.hash || "");
+  const pathname = routerState.location.pathname;
 
   useEffect(() => {
-    initVisitorTracker();
-  }, []);
-
-  useEffect(() => {
-    // Avoid logging admin navigation as customer visits
-    if (!currentPath.startsWith("/admin")) {
-      void trackCurrentVisitor(currentPath);
-    }
-  }, [currentPath]);
+    if (typeof window === "undefined") return;
+    void trackCurrentVisitor(pathname);
+  }, [pathname]);
 
   return null;
 }

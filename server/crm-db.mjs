@@ -148,30 +148,25 @@ function initSchema(db) {
 
     CREATE TABLE IF NOT EXISTS chat_threads (
       id TEXT PRIMARY KEY,
-      visitor_name TEXT DEFAULT 'Visitor',
-      visitor_email TEXT DEFAULT '',
-      visitor_phone TEXT DEFAULT '',
-      visitor_ip TEXT DEFAULT '',
-      visitor_device TEXT DEFAULT 'Desktop',
-      visitor_country TEXT DEFAULT 'US',
-      visitor_flag TEXT DEFAULT '🇺🇸',
-      visitor_city TEXT DEFAULT 'Kyiv',
-      page_url TEXT DEFAULT '/',
+      visitor_session TEXT,
+      visitor_name TEXT,
+      visitor_email TEXT,
+      visitor_phone TEXT,
       status TEXT DEFAULT 'active',
-      last_message TEXT DEFAULT '',
-      last_message_at TEXT DEFAULT CURRENT_TIMESTAMP,
       unread_count INTEGER DEFAULT 0,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+      last_message TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
 
     CREATE TABLE IF NOT EXISTS chat_messages (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       thread_id TEXT NOT NULL,
       sender TEXT NOT NULL,
-      sender_name TEXT NOT NULL,
+      sender_name TEXT,
       message TEXT NOT NULL,
-      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-      is_read INTEGER DEFAULT 0
+      is_read INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
     );
   `);
 
@@ -255,44 +250,315 @@ function initSchema(db) {
 }
 
 function seedInitialDataIfEmpty(db) {
+  // Check visitors
+  const visCount = db.prepare("SELECT COUNT(*) as count FROM visitors").get().count;
+  if (visCount === 0) {
+    const initialVisitors = [
+      {
+        session: "sess_91a02",
+        ip: "104.28.192.42",
+        country: "United States",
+        countryCode: "US",
+        flag: "🇺🇸",
+        city: "San Francisco",
+        region: "California",
+        postalCode: "94105",
+        street: "101 Market St, Financial District",
+        browser: "Chrome 124",
+        device: "Desktop (Mac)",
+        page: "/",
+        duration: 342,
+        visits: 3,
+        isReturning: 1,
+        time: "2026-09-16 19:02:14",
+        pages: JSON.stringify([
+          { url: "/", title: "Codex Dynamics", timestamp: "2026-09-16T18:55:00Z" },
+          { url: "/#work", title: "Codex Dynamics | Work", timestamp: "2026-09-16T18:57:30Z" },
+          { url: "/#services", title: "Codex Dynamics | Services", timestamp: "2026-09-16T19:00:10Z" },
+          { url: "/#contact", title: "Codex Dynamics | Contact", timestamp: "2026-09-16T19:02:14Z" },
+        ]),
+        cookies: JSON.stringify({
+          __cdx_vid: "vid_91a02_us",
+          __cdx_session: "sess_91a02",
+          __cdx_visit_count: "3",
+          __cdx_duration_secs: "342",
+          __cdx_first_visit: "2026-09-10T14:20:00Z",
+          __cdx_cookie_consent: "accepted",
+          __cdx_utm_source: "google_search",
+          __cdx_utm_campaign: "brand_q3",
+          __cdx_screen: "1920x1080 (2x DPR)",
+          __cdx_lang: "en-US",
+        }),
+      },
+      {
+        session: "sess_82b13",
+        ip: "82.165.197.1",
+        country: "United Kingdom",
+        countryCode: "GB",
+        flag: "🇬🇧",
+        city: "London",
+        region: "Greater London",
+        postalCode: "EC2A 4NE",
+        street: "25 Old Street, Silicon Roundabout",
+        browser: "Safari 17.4",
+        device: "Mobile (iPhone)",
+        page: "/#work",
+        duration: 215,
+        visits: 2,
+        isReturning: 1,
+        time: "2026-09-16 18:45:00",
+        pages: JSON.stringify([
+          { url: "/", title: "Codex Dynamics", timestamp: "2026-09-16T18:41:20Z" },
+          { url: "/#work", title: "Codex Dynamics | Work", timestamp: "2026-09-16T18:45:00Z" },
+        ]),
+        cookies: JSON.stringify({
+          __cdx_vid: "vid_82b13_uk",
+          __cdx_session: "sess_82b13",
+          __cdx_visit_count: "2",
+          __cdx_duration_secs: "215",
+          __cdx_first_visit: "2026-09-14T11:15:00Z",
+          __cdx_cookie_consent: "accepted",
+          __cdx_utm_source: "linkedin",
+          __cdx_screen: "393x852 (3x DPR)",
+          __cdx_lang: "en-GB",
+        }),
+      },
+      {
+        session: "sess_73c24",
+        ip: "178.62.204.89",
+        country: "Germany",
+        countryCode: "DE",
+        flag: "🇩🇪",
+        city: "Berlin",
+        region: "Berlin",
+        postalCode: "10115",
+        street: "Friedrichstraße 43, Mitte",
+        browser: "Firefox 125",
+        device: "Desktop (Linux)",
+        page: "/#services",
+        duration: 180,
+        visits: 1,
+        isReturning: 0,
+        time: "2026-09-16 18:22:11",
+        pages: JSON.stringify([
+          { url: "/", title: "Codex Dynamics", timestamp: "2026-09-16T18:19:10Z" },
+          { url: "/#services", title: "Codex Dynamics | Services", timestamp: "2026-09-16T18:22:11Z" },
+        ]),
+        cookies: JSON.stringify({
+          __cdx_vid: "vid_73c24_de",
+          __cdx_session: "sess_73c24",
+          __cdx_visit_count: "1",
+          __cdx_duration_secs: "180",
+          __cdx_first_visit: "2026-09-16T18:19:10Z",
+          __cdx_cookie_consent: "accepted",
+          __cdx_screen: "2560x1440 (1x DPR)",
+          __cdx_lang: "de-DE",
+        }),
+      },
+      {
+        session: "sess_64d35",
+        ip: "194.187.249.33",
+        country: "Ukraine",
+        countryCode: "UA",
+        flag: "🇺🇦",
+        city: "Kyiv",
+        region: "Kyiv City",
+        postalCode: "01001",
+        street: "14 Khreshchatyk St, Pechersk",
+        browser: "Chrome 124",
+        device: "Desktop (Windows)",
+        page: "/#contact",
+        duration: 410,
+        visits: 4,
+        isReturning: 1,
+        time: "2026-09-16 17:50:40",
+        pages: JSON.stringify([
+          { url: "/", title: "Codex Dynamics", timestamp: "2026-09-16T17:43:50Z" },
+          { url: "/#work", title: "Codex Dynamics | Work", timestamp: "2026-09-16T17:46:10Z" },
+          { url: "/#contact", title: "Codex Dynamics | Contact", timestamp: "2026-09-16T17:50:40Z" },
+        ]),
+        cookies: JSON.stringify({
+          __cdx_vid: "vid_64d35_ua",
+          __cdx_session: "sess_64d35",
+          __cdx_visit_count: "4",
+          __cdx_duration_secs: "410",
+          __cdx_first_visit: "2026-09-08T09:30:00Z",
+          __cdx_cookie_consent: "accepted",
+          __cdx_screen: "1920x1080 (1x DPR)",
+          __cdx_lang: "uk-UA",
+        }),
+      },
+      {
+        session: "sess_55e46",
+        ip: "24.200.180.12",
+        country: "Canada",
+        countryCode: "CA",
+        flag: "🇨🇦",
+        city: "Toronto",
+        region: "Ontario",
+        postalCode: "M5V 2T6",
+        street: "200 Bay St, Financial Core",
+        browser: "Edge 124",
+        device: "Desktop (Windows)",
+        page: "/",
+        duration: 95,
+        visits: 1,
+        isReturning: 0,
+        time: "2026-09-16 17:15:02",
+        pages: JSON.stringify([
+          { url: "/", title: "Codex Dynamics", timestamp: "2026-09-16T17:13:30Z" },
+        ]),
+        cookies: JSON.stringify({
+          __cdx_vid: "vid_55e46_ca",
+          __cdx_session: "sess_55e46",
+          __cdx_visit_count: "1",
+          __cdx_duration_secs: "95",
+          __cdx_first_visit: "2026-09-16T17:13:30Z",
+          __cdx_cookie_consent: "accepted",
+          __cdx_screen: "1920x1080 (1.25x DPR)",
+          __cdx_lang: "en-CA",
+        }),
+      },
+      {
+        session: "sess_46f57",
+        ip: "94.200.45.18",
+        country: "United Arab Emirates",
+        countryCode: "AE",
+        flag: "🇦🇪",
+        city: "Dubai",
+        region: "Dubai Emirate",
+        postalCode: "00000",
+        street: "Sheikh Zayed Rd, DIFC Gate Tower 4",
+        browser: "Safari 17",
+        device: "Mobile (iPhone)",
+        page: "/#studio",
+        duration: 260,
+        visits: 2,
+        isReturning: 1,
+        time: "2026-09-16 16:30:19",
+        pages: JSON.stringify([
+          { url: "/", title: "Codex Dynamics", timestamp: "2026-09-16T16:26:00Z" },
+          { url: "/#studio", title: "Codex Dynamics | Studio", timestamp: "2026-09-16T16:30:19Z" },
+        ]),
+        cookies: JSON.stringify({
+          __cdx_vid: "vid_46f57_ae",
+          __cdx_session: "sess_46f57",
+          __cdx_visit_count: "2",
+          __cdx_duration_secs: "260",
+          __cdx_first_visit: "2026-09-15T10:00:00Z",
+          __cdx_cookie_consent: "accepted",
+          __cdx_screen: "390x844 (3x DPR)",
+          __cdx_lang: "ar-AE",
+        }),
+      },
+    ];
+    const stmt = db.prepare(`
+      INSERT INTO visitors (
+        session_id, ip_address, country, country_code, flag, city, region, postal_code, street,
+        browser, device, page_url, duration_seconds, visit_count, is_returning, pages_viewed, cookies_data, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    for (const v of initialVisitors) {
+      stmt.run(
+        v.session, v.ip, v.country, v.countryCode, v.flag, v.city, v.region, v.postalCode, v.street,
+        v.browser, v.device, v.page, v.duration, v.visits, v.isReturning, v.pages, v.cookies, v.time
+      );
+    }
+  }
+
+  // Check leads
+  const leadCount = db.prepare("SELECT COUNT(*) as count FROM leads").get().count;
+  if (leadCount === 0) {
+    const initialLeads = [
+      {
+        name: "Alexander Wright",
+        email: "a.wright@auroracapital.co",
+        phone: "+44 20 7946 0912",
+        company: "Aurora Capital UK",
+        message: "We are preparing a Q4 brand relaunch and need a high-conversion Webflow/React build with bespoke animations and CRM sync.",
+        source: "website_contact",
+        status: "new",
+        score: 95,
+        notes: "Budget: $35k-$60k. Timeline: 6 weeks. Requested high-touch executive demo.",
+        country: "United Kingdom",
+        flag: "🇬🇧",
+        city: "London",
+        postal_code: "EC2A 4NE",
+        street: "25 Old Street, Silicon Roundabout",
+        pages_viewed_count: 5,
+        duration_seconds: 342,
+      },
+      {
+        name: "Sophia Martinez",
+        email: "sophia@novalabs.io",
+        phone: "+1 415 890 2311",
+        company: "Nova Labs Inc",
+        message: "Looking for an end-to-end studio to redesign our SaaS marketing portal and optimize organic search acquisition.",
+        source: "blog_reader",
+        status: "contacted",
+        score: 88,
+        notes: "Subscribed via article 'Mastering Core Web Vitals in 2026'. Downloaded architecture guide.",
+        country: "United States",
+        flag: "🇺🇸",
+        city: "San Francisco",
+        postal_code: "94105",
+        street: "101 Market St, Financial District",
+        pages_viewed_count: 4,
+        duration_seconds: 280,
+      },
+      {
+        name: "Dmitry Kovalenko",
+        email: "dmitry@vertexlogistics.eu",
+        phone: "+380 44 239 8810",
+        company: "Vertex Logistics",
+        message: "Need a modern corporate website with multilingual support and client portal integration.",
+        source: "website_contact",
+        status: "qualified",
+        score: 82,
+        notes: "Corporate fleet logistics platform. High priority for Q4 launch.",
+        country: "Ukraine",
+        flag: "🇺🇦",
+        city: "Kyiv",
+        postal_code: "01001",
+        street: "14 Khreshchatyk St, Pechersk",
+        pages_viewed_count: 6,
+        duration_seconds: 410,
+      },
+      {
+        name: "Elena Rostova",
+        email: "elena@nordictech.se",
+        phone: "+46 8 123 4567",
+        company: "Nordic Tech Dynamics",
+        message: "Interested in technical SEO audit and React redesign.",
+        source: "blog_reader",
+        status: "new",
+        score: 74,
+        notes: "Lead captured from blog insights newsletter subscription.",
+        country: "Sweden",
+        flag: "🇸🇪",
+        city: "Stockholm",
+        postal_code: "111 52",
+        street: "Kungsgatan 18",
+        pages_viewed_count: 3,
+        duration_seconds: 195,
+      },
+    ];
+    for (const l of initialLeads) {
+      createLead(l);
+    }
+  }
+
   // Check enquiries
   const enqCount = db.prepare("SELECT COUNT(*) as count FROM enquiries").get().count;
   if (enqCount === 0) {
     const initialEnquiries = [
-      {
-        name: "David Sterling",
-        email: "d.sterling@vanguardtech.co",
-        phone: "+1 (415) 890-2134",
-        company: "Vanguard Tech Partners",
-        message: "We are preparing a Q2 redesign for our enterprise SaaS customer portal. Need high-performance React architecture with bespoke dark UI.",
-        source: "website_contact",
-        status: "new",
-      },
-      {
-        name: "Claire Moreau",
-        email: "claire@atelierlux.fr",
-        phone: "+33 6 42 91 08 22",
-        company: "Atelier Lux Paris",
-        message: "Looking for an engineering partner to build a bespoke headless e-commerce experience with sub-second page loads across Europe.",
-        source: "contact_modal",
-        status: "contacted",
-      },
-      {
-        name: "Alexander Wright",
-        email: "a.wright@apexholdings.ae",
-        phone: "+971 50 123 4567",
-        company: "Apex Capital Holdings",
-        message: "Requesting a proposal for custom CRM integration and lead scoring automation with real-time analytics desk.",
-        source: "website_contact",
-        status: "closed",
-      },
+      { name: "Alexander Wright", email: "a.wright@auroracapital.co", phone: "+44 20 7946 0912", company: "Aurora Capital UK", message: "We are preparing a Q4 brand relaunch and need a high-conversion Webflow/React build with bespoke animations and CRM sync.", status: "new" },
+      { name: "Sophia Martinez", email: "sophia@novalabs.io", phone: "+1 415 890 2311", company: "Nova Labs Inc", message: "Looking for an end-to-end studio to redesign our SaaS marketing portal and optimize organic search acquisition.", status: "contacted" },
+      { name: "Dmitry Kovalenko", email: "dmitry@vertexlogistics.eu", phone: "+380 44 239 8810", company: "Vertex Logistics", message: "Need a modern corporate website with multilingual support and client portal integration.", status: "new" },
     ];
-    const enqStmt = db.prepare(`
-      INSERT INTO enquiries (name, email, phone, company, message, source, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `);
-    for (const eq of initialEnquiries) {
-      enqStmt.run(eq.name, eq.email, eq.phone, eq.company, eq.message, eq.source, eq.status);
+    const stmt = db.prepare("INSERT INTO enquiries (name, email, phone, company, message, status) VALUES (?, ?, ?, ?, ?, ?)");
+    for (const e of initialEnquiries) {
+      stmt.run(e.name, e.email, e.phone, e.company, e.message, e.status);
     }
   }
 
@@ -302,7 +568,7 @@ function seedInitialDataIfEmpty(db) {
     const initialBacklinks = [
       { name: "Clutch.co Global Leaders", url: "https://clutch.co/profile/codex-dynamics", notes: "DA 92 · Top Web Development & Digital Strategy Agency directory listing" },
       { name: "Awwwards Nominee Showcase", url: "https://www.awwwards.com/sites/codex-dynamics", notes: "DA 90 · Design system and typography showcase feature" },
-      { name: "DesignRush Top Agencies", url: "https://www.designrush.com/agency/codex-dynamics", notes: "DA 84 · High authority backlink targeting 'web design agency'" },
+      { name: "DesignRush Top Agencies", url: "https://www.designrush.com/agency/codex-dynamics", notes: "DA 84 · High authority backlink targeting 'web design studio'" },
       { name: "GitHub Tech Portfolio", url: "https://github.com/AnonymousXIVV/CodexDynamics106", notes: "DA 96 · Open source showcase and developer community link" },
     ];
     const stmt = db.prepare("INSERT INTO backlinks (name, url, notes) VALUES (?, ?, ?)");
@@ -418,68 +684,6 @@ function seedInitialDataIfEmpty(db) {
       stmt.run(pr.title, pr.site_name, pr.site_url, pr.description, pr.category, pr.image_url, pr.is_published);
     }
   }
-
-  // Check chat threads
-  const chatCount = db.prepare("SELECT COUNT(*) as count FROM chat_threads").get().count;
-  if (chatCount === 0) {
-    const threadStmt = db.prepare(`
-      INSERT INTO chat_threads (id, visitor_name, visitor_email, visitor_phone, visitor_ip, visitor_device, visitor_country, visitor_flag, visitor_city, page_url, status, last_message, last_message_at, unread_count, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    const msgStmt = db.prepare(`
-      INSERT INTO chat_messages (thread_id, sender, sender_name, message, created_at, is_read)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `);
-
-    // Seed thread 1 (Active)
-    const t1Id = "thread_sarah_01";
-    const t1Time = new Date(Date.now() - 12 * 60 * 1000).toISOString();
-    const t1LastTime = new Date(Date.now() - 4 * 60 * 1000).toISOString();
-    threadStmt.run(
-      t1Id,
-      "Sarah Jenkins",
-      "sarah.j@nexora.io",
-      "+1 (415) 890-2134",
-      "104.28.192.42",
-      "Desktop (Mac)",
-      "United States",
-      "🇺🇸",
-      "San Francisco",
-      "/#services",
-      "active",
-      "We are targeting a Q4 kickoff. Could you provide typical sprint pricing and engagement terms?",
-      t1LastTime,
-      1,
-      t1Time
-    );
-    msgStmt.run(t1Id, "visitor", "Sarah Jenkins", "Hi! We saw your case study on the high-conversion e-commerce revamp. We are currently planning a ground-up rebuild of our customer portal.", t1Time, 1);
-    msgStmt.run(t1Id, "bot", "Codex Concierge", "Welcome to Codex Dynamics! 👋 An engineer and project manager have received your inquiry. What is your preferred launch timeline?", new Date(Date.now() - 8 * 60 * 1000).toISOString(), 1);
-    msgStmt.run(t1Id, "visitor", "Sarah Jenkins", "We are targeting a Q4 kickoff. Could you provide typical sprint pricing and engagement terms?", t1LastTime, 0);
-
-    // Seed thread 2 (Resolved)
-    const t2Id = "thread_david_02";
-    const t2Time = new Date(Date.now() - 3 * 3600 * 1000).toISOString();
-    threadStmt.run(
-      t2Id,
-      "David Miller",
-      "david@millerassociates.io",
-      "+44 20 7946 0912",
-      "185.120.44.18",
-      "Mobile (iPhone 15)",
-      "United Kingdom",
-      "🇬🇧",
-      "London",
-      "/#work",
-      "resolved",
-      "Sounds fantastic! Please email the MSA over to david@millerassociates.io.",
-      t2Time,
-      0,
-      t2Time
-    );
-    msgStmt.run(t2Id, "visitor", "David Miller", "Hello, do you offer bespoke React / Next.js web application engineering and ongoing retainers?", new Date(Date.now() - 4 * 3600 * 1000).toISOString(), 1);
-    msgStmt.run(t2Id, "operator", "Studio Operator", "Hi David! Yes, our core focus is high-performance React & TypeScript engineering with dedicated monthly SLAs. I can send over our standard Master Services Agreement.", new Date(Date.now() - 3.5 * 3600 * 1000).toISOString(), 1);
-    msgStmt.run(t2Id, "visitor", "David Miller", "Sounds fantastic! Please email the MSA over to david@millerassociates.io.", t2Time, 1);
-  }
 }
 
 export function getAllCrmData() {
@@ -491,7 +695,6 @@ export function getAllCrmData() {
   const blogs = db.prepare("SELECT * FROM blog_posts ORDER BY created_at DESC LIMIT 50").all();
   const reviews = db.prepare("SELECT * FROM reviews ORDER BY created_at DESC LIMIT 50").all();
   const projects = db.prepare("SELECT * FROM projects ORDER BY created_at DESC LIMIT 50").all();
-  const chatThreads = db.prepare("SELECT * FROM chat_threads ORDER BY last_message_at DESC LIMIT 50").all();
 
   const totalVisitors = db.prepare("SELECT COUNT(*) as count FROM visitors").get().count;
   const todayVisitors = db.prepare("SELECT COUNT(*) as count FROM visitors WHERE date(created_at) = date('now')").get().count;
@@ -502,9 +705,6 @@ export function getAllCrmData() {
   const totalBlogs = db.prepare("SELECT COUNT(*) as count FROM blog_posts").get().count;
   const totalReviews = db.prepare("SELECT COUNT(*) as count FROM reviews").get().count;
   const totalProjects = db.prepare("SELECT COUNT(*) as count FROM projects").get().count;
-  const totalChatThreads = db.prepare("SELECT COUNT(*) as count FROM chat_threads").get().count;
-  const activeChatThreads = db.prepare("SELECT COUNT(*) as count FROM chat_threads WHERE status = 'active'").get().count;
-  const unreadChatCount = db.prepare("SELECT COALESCE(SUM(unread_count), 0) as count FROM chat_threads").get().count || 0;
 
   // Regional breakdown
   const regions = db.prepare(`
@@ -546,9 +746,6 @@ export function getAllCrmData() {
       totalBlogs,
       totalReviews,
       totalProjects,
-      totalChatThreads,
-      activeChatThreads,
-      unreadChatCount,
     },
     visitors,
     enquiries,
@@ -557,7 +754,6 @@ export function getAllCrmData() {
     blogs,
     reviews,
     projects,
-    chatThreads,
     regions,
     browsers,
     devices,
@@ -798,15 +994,6 @@ export function deleteLead(id) {
   db.prepare("DELETE FROM leads WHERE id = ?").run(Number(id));
 }
 
-export function bulkDeleteLeads(ids = []) {
-  if (!Array.isArray(ids) || ids.length === 0) return;
-  const db = getDb();
-  const validIds = ids.map(Number).filter((n) => !isNaN(n));
-  if (validIds.length === 0) return;
-  const placeholders = validIds.map(() => "?").join(",");
-  db.prepare(`DELETE FROM leads WHERE id IN (${placeholders})`).run(...validIds);
-}
-
 export function getPublicContent() {
   const db = getDb();
   const projects = db.prepare("SELECT * FROM projects WHERE is_published = 1 ORDER BY created_at DESC").all();
@@ -878,27 +1065,9 @@ export function deleteEnquiry(id) {
   db.prepare("DELETE FROM enquiries WHERE id = ?").run(Number(id));
 }
 
-export function bulkDeleteEnquiries(ids = []) {
-  if (!Array.isArray(ids) || ids.length === 0) return;
-  const db = getDb();
-  const validIds = ids.map(Number).filter((n) => !isNaN(n));
-  if (validIds.length === 0) return;
-  const placeholders = validIds.map(() => "?").join(",");
-  db.prepare(`DELETE FROM enquiries WHERE id IN (${placeholders})`).run(...validIds);
-}
-
 export function deleteVisitor(id) {
   const db = getDb();
   db.prepare("DELETE FROM visitors WHERE id = ?").run(Number(id));
-}
-
-export function bulkDeleteVisitors(ids = []) {
-  if (!Array.isArray(ids) || ids.length === 0) return;
-  const db = getDb();
-  const validIds = ids.map(Number).filter((n) => !isNaN(n));
-  if (validIds.length === 0) return;
-  const placeholders = validIds.map(() => "?").join(",");
-  db.prepare(`DELETE FROM visitors WHERE id IN (${placeholders})`).run(...validIds);
 }
 
 export function clearVisitors(olderThanDays = null) {
@@ -1359,93 +1528,120 @@ export function resetSiteConfig() {
   return DEFAULT_SITE_CONFIG;
 }
 
+export function bulkDeleteVisitors(ids = []) {
+  if (!Array.isArray(ids) || ids.length === 0) return;
+  const db = getDb();
+  const placeholders = ids.map(() => "?").join(",");
+  db.prepare(`DELETE FROM visitors WHERE id IN (${placeholders})`).run(...ids);
+}
+
+export function bulkDeleteLeads(ids = []) {
+  if (!Array.isArray(ids) || ids.length === 0) return;
+  const db = getDb();
+  const placeholders = ids.map(() => "?").join(",");
+  db.prepare(`DELETE FROM leads WHERE id IN (${placeholders})`).run(...ids);
+}
+
+export function bulkDeleteEnquiries(ids = []) {
+  if (!Array.isArray(ids) || ids.length === 0) return;
+  const db = getDb();
+  const placeholders = ids.map(() => "?").join(",");
+  db.prepare(`DELETE FROM enquiries WHERE id IN (${placeholders})`).run(...ids);
+}
+
 export function getChatThreads() {
   const db = getDb();
-  return db.prepare("SELECT * FROM chat_threads ORDER BY last_message_at DESC").all();
+  try {
+    return db.prepare("SELECT * FROM chat_threads ORDER BY updated_at DESC").all();
+  } catch {
+    return [];
+  }
 }
 
 export function getChatMessages(threadId) {
   const db = getDb();
-  return db.prepare("SELECT * FROM chat_messages WHERE thread_id = ? ORDER BY created_at ASC").all(threadId);
+  try {
+    return db.prepare("SELECT * FROM chat_messages WHERE thread_id = ? ORDER BY created_at ASC").all(threadId);
+  } catch {
+    return [];
+  }
 }
 
-export function sendChatMessage({ threadId, sender, senderName, message, visitorInfo = {} }) {
+export function sendChatMessage({ threadId, sender = "visitor", senderName = "Visitor", message = "", visitorInfo = {} }) {
   const db = getDb();
+  const tId = threadId || `thread_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
   const now = new Date().toISOString();
-  const safeThreadId = threadId || `thread_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
 
-  let thread = db.prepare("SELECT * FROM chat_threads WHERE id = ?").get(safeThreadId);
+  let thread = null;
+  try {
+    thread = db.prepare("SELECT * FROM chat_threads WHERE id = ?").get(tId);
+  } catch {}
+
   if (!thread) {
     db.prepare(`
-      INSERT INTO chat_threads (
-        id, visitor_name, visitor_email, visitor_phone, visitor_ip,
-        visitor_device, visitor_country, visitor_flag, visitor_city,
-        page_url, status, last_message, last_message_at, unread_count, created_at
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?, ?, ?, ?)
+      INSERT INTO chat_threads (id, visitor_session, visitor_name, visitor_email, visitor_phone, status, unread_count, last_message, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, 'active', ?, ?, ?, ?)
     `).run(
-      safeThreadId,
-      visitorInfo.name || "Website Visitor",
-      visitorInfo.email || "",
-      visitorInfo.phone || "",
-      visitorInfo.ip || "127.0.0.1",
-      visitorInfo.device || "Desktop",
-      visitorInfo.country || "United States",
-      visitorInfo.flag || "🇺🇸",
-      visitorInfo.city || "San Francisco",
-      visitorInfo.pageUrl || "/",
+      tId,
+      visitorInfo?.sessionId || "",
+      visitorInfo?.name || senderName || "Visitor",
+      visitorInfo?.email || "",
+      visitorInfo?.phone || "",
+      sender === "visitor" ? 1 : 0,
       message,
       now,
-      sender === "visitor" ? 1 : 0,
       now
     );
+    thread = db.prepare("SELECT * FROM chat_threads WHERE id = ?").get(tId);
   } else {
-    const unreadInc = sender === "visitor" ? (thread.unread_count || 0) + 1 : 0;
+    const unreadDelta = sender === "visitor" ? (thread.unread_count || 0) + 1 : 0;
     db.prepare(`
       UPDATE chat_threads
-      SET last_message = ?, last_message_at = ?, unread_count = ?,
-          status = CASE WHEN status = 'resolved' AND ? = 'visitor' THEN 'active' ELSE status END
+      SET last_message = ?, updated_at = ?, unread_count = ?
       WHERE id = ?
-    `).run(message, now, unreadInc, sender, safeThreadId);
+    `).run(message, now, unreadDelta, tId);
+    thread = db.prepare("SELECT * FROM chat_threads WHERE id = ?").get(tId);
   }
 
-  const finalSenderName = senderName || (sender === "operator" ? "Studio Operator" : (sender === "bot" ? "Codex Concierge" : "Visitor"));
-  const insertStmt = db.prepare(`
-    INSERT INTO chat_messages (thread_id, sender, sender_name, message, created_at, is_read)
+  const stmt = db.prepare(`
+    INSERT INTO chat_messages (thread_id, sender, sender_name, message, is_read, created_at)
     VALUES (?, ?, ?, ?, ?, ?)
   `);
-  const result = insertStmt.run(safeThreadId, sender, finalSenderName, message, now, sender === "operator" ? 1 : 0);
-
-  const savedMsg = {
-    id: result.lastInsertRowid,
-    thread_id: safeThreadId,
+  const res = stmt.run(tId, sender, senderName, message, sender === "operator" ? 1 : 0, now);
+  const newMessage = {
+    id: res.lastInsertRowid,
+    thread_id: tId,
     sender,
-    sender_name: finalSenderName,
+    sender_name: senderName,
     message,
-    created_at: now,
     is_read: sender === "operator" ? 1 : 0,
+    created_at: now
   };
 
-  const updatedThread = db.prepare("SELECT * FROM chat_threads WHERE id = ?").get(safeThreadId);
-  return { message: savedMsg, thread: updatedThread };
+  return { thread, message: newMessage };
 }
 
 export function markChatThreadRead(threadId) {
   const db = getDb();
-  db.prepare("UPDATE chat_threads SET unread_count = 0 WHERE id = ?").run(threadId);
-  db.prepare("UPDATE chat_messages SET is_read = 1 WHERE thread_id = ?").run(threadId);
-  return { ok: true };
+  try {
+    db.prepare("UPDATE chat_threads SET unread_count = 0 WHERE id = ?").run(threadId);
+    db.prepare("UPDATE chat_messages SET is_read = 1 WHERE thread_id = ?").run(threadId);
+  } catch {}
 }
 
-export function updateChatThreadStatus(threadId, status) {
+export function updateChatThreadStatus(threadId, status = "active") {
   const db = getDb();
-  db.prepare("UPDATE chat_threads SET status = ? WHERE id = ?").run(status, threadId);
-  return { ok: true };
+  try {
+    db.prepare("UPDATE chat_threads SET status = ? WHERE id = ?").run(status, threadId);
+  } catch {}
 }
 
 export function deleteChatThread(threadId) {
   const db = getDb();
-  db.prepare("DELETE FROM chat_messages WHERE thread_id = ?").run(threadId);
-  db.prepare("DELETE FROM chat_threads WHERE id = ?").run(threadId);
-  return { ok: true };
+  try {
+    db.prepare("DELETE FROM chat_messages WHERE thread_id = ?").run(threadId);
+    db.prepare("DELETE FROM chat_threads WHERE id = ?").run(threadId);
+  } catch {}
 }
+
 

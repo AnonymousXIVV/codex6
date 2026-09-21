@@ -177,12 +177,12 @@ export function EnquiriesTab({
     <div className="space-y-4">
       {/* Bulk Actions Toolbar */}
       {selectedIds.size > 0 && (
-        <div className="bg-neutral-900 text-white rounded-xl p-3 px-4 shadow-md flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-1">
+        <div className="bg-neutral-900 text-white rounded-2xl p-3 px-4.5 shadow-xl flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-1 border border-white/10">
           <div className="flex items-center gap-2.5">
-            <span className="inline-flex items-center justify-center size-5 rounded-md bg-white/20 text-xs font-bold font-mono">
+            <span className="inline-flex items-center justify-center size-5 rounded-lg bg-white/20 text-xs font-semibold font-mono">
               {selectedIds.size}
             </span>
-            <span className="text-xs font-medium">
+            <span className="text-xs font-medium text-neutral-200">
               {selectedIds.size} inquiry{selectedIds.size > 1 ? "ies" : ""} selected
             </span>
           </div>
@@ -191,23 +191,23 @@ export function EnquiriesTab({
             <button
               type="button"
               onClick={() => handleDownloadCsv()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition cursor-pointer"
             >
-              <FileSpreadsheet className="size-3.5 text-emerald-300" />
+              <FileSpreadsheet className="size-3.5 text-emerald-400" />
               <span>Export CSV</span>
             </button>
             <button
               type="button"
               onClick={() => handleExportJson()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition cursor-pointer"
             >
-              <FileJson className="size-3.5 text-amber-300" />
+              <FileJson className="size-3.5 text-amber-400" />
               <span>Export JSON</span>
             </button>
             <button
               type="button"
               onClick={() => handleBulkUpdateStatus("contacted")}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition cursor-pointer"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-medium transition cursor-pointer"
             >
               <CheckCircle2 className="size-3 text-[#0071E3]" />
               <span>Mark Contacted</span>
@@ -215,7 +215,7 @@ export function EnquiriesTab({
             <button
               type="button"
               onClick={handleBulkDelete}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-semibold transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition cursor-pointer"
             >
               <Trash2 className="size-3.5" />
               <span>Delete Selected</span>
@@ -232,19 +232,23 @@ export function EnquiriesTab({
       )}
 
       {/* Single Unified Apple-Style Container */}
-      <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden">
+      <div className="bg-white rounded-2xl border border-black/[0.06] shadow-[0_1px_3px_rgba(0,0,0,0.02),0_4px_16px_rgba(0,0,0,0.02)] overflow-hidden">
         {/* Header Section */}
         <div className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <Inbox className="size-4 text-[#0071E3]" />
-              <h2 className="text-base font-semibold text-neutral-900 tracking-tight">
-                Inquiries & Contact Submissions
-              </h2>
+              <span className="p-2 rounded-xl bg-[#0071E3]/10 text-[#0071E3]">
+                <Inbox className="size-4" />
+              </span>
+              <div>
+                <h2 className="text-base font-semibold text-neutral-900 tracking-tight">
+                  Inquiries & Contact Submissions
+                </h2>
+                <p className="text-xs text-neutral-500 mt-0.5">
+                  Direct form inquiries from prospects interested in custom software and web development.
+                </p>
+              </div>
             </div>
-            <p className="text-xs text-neutral-500 mt-1">
-              Direct form inquiries from prospects interested in custom software and web development.
-            </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -255,17 +259,17 @@ export function EnquiriesTab({
                 onClick={() => setIsExportOpen(!isExportOpen)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/[0.08] bg-white hover:bg-neutral-50 text-neutral-700 text-xs font-medium transition cursor-pointer shadow-2xs"
               >
-                <Download className="size-3.5 text-[#0071E3]" />
+                <Download className="size-3.5 text-neutral-500" />
                 <span>Export</span>
                 <ChevronDown className="size-3 text-neutral-400" />
               </button>
 
               {isExportOpen && (
-                <div className="absolute right-0 mt-1.5 w-52 rounded-xl bg-white border border-black/[0.08] shadow-lg p-1.5 z-30 space-y-1 animate-in fade-in">
+                <div className="absolute right-0 mt-1.5 w-52 rounded-2xl bg-white border border-black/[0.08] shadow-xl p-1.5 z-30 space-y-1 animate-in fade-in">
                   <button
                     type="button"
                     onClick={() => handleDownloadCsv()}
-                    className="w-full text-left px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-100 rounded-lg transition flex items-center gap-2 cursor-pointer"
+                    className="w-full text-left px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-50 rounded-xl transition flex items-center gap-2.5 cursor-pointer"
                   >
                     <FileSpreadsheet className="size-4 text-emerald-600" />
                     <div>
@@ -276,7 +280,7 @@ export function EnquiriesTab({
                   <button
                     type="button"
                     onClick={() => handleExportJson()}
-                    className="w-full text-left px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-100 rounded-lg transition flex items-center gap-2 cursor-pointer"
+                    className="w-full text-left px-3 py-2 text-xs text-neutral-800 hover:bg-neutral-50 rounded-xl transition flex items-center gap-2.5 cursor-pointer"
                   >
                     <FileJson className="size-4 text-amber-600" />
                     <div>
@@ -295,7 +299,7 @@ export function EnquiriesTab({
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
                 aria-label="Filter enquiries by status"
-                className="bg-[#F9F9FB] border border-black/[0.08] rounded-xl px-2.5 py-1.5 text-xs font-medium text-neutral-700 focus:border-[#0071E3] outline-none cursor-pointer"
+                className="bg-white border border-black/[0.08] rounded-xl px-2.5 py-1.5 text-xs font-medium text-neutral-700 focus:border-[#0071E3] outline-none cursor-pointer"
               >
                 <option value="all">All ({enquiries.length})</option>
                 <option value="new">New</option>
@@ -328,7 +332,7 @@ export function EnquiriesTab({
         </div>
 
         {/* Grouped Inquiries List */}
-        <div className="divide-y divide-black/[0.06]">
+        <div className="divide-y divide-black/[0.04]">
           {filtered.length === 0 ? (
             <div className="p-14 text-center text-xs text-neutral-500">
               <div className="size-9 rounded-xl bg-neutral-100 text-neutral-400 flex items-center justify-center mx-auto mb-2">
@@ -421,7 +425,7 @@ export function EnquiriesTab({
                       </div>
 
                       {/* Message Content Bubble - Apple Notes style */}
-                      <div className="p-3 bg-[#F9F9FB] border border-black/[0.04] rounded-xl text-xs text-neutral-700 leading-relaxed break-words">
+                      <div className="p-3 bg-[#FBFBFC] border border-black/[0.04] rounded-xl text-xs text-neutral-700 leading-relaxed break-words shadow-2xs">
                         "{lead.message}"
                       </div>
                     </div>
@@ -437,7 +441,7 @@ export function EnquiriesTab({
                           await onUpdateStatus(lead.id, nextStatus);
                           toast.success(`Lead marked as ${nextStatus}.`);
                         }}
-                        className="px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl text-xs font-medium border border-black/[0.06] transition cursor-pointer"
+                        className="px-3 py-1.5 bg-neutral-100/80 hover:bg-neutral-200/70 text-neutral-800 rounded-xl text-xs font-medium border border-black/[0.06] transition cursor-pointer"
                       >
                         {lead.status === "new" ? "Mark Contacted" : "Mark Closed"}
                       </button>
@@ -448,7 +452,7 @@ export function EnquiriesTab({
                           await onDelete(lead.id);
                           toast.info("Inquiry deleted from database.");
                         }}
-                        className="p-1.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer"
+                        className="p-1.5 text-neutral-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
                         title="Delete inquiry"
                       >
                         <Trash2 className="size-3.5" />

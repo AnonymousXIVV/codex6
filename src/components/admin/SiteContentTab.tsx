@@ -679,16 +679,16 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
   return (
     <div className="space-y-6">
       {onSwitchTab && (
-        <div className="rounded-2xl bg-white border border-black/[0.08] p-4 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="surface-lift rounded-2xl bg-gradient-to-r from-blue/5 via-purple-500/5 to-emerald-500/5 border border-black/10 p-4 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="size-9 rounded-xl bg-[#0071E3]/10 text-[#0071E3] flex items-center justify-center shrink-0">
+            <span className="size-9 rounded-xl bg-blue/10 text-blue flex items-center justify-center shrink-0">
               <Sparkles className="size-4" />
             </span>
             <div>
-              <span className="text-xs font-semibold text-neutral-900">
+              <span className="text-xs font-semibold text-label">
                 Looking for Color Schemes, Section Ordering, WhatsApp Floating Docks, or SEO?
               </span>
-              <p className="text-[11px] text-neutral-500 mt-0.5">
+              <p className="text-[11px] text-muted-foreground mt-0.5">
                 The Studio Customizer gives you real-time controls for colorways, corner radiuses, section visibility/ordering, conversion docks, and emergency mode.
               </p>
             </div>
@@ -696,7 +696,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
           <button
             type="button"
             onClick={() => onSwitchTab("customizer")}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-semibold shrink-0 cursor-pointer shadow-2xs transition"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue hover:bg-blue-600 text-white text-xs font-semibold shrink-0 cursor-pointer shadow-xs transition"
           >
             <Sparkles className="size-3.5" />
             <span>Open Studio Customizer</span>
@@ -705,26 +705,26 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
       )}
 
       {/* Header Banner */}
-      <div className="rounded-2xl bg-white border border-black/[0.08] p-4 sm:p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="surface-lift rounded-2xl bg-card border border-black/8 p-4 sm:p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <Globe className="size-5 text-[#0071E3]" />
-            <h2 className="text-base font-semibold text-neutral-900 tracking-tight">
+            <Globe className="size-5 text-blue" />
+            <h2 className="text-base font-semibold text-label font-display tracking-tight">
               Multi-Contact Center & Website Copy
             </h2>
             {hasUnsavedChanges ? (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-500/10 text-amber-600 border border-amber-500/20">
                 <span className="size-1.5 rounded-full bg-amber-500 animate-pulse" />
                 Unsaved Edits
               </span>
             ) : (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-600">
                 <Check className="size-3" />
                 Saved
               </span>
             )}
           </div>
-          <p className="text-xs text-neutral-500 mt-0.5">
+          <p className="text-xs text-muted-foreground mt-0.5">
             Manage multiple phone lines, WhatsApps, Telegrams, Vibers, and studio locations with compact dropdowns and dedicated save buttons.
           </p>
         </div>
@@ -734,7 +734,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
             type="button"
             onClick={handleReset}
             disabled={resetting}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/[0.08] hover:bg-neutral-50 text-neutral-600 hover:text-neutral-900 text-xs font-medium transition-all cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/10 hover:bg-fill text-muted-foreground hover:text-label text-xs font-medium transition-all cursor-pointer"
           >
             <RotateCcw className="size-3.5" />
             <span>Reset</span>
@@ -745,8 +745,8 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
             onClick={() => handleSave()}
             disabled={saving}
             className={cn(
-              "inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-white text-xs font-semibold transition-all shadow-2xs active:scale-[0.99] cursor-pointer",
-              hasUnsavedChanges ? "bg-emerald-600 hover:bg-emerald-700" : "bg-neutral-900 hover:bg-black"
+              "inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-white text-xs font-semibold transition-all shadow-xs active:scale-[0.99] cursor-pointer",
+              hasUnsavedChanges ? "bg-emerald-600 hover:bg-emerald-700" : "bg-blue hover:bg-blue-hover"
             )}
           >
             <Save className="size-3.5" />
@@ -756,11 +756,11 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
       </div>
 
       {/* Space-Saving Dropdown Toolbar */}
-      <div className="rounded-2xl bg-white border border-black/[0.08] p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-wrap items-center justify-between gap-3">
+      <div className="surface-lift rounded-2xl bg-card border border-black/8 p-3 shadow-xs flex flex-wrap items-center justify-between gap-3">
         {/* Left: View Filter Dropdown & Expand/Collapse Toggle */}
         <div className="flex items-center gap-2.5 flex-wrap">
           <div className="flex items-center gap-1.5">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400 whitespace-nowrap">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground whitespace-nowrap">
               Section:
             </span>
             <div className="relative">
@@ -773,7 +773,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                     setCollapsedSections((prev) => ({ ...prev, [cat]: false }));
                   }
                 }}
-                className="appearance-none bg-neutral-50/80 hover:bg-neutral-100/80 border border-black/[0.08] rounded-xl px-3 py-1.5 pr-8 text-xs font-semibold text-neutral-800 outline-none cursor-pointer transition shadow-2xs"
+                className="appearance-none bg-fill/60 hover:bg-fill border border-black/10 hover:border-black/20 rounded-xl px-3 py-1.5 pr-8 text-xs font-semibold text-label outline-none cursor-pointer transition shadow-2xs"
               >
                 <option value="all">📁 All Sections ({phones.length + whatsapps.length + telegrams.length + vibers.length + emails.length + addresses.length} contacts)</option>
                 <option value="phone">📞 Phone Numbers ({phones.length})</option>
@@ -785,14 +785,14 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 <option value="header_socials">🌐 Header Socials ({activeCount}/5 active)</option>
                 <option value="brand">✨ Brand & Hero Copy</option>
               </select>
-              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-3.5 text-neutral-400" />
+              <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
             </div>
           </div>
 
           <button
             type="button"
             onClick={handleToggleAllSections}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/[0.08] hover:bg-neutral-50 text-neutral-600 hover:text-neutral-900 text-xs font-medium transition cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-black/10 hover:bg-fill text-muted-foreground hover:text-label text-xs font-medium transition cursor-pointer"
             title="Toggle compact view for all sections"
           >
             <ChevronsUpDown className="size-3.5" />
@@ -820,7 +820,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 setHasUnsavedChanges(true);
                 e.target.value = "";
               }}
-              className="appearance-none bg-[#0071E3] hover:bg-blue-600 text-white text-xs font-semibold px-3.5 py-1.5 pr-8 rounded-xl shadow-2xs transition cursor-pointer border-none"
+              className="appearance-none bg-blue hover:bg-blue-hover text-white text-xs font-semibold px-3.5 py-1.5 pr-8 rounded-xl shadow-xs transition cursor-pointer border-none"
             >
               <option value="" disabled>+ Add Channel / Contact ▾</option>
               <option value="phone">📞 + Phone Number</option>
@@ -837,7 +837,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
             type="button"
             onClick={() => handleSave()}
             disabled={saving}
-            className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs"
             title="Save all changes to database"
           >
             <Save className="size-3.5" />
@@ -847,15 +847,15 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
       </div>
 
       {loading ? (
-        <div className="rounded-2xl bg-white border border-black/[0.08] p-12 text-center text-xs text-neutral-400 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+        <div className="surface-lift rounded-2xl bg-card border border-black/8 p-12 text-center text-xs text-subtle">
           Loading site configuration from SQLite...
         </div>
       ) : (
         <div className="space-y-6">
           {/* PHONE NUMBERS SECTION */}
           {(activeCategory === "all" || activeCategory === "phone") && (
-            <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
+            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-5 sm:p-6 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-hairline">
                 <button
                   type="button"
                   onClick={() => toggleSection("phone")}
@@ -866,14 +866,14 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900 group-hover:text-[#0071E3] transition">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-label group-hover:text-blue transition">
                         Direct Phone Numbers ({phones.length})
                       </h3>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-medium">
                         Click-to-Call
                       </span>
                     </div>
-                    <p className="text-[11px] text-neutral-500 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
                       Add mobile desks, landlines, sales hotlines. Primary line features on hero and call buttons.
                     </p>
                   </div>
@@ -887,7 +887,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                       setCollapsedSections((prev) => ({ ...prev, phone: false }));
                       setHasUnsavedChanges(true);
                     }}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-2xs"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs"
                   >
                     <Plus className="size-3.5" />
                     <span>Add Phone</span>
@@ -897,7 +897,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                     type="button"
                     onClick={() => handleSave()}
                     disabled={saving}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-emerald-600/30 bg-emerald-50 text-emerald-700 text-xs font-semibold transition cursor-pointer shadow-2xs"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-emerald-600/30 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs font-semibold transition cursor-pointer shadow-2xs"
                     title="Save phone numbers to database"
                   >
                     <Save className="size-3.5" />
@@ -907,7 +907,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                   <button
                     type="button"
                     onClick={() => toggleSection("phone")}
-                    className="size-7 rounded-lg hover:bg-neutral-100 text-neutral-400 flex items-center justify-center transition cursor-pointer"
+                    className="size-7 rounded-lg hover:bg-fill text-muted-foreground flex items-center justify-center transition cursor-pointer"
                     title={collapsedSections.phone ? "Expand section" : "Collapse section"}
                   >
                     <ChevronDown className={cn("size-4 transition-transform duration-200", collapsedSections.phone && "-rotate-90")} />
@@ -917,154 +917,155 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
               {!collapsedSections.phone && (
                 <>
-                  {phones.length === 0 ? (
-                    <div className="text-center py-6 text-xs text-neutral-400 border border-dashed border-black/[0.08] rounded-xl">
-                      No phone numbers configured. Click "Add Phone Number" to create one.
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {phones.map((p, _idx) => (
-                        <div
-                          key={p.id}
-                          className={cn(
-                            "rounded-xl border p-4 transition-all relative space-y-3",
-                            p.isPrimary
-                              ? "border-emerald-500/40 bg-emerald-50/20 shadow-2xs"
-                              : "border-black/[0.08] bg-neutral-50/40 hover:border-black/15"
-                          )}
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <PhoneLogo className="size-5 shrink-0" />
-                              <select
-                                value={p.type}
-                                onChange={(e) => {
-                                  const newType = e.target.value as SocialContact["type"];
-                                  handleUpdateContact(p.id, {
-                                    type: newType,
-                                    href: computeHref(newType, p.value),
-                                  });
-                                  setHasUnsavedChanges(true);
-                                  toast.info(`Changed contact type to ${newType}.`);
-                                }}
-                                className="bg-white border border-black/[0.08] rounded-lg px-2 py-0.5 text-[10px] font-medium text-neutral-800 outline-none cursor-pointer shadow-2xs"
-                                title="Change channel type"
-                              >
-                                <option value="phone">📞 Phone</option>
-                                <option value="whatsapp">💬 WhatsApp</option>
-                                <option value="telegram">✈️ Telegram</option>
-                                <option value="viber">🟣 Viber</option>
-                                <option value="email">✉️ Email</option>
-                              </select>
 
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  handleSetPrimaryContact(p.id, "phone");
-                                  setHasUnsavedChanges(true);
-                                }}
-                                className={cn(
-                                  "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold transition cursor-pointer",
-                                  p.isPrimary
-                                    ? "bg-emerald-600 text-white shadow-2xs"
-                                    : "bg-black/[0.04] hover:bg-emerald-50 text-neutral-600 hover:text-emerald-700"
-                                )}
-                              >
-                                <Star className={cn("size-2.5", p.isPrimary && "fill-current")} />
-                                <span>{p.isPrimary ? "Primary Line" : "Make Primary"}</span>
-                              </button>
-                            </div>
+              {phones.length === 0 ? (
+                <div className="text-center py-6 text-xs text-muted-foreground border border-dashed border-black/10 rounded-xl">
+                  No phone numbers configured. Click "Add Phone Number" to create one.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {phones.map((p, _idx) => (
+                    <div
+                      key={p.id}
+                      className={cn(
+                        "rounded-xl border p-4 transition-all relative space-y-3",
+                        p.isPrimary
+                          ? "border-emerald-500/40 bg-emerald-500/[0.03] shadow-xs"
+                          : "border-black/8 bg-fill/30 hover:border-black/15"
+                      )}
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <PhoneLogo className="size-5 shrink-0" />
+                          <select
+                            value={p.type}
+                            onChange={(e) => {
+                              const newType = e.target.value as SocialContact["type"];
+                              handleUpdateContact(p.id, {
+                                type: newType,
+                                href: computeHref(newType, p.value),
+                              });
+                              setHasUnsavedChanges(true);
+                              toast.info(`Changed contact type to ${newType}.`);
+                            }}
+                            className="bg-fill/60 hover:bg-fill border border-black/10 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-label outline-none cursor-pointer"
+                            title="Change channel type"
+                          >
+                            <option value="phone">📞 Phone</option>
+                            <option value="whatsapp">💬 WhatsApp</option>
+                            <option value="telegram">✈️ Telegram</option>
+                            <option value="viber">🟣 Viber</option>
+                            <option value="email">✉️ Email</option>
+                          </select>
 
-                            <button
-                              type="button"
-                              onClick={() => {
-                                handleRemoveContact(p.id);
-                                setHasUnsavedChanges(true);
-                              }}
-                              className="size-7 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition cursor-pointer"
-                              title="Delete phone number"
-                            >
-                              <Trash2 className="size-3.5" />
-                            </button>
-                          </div>
-
-                          <div className="space-y-2">
-                            <div>
-                              <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
-                                Line Label / Purpose
-                              </label>
-                              <input
-                                type="text"
-                                value={p.label || ""}
-                                placeholder="e.g. Sales Desk, Kyiv Landline, Emergency"
-                                onChange={(e) => handleUpdateContact(p.id, { label: e.target.value })}
-                                className="w-full bg-white border border-black/[0.08] focus:border-emerald-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
-                              />
-                            </div>
-
-                            <div>
-                              <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
-                                Phone Number
-                              </label>
-                              <input
-                                type="text"
-                                value={p.value}
-                                placeholder="+380 63 640 6783"
-                                onChange={(e) => handleUpdateContact(p.id, { value: e.target.value })}
-                                className="w-full bg-white border border-black/[0.08] focus:border-emerald-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 font-mono outline-none transition shadow-2xs"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="pt-2 border-t border-black/[0.06] flex items-center justify-between text-[11px]">
-                            <span className="text-neutral-500 font-mono truncate max-w-[200px]">
-                              {p.href || `tel:${p.value}`}
-                            </span>
-                            <div className="flex items-center gap-2">
-                              <button
-                                type="button"
-                                onClick={() => handleCopyUrl(`phone-${p.id}`, p.value)}
-                                className="text-neutral-500 hover:text-neutral-900 inline-flex items-center gap-1 cursor-pointer"
-                              >
-                                <Copy className="size-3" />
-                                <span>Copy</span>
-                              </button>
-                              <a
-                                href={p.href || `tel:${p.value}`}
-                                className="text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 font-medium"
-                              >
-                                <ExternalLink className="size-3" />
-                                <span>Test Call</span>
-                              </a>
-                            </div>
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleSetPrimaryContact(p.id, "phone");
+                              setHasUnsavedChanges(true);
+                            }}
+                            className={cn(
+                              "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer",
+                              p.isPrimary
+                                ? "bg-emerald-600 text-white shadow-xs"
+                                : "bg-black/5 dark:bg-white/5 hover:bg-emerald-500/10 text-muted-foreground hover:text-emerald-600"
+                            )}
+                          >
+                            <Star className={cn("size-2.5", p.isPrimary && "fill-current")} />
+                            <span>{p.isPrimary ? "Primary Line" : "Make Primary"}</span>
+                          </button>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          )}
 
-          {/* WHATSAPP NUMBERS SECTION */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleRemoveContact(p.id);
+                            setHasUnsavedChanges(true);
+                          }}
+                          className="size-7 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 flex items-center justify-center transition cursor-pointer"
+                          title="Delete phone number"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </button>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div>
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
+                            Line Label / Purpose
+                          </label>
+                          <input
+                            type="text"
+                            value={p.label || ""}
+                            placeholder="e.g. Sales Desk, Kyiv Landline, Emergency"
+                            onChange={(e) => handleUpdateContact(p.id, { label: e.target.value })}
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-emerald-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
+                            Phone Number
+                          </label>
+                          <input
+                            type="text"
+                            value={p.value}
+                            placeholder="+380 63 640 6783"
+                            onChange={(e) => handleUpdateContact(p.id, { value: e.target.value })}
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-emerald-500 rounded-lg px-3 py-1.5 text-xs text-label font-mono outline-none transition"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-hairline flex items-center justify-between text-[11px]">
+                        <span className="text-muted-foreground font-mono truncate max-w-[200px]">
+                          {p.href || `tel:${p.value}`}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleCopyUrl(`phone-${p.id}`, p.value)}
+                            className="text-muted-foreground hover:text-label inline-flex items-center gap-1 cursor-pointer"
+                          >
+                            <Copy className="size-3" />
+                            <span>Copy</span>
+                          </button>
+                          <a
+                            href={p.href || `tel:${p.value}`}
+                            className="text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 font-medium"
+                          >
+                            <ExternalLink className="size-3" />
+                            <span>Test Call</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* WHATSAPP NUMBERS SECTION */}
           {(activeCategory === "all" || activeCategory === "whatsapp") && (
-            <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
+            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-hairline">
                 <div className="flex items-center gap-2.5">
                   <div className="size-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-600">
                     <WhatsAppLogo className="size-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                         WhatsApp Business & Direct Lines ({whatsapps.length})
                       </h3>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-medium">
                         Instant Chat wa.me
                       </span>
                     </div>
-                    <p className="text-[11px] text-neutral-500 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
                       Configure multiple WhatsApp numbers (e.g. Sales, Support, Technical). Links automatically generate direct wa.me chat URLs.
                     </p>
                   </div>
@@ -1073,7 +1074,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 <button
                   type="button"
                   onClick={() => handleAddContact("whatsapp")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-2xs shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs shrink-0"
                 >
                   <Plus className="size-3.5" />
                   <span>Add WhatsApp Line</span>
@@ -1081,7 +1082,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
               </div>
 
               {whatsapps.length === 0 ? (
-                <div className="text-center py-6 text-xs text-neutral-400 border border-dashed border-black/[0.08] rounded-xl">
+                <div className="text-center py-6 text-xs text-muted-foreground border border-dashed border-black/10 rounded-xl">
                   No WhatsApp lines configured. Click "Add WhatsApp Line" to create one.
                 </div>
               ) : (
@@ -1092,8 +1093,8 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                       className={cn(
                         "rounded-xl border p-4 transition-all relative space-y-3",
                         w.isPrimary
-                          ? "border-emerald-500/40 bg-emerald-50/20 shadow-2xs"
-                          : "border-black/[0.08] bg-neutral-50/40 hover:border-black/15"
+                          ? "border-emerald-500/40 bg-emerald-500/[0.03] shadow-xs"
+                          : "border-black/8 bg-fill/30 hover:border-black/15"
                       )}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -1103,10 +1104,10 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             type="button"
                             onClick={() => handleSetPrimaryContact(w.id, "whatsapp")}
                             className={cn(
-                              "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold transition cursor-pointer",
+                              "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer",
                               w.isPrimary
-                                ? "bg-emerald-600 text-white shadow-2xs"
-                                : "bg-black/[0.04] hover:bg-emerald-50 text-neutral-600 hover:text-emerald-700"
+                                ? "bg-emerald-600 text-white shadow-xs"
+                                : "bg-black/5 dark:bg-white/5 hover:bg-emerald-500/10 text-muted-foreground hover:text-emerald-600"
                             )}
                           >
                             <Star className={cn("size-2.5", w.isPrimary && "fill-current")} />
@@ -1117,7 +1118,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                         <button
                           type="button"
                           onClick={() => handleRemoveContact(w.id)}
-                          className="size-7 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition cursor-pointer"
+                          className="size-7 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 flex items-center justify-center transition cursor-pointer"
                           title="Delete WhatsApp"
                         >
                           <Trash2 className="size-3.5" />
@@ -1126,7 +1127,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
                       <div className="space-y-2">
                         <div>
-                          <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                             Desk / Account Label
                           </label>
                           <input
@@ -1134,12 +1135,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             value={w.label || ""}
                             placeholder="e.g. Main WhatsApp, Sales Desk, VIP Support"
                             onChange={(e) => handleUpdateContact(w.id, { label: e.target.value })}
-                            className="w-full bg-white border border-black/[0.08] focus:border-emerald-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-emerald-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                             Phone Number (With Country Code)
                           </label>
                           <input
@@ -1147,20 +1148,20 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             value={w.value}
                             placeholder="+380636406783"
                             onChange={(e) => handleUpdateContact(w.id, { value: e.target.value })}
-                            className="w-full bg-white border border-black/[0.08] focus:border-emerald-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 font-mono outline-none transition shadow-2xs"
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-emerald-500 rounded-lg px-3 py-1.5 text-xs text-label font-mono outline-none transition"
                           />
                         </div>
                       </div>
 
-                      <div className="pt-2 border-t border-black/[0.06] flex items-center justify-between text-[11px]">
-                        <span className="text-neutral-500 font-mono truncate max-w-[200px]">
+                      <div className="pt-2 border-t border-hairline flex items-center justify-between text-[11px]">
+                        <span className="text-muted-foreground font-mono truncate max-w-[200px]">
                           {w.href || `https://wa.me/${w.value.replace(/[^0-9]/g, "")}`}
                         </span>
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => handleCopyUrl(`wa-${w.id}`, w.href || `https://wa.me/${w.value.replace(/[^0-9]/g, "")}`)}
-                            className="text-neutral-500 hover:text-neutral-900 inline-flex items-center gap-1 cursor-pointer"
+                            className="text-muted-foreground hover:text-label inline-flex items-center gap-1 cursor-pointer"
                           >
                             <Copy className="size-3" />
                             <span>Copy Link</span>
@@ -1185,22 +1186,22 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
           {/* TELEGRAM ACCOUNTS SECTION */}
           {(activeCategory === "all" || activeCategory === "telegram") && (
-            <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
+            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-hairline">
                 <div className="flex items-center gap-2.5">
                   <div className="size-8 rounded-xl bg-[#26A5E4]/10 flex items-center justify-center text-[#26A5E4]">
                     <TelegramLogo className="size-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                         Telegram Accounts & Channels ({telegrams.length})
                       </h3>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-sky-50 text-sky-700 border border-sky-200/60 font-medium">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-600 font-medium">
                         Instant t.me Gateway
                       </span>
                     </div>
-                    <p className="text-[11px] text-neutral-500 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
                       Provide usernames (e.g. @codexdynamics), phone numbers, or channel invite links. Visitors can instantly open chat in Telegram.
                     </p>
                   </div>
@@ -1209,7 +1210,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 <button
                   type="button"
                   onClick={() => handleAddContact("telegram")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#26A5E4] hover:bg-[#1f93cd] text-white text-xs font-semibold transition cursor-pointer shadow-2xs shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#26A5E4] hover:bg-[#1f93cd] text-white text-xs font-semibold transition cursor-pointer shadow-xs shrink-0"
                 >
                   <Plus className="size-3.5" />
                   <span>Add Telegram</span>
@@ -1217,7 +1218,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
               </div>
 
               {telegrams.length === 0 ? (
-                <div className="text-center py-6 text-xs text-neutral-400 border border-dashed border-black/[0.08] rounded-xl">
+                <div className="text-center py-6 text-xs text-muted-foreground border border-dashed border-black/10 rounded-xl">
                   No Telegram accounts configured. Click "Add Telegram" to create one.
                 </div>
               ) : (
@@ -1228,8 +1229,8 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                       className={cn(
                         "rounded-xl border p-4 transition-all relative space-y-3",
                         t.isPrimary
-                          ? "border-sky-500/40 bg-sky-50/20 shadow-2xs"
-                          : "border-black/[0.08] bg-neutral-50/40 hover:border-black/15"
+                          ? "border-sky-500/40 bg-sky-500/[0.03] shadow-xs"
+                          : "border-black/8 bg-fill/30 hover:border-black/15"
                       )}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -1239,10 +1240,10 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             type="button"
                             onClick={() => handleSetPrimaryContact(t.id, "telegram")}
                             className={cn(
-                              "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold transition cursor-pointer",
+                              "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer",
                               t.isPrimary
-                                ? "bg-[#26A5E4] text-white shadow-2xs"
-                                : "bg-black/[0.04] hover:bg-sky-50 text-neutral-600 hover:text-sky-700"
+                                ? "bg-[#26A5E4] text-white shadow-xs"
+                                : "bg-black/5 dark:bg-white/5 hover:bg-sky-500/10 text-muted-foreground hover:text-sky-600"
                             )}
                           >
                             <Star className={cn("size-2.5", t.isPrimary && "fill-current")} />
@@ -1253,7 +1254,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                         <button
                           type="button"
                           onClick={() => handleRemoveContact(t.id)}
-                          className="size-7 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition cursor-pointer"
+                          className="size-7 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 flex items-center justify-center transition cursor-pointer"
                           title="Delete Telegram"
                         >
                           <Trash2 className="size-3.5" />
@@ -1262,7 +1263,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
                       <div className="space-y-2">
                         <div>
-                          <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                             Telegram Label
                           </label>
                           <input
@@ -1270,12 +1271,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             value={t.label || ""}
                             placeholder="e.g. Official Telegram, Founder Direct, Studio Channel"
                             onChange={(e) => handleUpdateContact(t.id, { label: e.target.value })}
-                            className="w-full bg-white border border-black/[0.08] focus:border-sky-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-sky-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                             Handle, Phone, or URL
                           </label>
                           <input
@@ -1283,20 +1284,20 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             value={t.value}
                             placeholder="@codexdynamics or +380636406783"
                             onChange={(e) => handleUpdateContact(t.id, { value: e.target.value })}
-                            className="w-full bg-white border border-black/[0.08] focus:border-sky-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 font-mono outline-none transition shadow-2xs"
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-sky-500 rounded-lg px-3 py-1.5 text-xs text-label font-mono outline-none transition"
                           />
                         </div>
                       </div>
 
-                      <div className="pt-2 border-t border-black/[0.06] flex items-center justify-between text-[11px]">
-                        <span className="text-neutral-500 font-mono truncate max-w-[200px]">
+                      <div className="pt-2 border-t border-hairline flex items-center justify-between text-[11px]">
+                        <span className="text-muted-foreground font-mono truncate max-w-[200px]">
                           {t.href || `https://t.me/${t.value.replace(/^@/, "")}`}
                         </span>
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => handleCopyUrl(`tg-${t.id}`, t.href || `https://t.me/${t.value.replace(/^@/, "")}`)}
-                            className="text-neutral-500 hover:text-neutral-900 inline-flex items-center gap-1 cursor-pointer"
+                            className="text-muted-foreground hover:text-label inline-flex items-center gap-1 cursor-pointer"
                           >
                             <Copy className="size-3" />
                             <span>Copy Link</span>
@@ -1321,22 +1322,22 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
           {/* VIBER NUMBERS SECTION */}
           {(activeCategory === "all" || activeCategory === "viber") && (
-            <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
+            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-hairline">
                 <div className="flex items-center gap-2.5">
                   <div className="size-8 rounded-xl bg-[#7360F2]/10 flex items-center justify-center text-[#7360F2]">
                     <ViberLogo className="size-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                         Viber Messaging Lines ({vibers.length})
                       </h3>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 border border-purple-200/60 font-medium">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-600 font-medium">
                         viber://chat Protocol
                       </span>
                     </div>
-                    <p className="text-[11px] text-neutral-500 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
                       Configure Viber client support numbers with international format. Direct links open native Viber chat.
                     </p>
                   </div>
@@ -1345,7 +1346,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 <button
                   type="button"
                   onClick={() => handleAddContact("viber")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#7360F2] hover:bg-[#6250e0] text-white text-xs font-semibold transition cursor-pointer shadow-2xs shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#7360F2] hover:bg-[#6250e0] text-white text-xs font-semibold transition cursor-pointer shadow-xs shrink-0"
                 >
                   <Plus className="size-3.5" />
                   <span>Add Viber Line</span>
@@ -1353,7 +1354,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
               </div>
 
               {vibers.length === 0 ? (
-                <div className="text-center py-6 text-xs text-neutral-400 border border-dashed border-black/[0.08] rounded-xl">
+                <div className="text-center py-6 text-xs text-muted-foreground border border-dashed border-black/10 rounded-xl">
                   No Viber lines configured. Click "Add Viber Line" to create one.
                 </div>
               ) : (
@@ -1364,8 +1365,8 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                       className={cn(
                         "rounded-xl border p-4 transition-all relative space-y-3",
                         v.isPrimary
-                          ? "border-purple-500/40 bg-purple-50/20 shadow-2xs"
-                          : "border-black/[0.08] bg-neutral-50/40 hover:border-black/15"
+                          ? "border-purple-500/40 bg-purple-500/[0.03] shadow-xs"
+                          : "border-black/8 bg-fill/30 hover:border-black/15"
                       )}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -1375,10 +1376,10 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             type="button"
                             onClick={() => handleSetPrimaryContact(v.id, "viber")}
                             className={cn(
-                              "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold transition cursor-pointer",
+                              "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer",
                               v.isPrimary
-                                ? "bg-[#7360F2] text-white shadow-2xs"
-                                : "bg-black/[0.04] hover:bg-purple-50 text-neutral-600 hover:text-purple-700"
+                                ? "bg-[#7360F2] text-white shadow-xs"
+                                : "bg-black/5 dark:bg-white/5 hover:bg-purple-500/10 text-muted-foreground hover:text-purple-600"
                             )}
                           >
                             <Star className={cn("size-2.5", v.isPrimary && "fill-current")} />
@@ -1389,7 +1390,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                         <button
                           type="button"
                           onClick={() => handleRemoveContact(v.id)}
-                          className="size-7 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition cursor-pointer"
+                          className="size-7 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 flex items-center justify-center transition cursor-pointer"
                           title="Delete Viber"
                         >
                           <Trash2 className="size-3.5" />
@@ -1398,7 +1399,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
                       <div className="space-y-2">
                         <div>
-                          <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                             Viber Label
                           </label>
                           <input
@@ -1406,12 +1407,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             value={v.label || ""}
                             placeholder="e.g. Direct Viber, Support Desk"
                             onChange={(e) => handleUpdateContact(v.id, { label: e.target.value })}
-                            className="w-full bg-white border border-black/[0.08] focus:border-purple-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-purple-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                             Viber Number (E.164 Format)
                           </label>
                           <input
@@ -1419,20 +1420,20 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             value={v.value}
                             placeholder="+380636406783"
                             onChange={(e) => handleUpdateContact(v.id, { value: e.target.value })}
-                            className="w-full bg-white border border-black/[0.08] focus:border-purple-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 font-mono outline-none transition shadow-2xs"
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-purple-500 rounded-lg px-3 py-1.5 text-xs text-label font-mono outline-none transition"
                           />
                         </div>
                       </div>
 
-                      <div className="pt-2 border-t border-black/[0.06] flex items-center justify-between text-[11px]">
-                        <span className="text-neutral-500 font-mono truncate max-w-[200px]">
+                      <div className="pt-2 border-t border-hairline flex items-center justify-between text-[11px]">
+                        <span className="text-muted-foreground font-mono truncate max-w-[200px]">
                           {v.href || `viber://chat?number=${encodeURIComponent(v.value)}`}
                         </span>
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => handleCopyUrl(`vb-${v.id}`, v.value)}
-                            className="text-neutral-500 hover:text-neutral-900 inline-flex items-center gap-1 cursor-pointer"
+                            className="text-muted-foreground hover:text-label inline-flex items-center gap-1 cursor-pointer"
                           >
                             <Copy className="size-3" />
                             <span>Copy</span>
@@ -1455,22 +1456,22 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
           {/* STUDIO ADDRESSES & OFFICES SECTION */}
           {(activeCategory === "all" || activeCategory === "address") && (
-            <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
+            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-hairline">
                 <div className="flex items-center gap-2.5">
                   <div className="size-8 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-600">
                     <MapPin className="size-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                         Studio Addresses & Office Locations ({addresses.length})
                       </h3>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200/60 font-medium">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 font-medium">
                         Google Maps & Directions
                       </span>
                     </div>
-                    <p className="text-[11px] text-neutral-500 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
                       Configure your main studio headquarters, satellite branches, and regional desks. Visitors can explore them with 1-click Google Maps links.
                     </p>
                   </div>
@@ -1479,7 +1480,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 <button
                   type="button"
                   onClick={handleAddAddress}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition cursor-pointer shadow-2xs shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs shrink-0"
                 >
                   <Plus className="size-3.5" />
                   <span>Add Studio Location</span>
@@ -1493,8 +1494,8 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                     className={cn(
                       "rounded-xl border p-4 transition-all relative space-y-3",
                       addr.isPrimary
-                        ? "border-rose-500/40 bg-rose-50/20 shadow-2xs"
-                        : "border-black/[0.08] bg-neutral-50/40 hover:border-black/15"
+                        ? "border-rose-500/40 bg-rose-500/[0.03] shadow-xs"
+                        : "border-black/8 bg-fill/30 hover:border-black/15"
                     )}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -1504,10 +1505,10 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           type="button"
                           onClick={() => handleSetPrimaryAddress(addr.id)}
                           className={cn(
-                            "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold transition cursor-pointer",
+                            "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer",
                             addr.isPrimary
-                              ? "bg-rose-600 text-white shadow-2xs"
-                              : "bg-black/[0.04] hover:bg-rose-50 text-neutral-600 hover:text-rose-700"
+                              ? "bg-rose-600 text-white shadow-xs"
+                              : "bg-black/5 dark:bg-white/5 hover:bg-rose-500/10 text-muted-foreground hover:text-rose-600"
                           )}
                         >
                           <Star className={cn("size-2.5", addr.isPrimary && "fill-current")} />
@@ -1520,7 +1521,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           href={`https://maps.google.com/?q=${encodeURIComponent(addr.fullAddress || `${addr.street}, ${addr.city}`)}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/[0.04] hover:bg-black/[0.08] text-neutral-800 text-[11px] font-medium transition"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-black/5 dark:bg-white/5 hover:bg-black/10 text-label text-[11px] font-medium transition"
                         >
                           <ExternalLink className="size-3 text-rose-500" />
                           <span>Preview on Google Maps</span>
@@ -1530,7 +1531,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           <button
                             type="button"
                             onClick={() => handleRemoveAddress(addr.id)}
-                            className="size-7 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition cursor-pointer"
+                            className="size-7 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 flex items-center justify-center transition cursor-pointer"
                             title="Delete address"
                           >
                             <Trash2 className="size-3.5" />
@@ -1541,7 +1542,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
-                        <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                        <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                           Location Name / Studio Label
                         </label>
                         <input
@@ -1549,12 +1550,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           value={addr.label || ""}
                           placeholder="e.g. Kyiv Studio (HQ), Gulliver Tower Desk"
                           onChange={(e) => handleUpdateAddress(addr.id, { label: e.target.value })}
-                          className="w-full bg-white border border-black/[0.08] focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
+                          className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                        <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                           Street & Building
                         </label>
                         <input
@@ -1562,12 +1563,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           value={addr.street || ""}
                           placeholder="e.g. Sportyvna, 1A"
                           onChange={(e) => handleUpdateAddress(addr.id, { street: e.target.value })}
-                          className="w-full bg-white border border-black/[0.08] focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
+                          className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                        <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                           City, Postal Code & Country
                         </label>
                         <input
@@ -1575,14 +1576,14 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           value={addr.city || ""}
                           placeholder="e.g. Kyiv, 012023, Ukraine"
                           onChange={(e) => handleUpdateAddress(addr.id, { city: e.target.value })}
-                          className="w-full bg-white border border-black/[0.08] focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
+                          className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                         />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-1">
                       <div className="sm:col-span-2">
-                        <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                        <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                           Full Formatted Address (For Maps Direction Query)
                         </label>
                         <input
@@ -1590,12 +1591,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           value={addr.fullAddress || ""}
                           placeholder="Sportyvna, 1A, Kyiv, 012023, Ukraine"
                           onChange={(e) => handleUpdateAddress(addr.id, { fullAddress: e.target.value })}
-                          className="w-full bg-white border border-black/[0.08] focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
+                          className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                        <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                           Latitude (Map Pin)
                         </label>
                         <input
@@ -1603,12 +1604,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           step="any"
                           value={addr.lat ?? 50.438743}
                           onChange={(e) => handleUpdateAddress(addr.id, { lat: parseFloat(e.target.value) || 0 })}
-                          className="w-full bg-white border border-black/[0.08] focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 font-mono outline-none transition shadow-2xs"
+                          className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-label font-mono outline-none transition"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                        <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                           Longitude (Map Pin)
                         </label>
                         <input
@@ -1616,7 +1617,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           step="any"
                           value={addr.lng ?? 30.523177}
                           onChange={(e) => handleUpdateAddress(addr.id, { lng: parseFloat(e.target.value) || 0 })}
-                          className="w-full bg-white border border-black/[0.08] focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-neutral-900 font-mono outline-none transition shadow-2xs"
+                          className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-label font-mono outline-none transition"
                         />
                       </div>
                     </div>
@@ -1628,22 +1629,22 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
           {/* EMAIL INBOXES SECTION */}
           {(activeCategory === "all" || activeCategory === "email") && (
-            <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-black/[0.06]">
+            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-hairline">
                 <div className="flex items-center gap-2.5">
-                  <div className="size-8 rounded-xl bg-[#0071E3]/10 flex items-center justify-center text-[#0071E3]">
+                  <div className="size-8 rounded-xl bg-blue/10 flex items-center justify-center text-blue">
                     <Mail className="size-4" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
+                      <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                         Public Inboxes & Routing Emails ({emails.length})
                       </h3>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#0071E3]/10 text-[#0071E3] font-medium">
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue/10 text-blue font-medium">
                         mailto: Inboxes
                       </span>
                     </div>
-                    <p className="text-[11px] text-neutral-500 mt-0.5">
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
                       Configure team emails (e.g. Inquiries, Press, Founder direct). The primary email will also receive client messages.
                     </p>
                   </div>
@@ -1652,7 +1653,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 <button
                   type="button"
                   onClick={() => handleAddContact("email")}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0071E3] hover:bg-[#0077ED] text-white text-xs font-semibold transition cursor-pointer shadow-2xs shrink-0"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue hover:bg-blue-hover text-white text-xs font-semibold transition cursor-pointer shadow-xs shrink-0"
                 >
                   <Plus className="size-3.5" />
                   <span>Add Email Inbox</span>
@@ -1660,7 +1661,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
               </div>
 
               {emails.length === 0 ? (
-                <div className="text-center py-6 text-xs text-neutral-400 border border-dashed border-black/[0.08] rounded-xl">
+                <div className="text-center py-6 text-xs text-muted-foreground border border-dashed border-black/10 rounded-xl">
                   No emails configured. Click "Add Email Inbox" to create one.
                 </div>
               ) : (
@@ -1671,8 +1672,8 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                       className={cn(
                         "rounded-xl border p-4 transition-all relative space-y-3",
                         em.isPrimary
-                          ? "border-[#0071E3]/40 bg-[#0071E3]/[0.03] shadow-2xs"
-                          : "border-black/[0.08] bg-neutral-50/40 hover:border-black/15"
+                          ? "border-blue/40 bg-blue/[0.03] shadow-xs"
+                          : "border-black/8 bg-fill/30 hover:border-black/15"
                       )}
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -1682,10 +1683,10 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             type="button"
                             onClick={() => handleSetPrimaryContact(em.id, "email")}
                             className={cn(
-                              "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold transition cursor-pointer",
+                              "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer",
                               em.isPrimary
-                                ? "bg-[#0071E3] text-white shadow-2xs"
-                                : "bg-black/[0.04] hover:bg-[#0071E3]/10 text-neutral-600 hover:text-[#0071E3]"
+                                ? "bg-blue text-white shadow-xs"
+                                : "bg-black/5 dark:bg-white/5 hover:bg-blue/10 text-muted-foreground hover:text-blue"
                             )}
                           >
                             <Star className={cn("size-2.5", em.isPrimary && "fill-current")} />
@@ -1696,7 +1697,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                         <button
                           type="button"
                           onClick={() => handleRemoveContact(em.id)}
-                          className="size-7 rounded-lg text-neutral-400 hover:text-red-600 hover:bg-red-50 flex items-center justify-center transition cursor-pointer"
+                          className="size-7 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 flex items-center justify-center transition cursor-pointer"
                           title="Delete Email"
                         >
                           <Trash2 className="size-3.5" />
@@ -1705,7 +1706,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
                       <div className="space-y-2">
                         <div>
-                          <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                             Inbox Label / Department
                           </label>
                           <input
@@ -1713,12 +1714,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             value={em.label || ""}
                             placeholder="e.g. Primary Inquiries, Press & Media, Founder Direct"
                             onChange={(e) => handleUpdateContact(em.id, { label: e.target.value })}
-                            className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-lg px-3 py-1.5 text-xs text-neutral-900 outline-none transition shadow-2xs"
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-blue rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] uppercase font-semibold text-neutral-400 mb-1">
+                          <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
                             Email Address
                           </label>
                           <input
@@ -1726,27 +1727,27 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             value={em.value}
                             placeholder="contact@codexdynamics.com"
                             onChange={(e) => handleUpdateContact(em.id, { value: e.target.value })}
-                            className="w-full bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-lg px-3 py-1.5 text-xs text-neutral-900 font-mono outline-none transition shadow-2xs"
+                            className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-blue rounded-lg px-3 py-1.5 text-xs text-label font-mono outline-none transition"
                           />
                         </div>
                       </div>
 
-                      <div className="pt-2 border-t border-black/[0.06] flex items-center justify-between text-[11px]">
-                        <span className="text-neutral-500 font-mono truncate max-w-[200px]">
+                      <div className="pt-2 border-t border-hairline flex items-center justify-between text-[11px]">
+                        <span className="text-muted-foreground font-mono truncate max-w-[200px]">
                           {em.href || `mailto:${em.value}`}
                         </span>
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
                             onClick={() => handleCopyUrl(`em-${em.id}`, em.value)}
-                            className="text-neutral-500 hover:text-neutral-900 inline-flex items-center gap-1 cursor-pointer"
+                            className="text-muted-foreground hover:text-label inline-flex items-center gap-1 cursor-pointer"
                           >
                             <Copy className="size-3" />
                             <span>Copy</span>
                           </button>
                           <a
                             href={em.href || `mailto:${em.value}`}
-                            className="text-[#0071E3] hover:underline inline-flex items-center gap-1 font-medium"
+                            className="text-blue hover:underline inline-flex items-center gap-1 font-medium"
                           >
                             <ExternalLink className="size-3" />
                             <span>Send Email</span>
@@ -1762,22 +1763,22 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
           {/* HEADER SOCIAL BUTTONS CARD */}
           {(activeCategory === "all" || activeCategory === "header_socials") && (
-            <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-black/[0.06]">
+            <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-hairline">
                 <div>
                   <div className="flex items-center gap-2">
-                    <div className="size-7 rounded-xl bg-[#0071E3]/10 flex items-center justify-center text-[#0071E3]">
+                    <div className="size-7 rounded-lg bg-blue/10 flex items-center justify-center text-blue">
                       <Share2 className="size-4" />
                     </div>
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                       Header Social Action Buttons (Show / Hide & Credentials)
                     </h3>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
                       <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       {activeCount} of 5 Active on Header
                     </span>
                   </div>
-                  <p className="text-xs text-neutral-500 mt-1.5 max-w-2xl">
+                  <p className="text-xs text-muted-foreground mt-1.5 max-w-2xl">
                     Toggle which social icons appear in the global website navigation header, and update their destination profile links.
                   </p>
                 </div>
@@ -1786,7 +1787,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                   <button
                     type="button"
                     onClick={handleEnableAllSocials}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-black/[0.08] hover:bg-neutral-50 text-xs font-medium text-neutral-700 transition cursor-pointer shadow-2xs"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-black/10 hover:bg-fill text-xs font-medium text-label transition cursor-pointer"
                   >
                     <Eye className="size-3 text-emerald-600" />
                     <span>Show All 5</span>
@@ -1794,7 +1795,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                   <button
                     type="button"
                     onClick={handleDisableAllSocials}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-black/[0.08] hover:bg-neutral-50 text-xs font-medium text-neutral-700 transition cursor-pointer shadow-2xs"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-black/10 hover:bg-fill text-xs font-medium text-label transition cursor-pointer"
                   >
                     <EyeOff className="size-3 text-rose-500" />
                     <span>Hide All</span>
@@ -1802,7 +1803,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                   <button
                     type="button"
                     onClick={handleResetSocialUrls}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-black/[0.08] hover:bg-neutral-50 text-xs font-medium text-neutral-500 hover:text-neutral-800 transition cursor-pointer shadow-2xs"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-black/10 hover:bg-fill text-xs font-medium text-subtle hover:text-label transition cursor-pointer"
                   >
                     <RotateCcw className="size-3" />
                     <span>Reset URLs</span>
@@ -1822,8 +1823,8 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                       className={cn(
                         "rounded-xl border p-4 transition-all relative flex flex-col justify-between space-y-3",
                         state.enabled
-                          ? "border-black/[0.12] bg-white shadow-2xs"
-                          : "border-black/[0.06] bg-neutral-50/40 opacity-70"
+                          ? "border-black/12 bg-fill/40 shadow-xs"
+                          : "border-black/5 bg-fill/10 opacity-70"
                       )}
                     >
                       <div className="flex items-start justify-between gap-3">
@@ -1838,14 +1839,14 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           </div>
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <span className="text-xs font-semibold text-neutral-900">
+                              <span className="text-xs font-semibold text-label">
                                 {platform.name}
                               </span>
                               {state.enabled && (
                                 <span className="size-1.5 rounded-full bg-emerald-500" />
                               )}
                             </div>
-                            <p className="text-[11px] text-neutral-500 line-clamp-1">
+                            <p className="text-[11px] text-muted-foreground line-clamp-1">
                               {platform.description}
                             </p>
                           </div>
@@ -1864,7 +1865,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
 
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between text-[11px]">
-                          <label className="font-medium text-neutral-500 flex items-center gap-1">
+                          <label className="font-medium text-subtle flex items-center gap-1">
                             <LinkIcon className="size-3" />
                             <span>Destination URL</span>
                           </label>
@@ -1872,7 +1873,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                             <button
                               type="button"
                               onClick={() => handleCopyUrl(platform.key, state.url)}
-                              className="text-[10px] text-neutral-500 hover:text-neutral-900 transition px-1.5 py-0.5 rounded hover:bg-black/5 flex items-center gap-1 cursor-pointer"
+                              className="text-[10px] text-muted-foreground hover:text-label transition px-1.5 py-0.5 rounded hover:bg-black/5 flex items-center gap-1 cursor-pointer"
                               title="Copy URL"
                             >
                               {isCopied ? (
@@ -1892,7 +1893,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                                 href={state.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-[10px] text-[#0071E3] hover:underline px-1.5 py-0.5 rounded hover:bg-[#0071E3]/5 flex items-center gap-0.5"
+                                className="text-[10px] text-blue hover:underline px-1.5 py-0.5 rounded hover:bg-blue/5 flex items-center gap-0.5"
                                 title="Open URL in new tab"
                               >
                                 <ExternalLink className="size-2.5" />
@@ -1908,15 +1909,15 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           placeholder={platform.placeholder}
                           onChange={(e) => handleUpdateSocialUrl(platform.key, e.target.value)}
                           className={cn(
-                            "w-full bg-white border rounded-xl px-3 py-1.5 text-xs text-neutral-900 outline-none transition font-mono shadow-2xs",
+                            "w-full bg-white dark:bg-black/20 border rounded-lg px-3 py-1.5 text-xs text-label outline-none transition font-mono",
                             state.enabled
-                              ? "border-black/[0.1] focus:border-[#0071E3]"
-                              : "border-black/[0.06] text-neutral-400 bg-neutral-50"
+                              ? "border-black/10 focus:border-blue"
+                              : "border-black/5 text-muted-foreground bg-fill/50"
                           )}
                         />
                       </div>
 
-                      <div className="pt-2 border-t border-black/[0.06] flex items-center justify-between text-[10px] text-neutral-500">
+                      <div className="pt-2 border-t border-hairline flex items-center justify-between text-[10px] text-muted-foreground">
                         <span>Status: {state.enabled ? "Live on Header" : "Hidden"}</span>
                         <span className="font-mono">
                           {state.url ? new URL(state.url).hostname : "No URL"}
@@ -1933,96 +1934,96 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
           {(activeCategory === "all" || activeCategory === "brand") && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Brand Settings */}
-              <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-                <div className="flex items-center gap-2 pb-3 border-b border-black/[0.06]">
-                  <Sparkles className="size-4 text-[#0071E3]" />
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
+              <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-4">
+                <div className="flex items-center gap-2 pb-3 border-b border-hairline">
+                  <Sparkles className="size-4 text-blue" />
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                     Brand & Global Settings
                   </h3>
                 </div>
 
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-neutral-500 mb-1">
+                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-subtle mb-1">
                       Brand / Studio Name
                     </label>
                     <input
                       type="text"
                       value={form.siteName}
                       onChange={(e) => setForm({ ...form, siteName: e.target.value })}
-                      className="w-full bg-neutral-50/60 hover:bg-neutral-50 focus:bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl px-3.5 py-2 text-xs text-neutral-900 outline-none transition-all shadow-2xs"
+                      className="w-full bg-fill/60 hover:bg-fill border border-black/8 focus:border-blue focus:bg-white rounded-xl px-3.5 py-2 text-xs text-label outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-neutral-500 mb-1">
+                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-subtle mb-1">
                       Copyright Year
                     </label>
                     <input
                       type="text"
                       value={form.copyrightYear}
                       onChange={(e) => setForm({ ...form, copyrightYear: e.target.value })}
-                      className="w-full bg-neutral-50/60 hover:bg-neutral-50 focus:bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl px-3.5 py-2 text-xs text-neutral-900 outline-none transition-all font-mono shadow-2xs"
+                      className="w-full bg-fill/60 hover:bg-fill border border-black/8 focus:border-blue focus:bg-white rounded-xl px-3.5 py-2 text-xs text-label outline-none transition-all font-mono"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-neutral-500 mb-1">
+                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-subtle mb-1">
                       Inbound Inquiries Dispatch Email
                     </label>
                     <input
                       type="email"
                       value={form.formSubmitEmail}
                       onChange={(e) => setForm({ ...form, formSubmitEmail: e.target.value })}
-                      className="w-full bg-neutral-50/60 hover:bg-neutral-50 focus:bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl px-3.5 py-2 text-xs text-neutral-900 outline-none transition-all font-mono shadow-2xs"
+                      className="w-full bg-fill/60 hover:bg-fill border border-black/8 focus:border-blue focus:bg-white rounded-xl px-3.5 py-2 text-xs text-label outline-none transition-all font-mono"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Hero Section Copy */}
-              <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6 shadow-[0_1px_3px_rgba(0,0,0,0.03)] space-y-4">
-                <div className="flex items-center gap-2 pb-3 border-b border-black/[0.06]">
+              <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-4">
+                <div className="flex items-center gap-2 pb-3 border-b border-hairline">
                   <Sparkles className="size-4 text-purple-600" />
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-900">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
                     Hero Section Copy
                   </h3>
                 </div>
 
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-neutral-500 mb-1">
+                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-subtle mb-1">
                       Hero Pill Badge
                     </label>
                     <input
                       type="text"
                       value={form.heroBadge}
                       onChange={(e) => setForm({ ...form, heroBadge: e.target.value })}
-                      className="w-full bg-neutral-50/60 hover:bg-neutral-50 focus:bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl px-3.5 py-2 text-xs text-neutral-900 outline-none transition-all shadow-2xs"
+                      className="w-full bg-fill/60 hover:bg-fill border border-black/8 focus:border-blue focus:bg-white rounded-xl px-3.5 py-2 text-xs text-label outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-neutral-500 mb-1">
+                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-subtle mb-1">
                       Main Headline (Title)
                     </label>
                     <input
                       type="text"
                       value={form.heroTitle}
                       onChange={(e) => setForm({ ...form, heroTitle: e.target.value })}
-                      className="w-full bg-neutral-50/60 hover:bg-neutral-50 focus:bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl px-3.5 py-2 text-xs text-neutral-900 outline-none transition-all shadow-2xs"
+                      className="w-full bg-fill/60 hover:bg-fill border border-black/8 focus:border-blue focus:bg-white rounded-xl px-3.5 py-2 text-xs text-label outline-none transition-all"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-neutral-500 mb-1">
+                    <label className="block text-[11px] uppercase tracking-wider font-semibold text-subtle mb-1">
                       Hero Subtitle / Value Proposition
                     </label>
                     <textarea
                       rows={2}
                       value={form.heroSubtitle}
                       onChange={(e) => setForm({ ...form, heroSubtitle: e.target.value })}
-                      className="w-full bg-neutral-50/60 hover:bg-neutral-50 focus:bg-white border border-black/[0.08] focus:border-[#0071E3] rounded-xl p-3 text-xs text-neutral-900 outline-none transition-all shadow-2xs"
+                      className="w-full bg-fill/60 hover:bg-fill border border-black/8 focus:border-blue focus:bg-white rounded-xl p-3 text-xs text-label outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -2031,9 +2032,9 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
           )}
 
           {/* Floating Save Bar */}
-          <div className="rounded-2xl border border-black/[0.08] bg-white p-4 sm:p-5 shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-xs text-neutral-500">
-              <CheckCircle2 className="size-4 text-emerald-500 shrink-0" />
+          <div className="surface-lift rounded-2xl bg-card border border-black/8 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <CheckCircle2 className="size-4 text-emerald-500" />
               <span>
                 All changes made here are saved directly into your SQLite database and immediately active on the live site.
               </span>
@@ -2044,7 +2045,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 type="button"
                 onClick={handleReset}
                 disabled={resetting}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-black/[0.08] hover:bg-neutral-50 text-neutral-600 hover:text-neutral-900 text-xs font-medium transition cursor-pointer shadow-2xs"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-black/10 hover:bg-fill text-muted-foreground hover:text-label text-xs font-medium transition cursor-pointer"
               >
                 <RotateCcw className="size-3.5" />
                 <span>Reset</span>
@@ -2054,7 +2055,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 type="button"
                 onClick={() => handleSave()}
                 disabled={saving}
-                className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-neutral-900 hover:bg-black text-white text-xs font-semibold transition shadow-2xs active:scale-[0.99] cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-6 py-2 rounded-full bg-blue hover:bg-blue-hover text-paper text-xs font-semibold transition shadow-sm active:scale-[0.99] cursor-pointer"
               >
                 <Save className="size-3.5" />
                 <span>{saving ? "Saving Changes..." : "Save All Contacts & Content"}</span>
