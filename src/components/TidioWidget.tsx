@@ -179,7 +179,7 @@ export function TidioWidget() {
       }
     };
 
-    // Robust multi-strategy detection across Tidio v4 (Shadow DOM), v3 (iframe), and custom popups
+    // Multi-strategy detection across Tidio v4 (Shadow DOM), v3 (iframe), and custom popups
     const evaluateTidioActivity = () => {
       const tidioHost = document.getElementById("tidio-chat");
       if (tidioHost) {
@@ -192,23 +192,17 @@ export function TidioWidget() {
             return;
           }
 
-          // Check for active chat window, message log, form, or input textarea
-          if (shadow.querySelector("form, textarea, input[type='text'], .chat-view, [class*='conversation'], [class*='chatWindow']")) {
+          // Check for full active chat window view
+          if (shadow.querySelector(".chat-view, [class*='chatWindow'], [class*='conversationContainer']")) {
             syncOpenState(true);
             return;
           }
 
-          // Check for message preview flyout, speech bubble, or proactive prompt
-          if (shadow.querySelector("[data-testid='messageFlyout'], [class*='flyout'], [class*='messageBubble'], [class*='popup'], [class*='preview']")) {
-            syncOpenState(true);
-            return;
-          }
-
-          // Check if any element in the shadow tree has expanded beyond launcher size (> 100px)
+          // Check if any element in the shadow tree has expanded into full chat window size (> 300px height, > 240px width)
           const allShadowDivs = shadow.querySelectorAll("div, section, main");
           for (let i = 0; i < allShadowDivs.length; i++) {
             const r = allShadowDivs[i].getBoundingClientRect();
-            if (r.height > 100 && r.width > 100) {
+            if (r.height > 300 && r.width > 240) {
               syncOpenState(true);
               return;
             }
@@ -244,7 +238,7 @@ export function TidioWidget() {
         document.querySelector("iframe[src*='tidio']")) as HTMLIFrameElement | null;
       if (iframe && iframe.id !== "tidio-chat-code") {
         const rect = iframe.getBoundingClientRect();
-        if (rect.height > 100) {
+        if (rect.height > 300 && rect.width > 240) {
           syncOpenState(true);
           return;
         }

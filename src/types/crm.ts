@@ -168,6 +168,16 @@ export interface Project {
   created_at: string;
 }
 
+export interface ChatMessage {
+  id: number;
+  thread_id: string;
+  sender: "visitor" | "operator" | "system";
+  sender_name: string;
+  message: string;
+  created_at: string;
+  is_read: number;
+}
+
 export interface CrmStats {
   totalVisitors: number;
   todayVisitors: number;
@@ -178,6 +188,8 @@ export interface CrmStats {
   totalBlogs: number;
   totalReviews: number;
   totalProjects: number;
+  unreadChatCount?: number;
+  activeChatThreads?: number;
 }
 
 export interface RegionStat {
