@@ -22,21 +22,21 @@ interface ConversionSettingsSectionProps {
 const BANNER_VARIANTS = [
   { id: "blue", name: "Codex Blue", bgClass: "bg-[#0071E3] text-white", borderClass: "border-[#0071E3]" },
   { id: "dark", name: "Obsidian Black", bgClass: "bg-[#111113] text-white", borderClass: "border-[#111113]" },
-  { id: "gradient", name: "Studio Gradient", bgClass: "bg-gradient-to-r from-[#0071E3] via-indigo-600 to-purple-600 text-white", borderClass: "border-indigo-600" },
+  { id: "gradient", name: "Dynamic Gradient", bgClass: "bg-gradient-to-r from-[#0071E3] via-indigo-600 to-purple-600 text-white", borderClass: "border-indigo-600" },
   { id: "amber", name: "Gold Amber", bgClass: "bg-amber-500 text-black font-semibold", borderClass: "border-amber-500" },
   { id: "emerald", name: "Growth Emerald", bgClass: "bg-emerald-600 text-white", borderClass: "border-emerald-600" },
 ] as const;
 
-type StudioViewMode = "all" | "banner" | "whatsapp" | "form";
+type ConversionViewMode = "all" | "banner" | "whatsapp" | "form";
 
 export function ConversionSettingsSection({ config, onChange }: ConversionSettingsSectionProps) {
-  const [activeView, setActiveView] = useState<StudioViewMode>("all");
+  const [activeView, setActiveView] = useState<ConversionViewMode>("all");
   const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
   const [isFlyoutOpen, setIsFlyoutOpen] = useState(false);
 
   const banner = config.banner || {
     enabled: true,
-    text: "Q3 Studio Booking Open — 2 Slots Remaining for Enterprise Architecture Rebuilds",
+    text: "Q3 Project Intake Open — 2 Slots Remaining for Enterprise Architecture Rebuilds",
     ctaText: "Book Discovery Call",
     ctaUrl: "#contact",
     variant: "blue",
@@ -47,7 +47,7 @@ export function ConversionSettingsSection({ config, onChange }: ConversionSettin
     enabled: true,
     number: "+380630000000",
     phone: "+380630000000",
-    defaultMessage: "Hello Codex Dynamics studio, I would like to discuss a new high-performance web project.",
+    defaultMessage: "Hello Codex Dynamics team, I would like to discuss a new high-performance web project.",
     position: "bottom-right",
     showExtraChannels: true,
   };
@@ -69,7 +69,7 @@ export function ConversionSettingsSection({ config, onChange }: ConversionSettin
 
   return (
     <div className="bg-white rounded-2xl border border-black/[0.08] shadow-[0_2px_12px_rgba(0,0,0,0.03)] overflow-hidden">
-      {/* 1. Master Studio Control Header */}
+      {/* 1. Master Control Header */}
       <div className="p-5 sm:p-6 border-b border-black/[0.06] bg-gradient-to-b from-[#FAFBFD] to-white flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2.5">
@@ -78,7 +78,7 @@ export function ConversionSettingsSection({ config, onChange }: ConversionSettin
             </div>
             <div>
               <h2 className="text-base font-semibold text-neutral-900 tracking-tight">
-                Conversion & Floating Triggers Studio
+                Conversion & Floating Triggers Suite
               </h2>
               <p className="text-xs text-neutral-500 mt-0.5">
                 Integrated command center for announcement banners, floating messenger docks, and lead qualification flows.
@@ -197,7 +197,7 @@ export function ConversionSettingsSection({ config, onChange }: ConversionSettin
         </div>
       </div>
 
-      {/* 3. Integrated Two-Column Studio Body */}
+      {/* 3. Integrated Two-Column Body */}
       <div className="grid grid-cols-1 xl:grid-cols-12 divide-y xl:divide-y-0 xl:divide-x divide-black/[0.06]">
         {/* Left Column: Editor Controls */}
         <div className="xl:col-span-7 p-5 sm:p-6 space-y-6">
@@ -392,7 +392,7 @@ export function ConversionSettingsSection({ config, onChange }: ConversionSettin
                         whatsapp: { ...whatsapp, defaultMessage: e.target.value },
                       })
                     }
-                    placeholder="Hello Codex Dynamics studio, I would like to discuss a new high-performance web project."
+                    placeholder="Hello Codex Dynamics team, I would like to discuss a new high-performance web project."
                     className="w-full text-xs px-3 py-2 rounded-xl border border-black/[0.08] bg-[#F9F9FB] focus:border-[#0071E3] focus:bg-white text-neutral-900 outline-none transition resize-none"
                   />
                 </div>
@@ -664,7 +664,7 @@ export function ConversionSettingsSection({ config, onChange }: ConversionSettin
                       </div>
                       <div className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-neutral-50 text-neutral-800">
                         <PhoneCall className="size-3 text-[#0071E3]" />
-                        <span>Direct Studio Call</span>
+                        <span>Direct Agency Call</span>
                       </div>
                       <div className="flex items-center gap-1.5 px-2 py-1 rounded hover:bg-neutral-50 text-neutral-800">
                         <Mail className="size-3 text-neutral-600" />

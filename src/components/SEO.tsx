@@ -19,9 +19,9 @@ export interface SEOProps {
 }
 
 const DEFAULT_SITE_NAME = "Codex Dynamics";
-const DEFAULT_TITLE = "Codex Dynamics — High-Performance Websites & Digital Studio";
+const DEFAULT_TITLE = "Codex Dynamics — High-Performance Websites & Digital Agency";
 const DEFAULT_DESCRIPTION =
-  "High-performance websites, web design, web development, and digital marketing studio. Precision engineering on every screen.";
+  "High-performance websites, web design, web development, and digital marketing agency. Precision engineering on every screen.";
 const DEFAULT_OG_IMAGE = "/hero/studio.jpg";
 
 /**

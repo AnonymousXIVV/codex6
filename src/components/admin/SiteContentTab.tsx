@@ -249,7 +249,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
             {
               id: "ph-2",
               type: "phone",
-              label: "Kyiv Studio Landline",
+              label: "Kyiv HQ Landline",
               value: "+380 44 233 4567",
               href: "tel:+380442334567",
               isPrimary: false,
@@ -313,7 +313,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
             {
               id: "em-2",
               type: "email",
-              label: "Direct Studio Desk",
+              label: "Direct Agency Desk",
               value: "hello@codexdynamics.com",
               href: "mailto:hello@codexdynamics.com",
               isPrimary: false,
@@ -327,7 +327,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
           setAddresses([
             {
               id: "addr-1",
-              label: "Kyiv Studio (HQ)",
+              label: "Kyiv Office (HQ)",
               street: "Sportyvna, 1A",
               city: "Kyiv, 012023, Ukraine",
               fullAddress: "Sportyvna, 1A, Kyiv, 012023, Ukraine",
@@ -478,7 +478,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
     const count = addresses.length + 1;
     const newAddress: AddressItem = {
       id: `addr-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`,
-      label: `Studio Office #${count}`,
+      label: `Office #${count}`,
       street: "Sportyvna, 1A",
       city: "Kyiv, Ukraine",
       fullAddress: "Sportyvna, 1A, Kyiv, Ukraine",
@@ -487,7 +487,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
       isPrimary: addresses.length === 0,
     };
     setAddresses((prev) => [...prev, newAddress]);
-    toast.success("Added new studio address.");
+    toast.success("Added new office address.");
   };
 
   const handleUpdateAddress = (id: string, updates: Partial<AddressItem>) => {
@@ -500,12 +500,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
     setAddresses((prev) =>
       prev.map((a) => ({ ...a, isPrimary: a.id === id }))
     );
-    toast.info("Updated primary studio address.");
+    toast.info("Updated primary office address.");
   };
 
   const handleRemoveAddress = (id: string) => {
     if (addresses.length <= 1) {
-      toast.error("You must maintain at least one studio address.");
+      toast.error("You must maintain at least one office address.");
       return;
     }
     setAddresses((prev) => {
@@ -516,7 +516,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
       }
       return [...remaining];
     });
-    toast.info("Studio address removed.");
+    toast.info("Office address removed.");
   };
 
   // Social URLs
@@ -689,7 +689,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 Looking for Color Schemes, Section Ordering, WhatsApp Floating Docks, or SEO?
               </span>
               <p className="text-[11px] text-muted-foreground mt-0.5">
-                The Studio Customizer gives you real-time controls for colorways, corner radiuses, section visibility/ordering, conversion docks, and emergency mode.
+                The Site Customizer gives you real-time controls for colorways, corner radiuses, section visibility/ordering, conversion docks, and emergency mode.
               </p>
             </div>
           </div>
@@ -699,7 +699,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue hover:bg-blue-600 text-white text-xs font-semibold shrink-0 cursor-pointer shadow-xs transition"
           >
             <Sparkles className="size-3.5" />
-            <span>Open Studio Customizer</span>
+            <span>Open Site Customizer</span>
           </button>
         </div>
       )}
@@ -725,7 +725,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
             )}
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Manage multiple phone lines, WhatsApps, Telegrams, Vibers, and studio locations with compact dropdowns and dedicated save buttons.
+            Manage multiple phone lines, WhatsApps, Telegrams, Vibers, and office locations with compact dropdowns and dedicated save buttons.
           </p>
         </div>
 
@@ -780,7 +780,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 <option value="whatsapp">💬 WhatsApp Lines ({whatsapps.length})</option>
                 <option value="telegram">✈️ Telegram Accounts ({telegrams.length})</option>
                 <option value="viber">🟣 Viber Support Lines ({vibers.length})</option>
-                <option value="address">📍 Studio Locations ({addresses.length})</option>
+                <option value="address">📍 Office Locations ({addresses.length})</option>
                 <option value="email">✉️ Email Inboxes ({emails.length})</option>
                 <option value="header_socials">🌐 Header Socials ({activeCount}/5 active)</option>
                 <option value="brand">✨ Brand & Hero Copy</option>
@@ -827,7 +827,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
               <option value="whatsapp">💬 + WhatsApp Line</option>
               <option value="telegram">✈️ + Telegram Account</option>
               <option value="viber">🟣 + Viber Line</option>
-              <option value="address">📍 + Studio Address</option>
+              <option value="address">📍 + Office Address</option>
               <option value="email">✉️ + Email Inbox</option>
             </select>
             <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 size-3.5 text-white/90" />
@@ -1269,7 +1269,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           <input
                             type="text"
                             value={t.label || ""}
-                            placeholder="e.g. Official Telegram, Founder Direct, Studio Channel"
+                            placeholder="e.g. Official Telegram, Founder Direct, Agency Channel"
                             onChange={(e) => handleUpdateContact(t.id, { label: e.target.value })}
                             className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-sky-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                           />
@@ -1454,7 +1454,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
             </div>
           )}
 
-          {/* STUDIO ADDRESSES & OFFICES SECTION */}
+          {/* OFFICE ADDRESSES & LOCATIONS SECTION */}
           {(activeCategory === "all" || activeCategory === "address") && (
             <div className="surface-lift rounded-2xl bg-card border border-black/8 p-6 shadow-sm space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-hairline">
@@ -1465,14 +1465,14 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                   <div>
                     <div className="flex items-center gap-2">
                       <h3 className="text-xs font-semibold uppercase tracking-wider text-label">
-                        Studio Addresses & Office Locations ({addresses.length})
+                        Office Addresses & Regional Desks ({addresses.length})
                       </h3>
                       <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-600 font-medium">
                         Google Maps & Directions
                       </span>
                     </div>
                     <p className="text-[11px] text-muted-foreground mt-0.5">
-                      Configure your main studio headquarters, satellite branches, and regional desks. Visitors can explore them with 1-click Google Maps links.
+                      Configure your main headquarters, satellite branches, and regional desks. Visitors can explore them with 1-click Google Maps links.
                     </p>
                   </div>
                 </div>
@@ -1483,7 +1483,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition cursor-pointer shadow-xs shrink-0"
                 >
                   <Plus className="size-3.5" />
-                  <span>Add Studio Location</span>
+                  <span>Add Office Location</span>
                 </button>
               </div>
 
@@ -1512,7 +1512,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                           )}
                         >
                           <Star className={cn("size-2.5", addr.isPrimary && "fill-current")} />
-                          <span>{addr.isPrimary ? "Primary HQ Studio" : "Set as Primary HQ"}</span>
+                          <span>{addr.isPrimary ? "Primary HQ" : "Set as Primary HQ"}</span>
                         </button>
                       </div>
 
@@ -1543,12 +1543,12 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       <div>
                         <label className="block text-[10px] uppercase font-semibold text-subtle mb-1">
-                          Location Name / Studio Label
+                          Location Name / Office Label
                         </label>
                         <input
                           type="text"
                           value={addr.label || ""}
-                          placeholder="e.g. Kyiv Studio (HQ), Gulliver Tower Desk"
+                          placeholder="e.g. Kyiv Office (HQ), Gulliver Tower Desk"
                           onChange={(e) => handleUpdateAddress(addr.id, { label: e.target.value })}
                           className="w-full bg-white dark:bg-black/20 border border-black/8 focus:border-rose-500 rounded-lg px-3 py-1.5 text-xs text-label outline-none transition"
                         />
@@ -1945,7 +1945,7 @@ export function SiteContentTab({ onSwitchTab }: SiteContentTabProps = {}) {
                 <div className="space-y-3">
                   <div>
                     <label className="block text-[11px] uppercase tracking-wider font-semibold text-subtle mb-1">
-                      Brand / Studio Name
+                      Brand / Company Name
                     </label>
                     <input
                       type="text"

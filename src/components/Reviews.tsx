@@ -24,7 +24,7 @@ const fallbackReviews: Review[] = [
   },
   {
     id: 3,
-    author: "Julian Thorne, Founder at Lumina Studio",
+    author: "Julian Thorne, Founder at Lumina Labs",
     rating: 5,
     comment: "Flawless graphic design and brand identity work. They delivered our vector logo suite, typography hierarchy, and complete Figma UI kit. Our perceived market value skyrocketed.",
     image_path: null,

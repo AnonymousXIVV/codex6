@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "@tanstack/react-router";
-import { ShieldCheck, AlertCircle, ArrowRight, ExternalLink } from "lucide-react";
+import { AlertCircle, ArrowRight, ExternalLink } from "lucide-react";
 
 interface AdminLoginProps {
   emailInput: string;
@@ -19,6 +19,14 @@ export function AdminLogin({
   authError,
   handleLogin,
 }: AdminLoginProps) {
+  const handleReturnToPublic = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("codex_return_to_public", "true");
+      sessionStorage.removeItem("codex_on_admin");
+      localStorage.removeItem("codex_on_admin");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f5f5f7] text-label flex items-center justify-center p-4 relative selection:bg-blue/15">
       {/* Background subtle radial gradient / grid */}
@@ -28,7 +36,11 @@ export function AdminLogin({
       <div className="w-full max-w-md relative z-10">
         {/* Header Branding */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2.5 mb-3 group">
+          <Link
+            to="/"
+            onClick={handleReturnToPublic}
+            className="inline-flex items-center gap-2.5 mb-3 group"
+          >
             <span className="relative flex size-8 shrink-0 items-center justify-center rounded-[10px] bg-blue text-paper shadow-[inset_0_0.5px_0_rgb(255_255_255_/_0.35)] transition-transform duration-200 group-hover:scale-105">
               <span className="text-sm font-semibold tracking-tight">C</span>
             </span>
@@ -43,29 +55,10 @@ export function AdminLogin({
 
         {/* Login Card */}
         <div className="surface-lift rounded-3xl bg-card border border-black/8 p-7 sm:p-9 shadow-[0_0_0_1px_rgb(0_0_0_/_0.05),0_4px_16px_rgb(0_0_0_/_0.06)] backdrop-blur-xl">
-          <div className="flex items-center justify-between gap-2 pb-5 mb-5 border-b border-hairline">
-            <div>
-              <h1 className="text-lg font-semibold tracking-tight text-label font-display">
-                Administrator Sign In
-              </h1>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Manage site visitors, blogs, and SEO
-              </p>
-            </div>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-              <span className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              SQLite3 Live
-            </span>
-          </div>
-
-          <div className="p-3.5 rounded-2xl bg-fill-subtle/70 border border-black/5 text-xs text-muted-foreground mb-6 flex items-start gap-3">
-            <ShieldCheck className="size-4 text-blue mt-0.5 shrink-0" />
-            <div>
-              <p className="font-medium text-label">Hostinger Shared Hosting & PHP Ready</p>
-              <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
-                Persistent database connected to <code className="font-mono text-label font-medium">database.sqlite</code>.
-              </p>
-            </div>
+          <div className="pb-5 mb-6 border-b border-hairline text-center">
+            <h1 className="text-lg font-semibold tracking-tight text-label font-display text-center">
+              Administrator Sign In
+            </h1>
           </div>
 
           {authError && (
@@ -114,17 +107,17 @@ export function AdminLogin({
 
             <button
               type="submit"
-              className="w-full mt-2 bg-label hover:bg-black text-paper font-medium py-3 rounded-full text-sm transition-all duration-200 shadow-sm active:scale-[0.99] flex items-center justify-center gap-2 group cursor-pointer"
+              className="w-full mt-2 bg-blue hover:bg-blue-hover text-paper font-medium py-3 rounded-full text-sm transition-all duration-200 shadow-sm active:scale-[0.99] flex items-center justify-center gap-2 group cursor-pointer"
             >
-              <span>Authenticate to CRM</span>
+              <span>Login</span>
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </button>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-hairline flex items-center justify-between text-xs text-subtle">
-            <span>Direct link: /admin</span>
+          <div className="mt-6 pt-4 border-t border-hairline flex items-center justify-center text-xs text-subtle">
             <Link
               to="/"
+              onClick={handleReturnToPublic}
               className="hover:text-label transition-colors inline-flex items-center gap-1 font-medium"
             >
               Public Website <ExternalLink className="size-3" />

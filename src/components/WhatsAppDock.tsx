@@ -50,12 +50,9 @@ export function WhatsAppDock() {
     window.addEventListener("tidio-chat-close", handleClose);
     window.addEventListener("tidio-chat-status", handleStatus);
 
-    // Official Tidio document events
+    // Official Tidio document events (only actual open and close of the full conversation window)
     document.addEventListener("tidioChat-open", handleOpen);
     document.addEventListener("tidioChat-close", handleClose);
-    document.addEventListener("tidioChat-messageFromOperator", handleOpen);
-    document.addEventListener("tidioChat-popUpOpen", handleOpen);
-    document.addEventListener("tidioChat-popUpHide", handleClose);
 
     // Initial and periodic evaluation of whether Tidio chat is expanded into full window
     const evaluateTidioState = () => {
@@ -64,26 +61,23 @@ export function WhatsAppDock() {
         document.body.classList.contains("tidio-chat-is-open") ||
         document.documentElement.classList.contains("tidio-chat-is-open");
 
-      // 2. DOM-level verification for full expanded chat view (not just collapsed launcher or unexpanded host)
+      // 2. DOM-level verification for full expanded chat view (not just collapsed launcher, greeting pill, or popup)
       let isOpenViaDom = false;
       const tidioHost = document.getElementById("tidio-chat");
       if (tidioHost) {
         const shadow = tidioHost.shadowRoot;
         if (shadow) {
-          // Explicit open indicator classes in shadow root
-          if (shadow.querySelector(".chat-open")) {
-            isOpenViaDom = true;
-          } else if (shadow.querySelector(".chat-view, [class*='chatWindow'], [class*='conversationContainer']")) {
-            isOpenViaDom = true;
-          } else {
-            // Check if any container element inside shadow root is large enough to be an open chat window
-            // Standard launcher is ~60px, open window is >240px wide & >320px high
-            const panels = shadow.querySelectorAll("div, section, main");
-            for (let i = 0; i < panels.length; i++) {
-              const r = panels[i].getBoundingClientRect();
-              if (r.height > 300 && r.width > 240) {
+          // If explicitly closed in shadow DOM, it is not open
+          const isClosed = shadow.querySelector(".chat-closed");
+          if (!isClosed) {
+            // Check for active full chat conversation window or message input
+            const chatWindow = shadow.querySelector(
+              ".chat-open, [class*='chatWindow'], [class*='conversationContainer'], [role='dialog'], textarea, [contenteditable='true']"
+            );
+            if (chatWindow) {
+              const r = chatWindow.getBoundingClientRect();
+              if (r.height > 250 && r.width > 220) {
                 isOpenViaDom = true;
-                break;
               }
             }
           }
@@ -99,8 +93,9 @@ export function WhatsAppDock() {
         document.querySelector("iframe[src*='tidio']")) as HTMLIFrameElement | null;
       if (iframe && iframe.id !== "tidio-chat-code") {
         const r = iframe.getBoundingClientRect();
-        // A minimized launcher iframe is ~60x60px; an open chat window is >300px height & >240px width
-        if (r.height > 300 && r.width > 240) {
+        // A full chat conversation window is >380px height & >280px width
+        // A launcher or greeting popup is substantially smaller
+        if (r.height > 380 && r.width > 280) {
           isOpenViaDom = true;
         }
       }
@@ -113,7 +108,7 @@ export function WhatsAppDock() {
     };
 
     evaluateTidioState();
-    const interval = setInterval(evaluateTidioState, 200);
+    const interval = setInterval(evaluateTidioState, 250);
 
     return () => {
       clearInterval(interval);
@@ -122,9 +117,6 @@ export function WhatsAppDock() {
       window.removeEventListener("tidio-chat-status", handleStatus);
       document.removeEventListener("tidioChat-open", handleOpen);
       document.removeEventListener("tidioChat-close", handleClose);
-      document.removeEventListener("tidioChat-messageFromOperator", handleOpen);
-      document.removeEventListener("tidioChat-popUpOpen", handleOpen);
-      document.removeEventListener("tidioChat-popUpHide", handleClose);
     };
   }, []);
 

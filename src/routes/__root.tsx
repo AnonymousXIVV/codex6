@@ -51,6 +51,25 @@ export const Route = createRootRoute({
                   localStorage.setItem('codex-theme', 'light');
                 } catch (e) {}
                 try {
+                  var onAdmin = sessionStorage.getItem('codex_on_admin') === 'true' || localStorage.getItem('codex_on_admin') === 'true';
+                  var returnToPublic = sessionStorage.getItem('codex_return_to_public') === 'true';
+                  var navEntry = (typeof performance !== 'undefined' && performance.getEntriesByType)
+                    ? performance.getEntriesByType('navigation')[0]
+                    : null;
+                  var isBackForward = navEntry && navEntry.type === 'back_forward';
+                  if (isBackForward) {
+                    sessionStorage.removeItem('codex_on_admin');
+                    localStorage.removeItem('codex_on_admin');
+                    onAdmin = false;
+                  }
+                  if (onAdmin && !returnToPublic && (location.pathname === '/' || location.pathname === '')) {
+                    var lastTab = sessionStorage.getItem('codex_admin_active_tab') || localStorage.getItem('codex_admin_active_tab');
+                    var target = '/admin' + (lastTab ? '?tab=' + encodeURIComponent(lastTab) : '');
+                    location.replace(target);
+                    return;
+                  }
+                } catch (e) {}
+                try {
                   var now = Date.now();
                   var history = JSON.parse(sessionStorage.getItem('__cdx_reload_history') || '[]');
                   history = history.filter(function(t) { return (now - t) < 8000; });

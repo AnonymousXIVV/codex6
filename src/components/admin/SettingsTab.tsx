@@ -241,7 +241,7 @@ export function SettingsTab({
     { id: "branding", label: "Visual Branding", icon: Palette },
     { id: "layout", label: "Layout & Sections", icon: Layout },
     { id: "conversion", label: "Conversion Tools", icon: Megaphone },
-    { id: "seo", label: "SEO & Social Studio", icon: Globe },
+    { id: "seo", label: "SEO & Social Suite", icon: Globe },
     { id: "emergency", label: "Emergency & Snapshots", icon: AlertTriangle, badge: localConfig.emergency?.maintenanceMode ? "ACTIVE" : undefined },
     { id: "system", label: "Security & Database", icon: Shield },
   ];
@@ -255,7 +255,7 @@ export function SettingsTab({
             <div className="flex items-center gap-2">
               <Sparkles className="size-5 text-blue" />
               <h2 className="text-lg font-bold text-label font-display tracking-tight">
-                Studio Customizer & Site Engineering
+                Site Customizer & Architecture
               </h2>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -552,7 +552,7 @@ export function SettingsTab({
               </div>
 
               <p className="text-xs text-muted-foreground mb-4">
-                Changes saved in the Studio Customizer are stored directly in SQLite and immediately reflected across the public React frontend.
+                Changes saved in the Site Customizer are stored directly in SQLite and immediately reflected across the public React frontend.
               </p>
 
               <div className="space-y-2 text-xs">

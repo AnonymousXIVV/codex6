@@ -52,7 +52,7 @@ interface BlogEditorPageProps {
 const PRESET_AUTHORS = [
   "Codex Dynamics Research",
   "Codex Dynamics Engineering",
-  "Codex Dynamics Design Studio",
+  "Codex Dynamics Editorial Team",
   "Founder & Principal Architect",
   "DevOps & Infrastructure Team",
 ];
@@ -1156,7 +1156,7 @@ export function BlogEditorPage({
                   <div className="size-6 rounded bg-[#2271b1] text-white flex items-center justify-center font-bold text-xs">
                     RM
                   </div>
-                  <span className="font-bold text-sm text-[#1e1e1e]">Rank Math SEO Studio</span>
+                  <span className="font-bold text-sm text-[#1e1e1e]">Rank Math SEO Suite</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -1198,7 +1198,7 @@ export function BlogEditorPage({
                   }`}
                 >
                   <Zap className="size-3.5" />
-                  <span>Power Words & Headline Studio ({powerWordsAnalysis.totalPowerWordsFound} Found)</span>
+                  <span>Power Words & Headline Suite ({powerWordsAnalysis.totalPowerWordsFound} Found)</span>
                 </button>
                 <button
                   type="button"
@@ -1294,7 +1294,7 @@ export function BlogEditorPage({
                           {metaDescription ||
                             excerpt ||
                             content.slice(0, 155).replace(/[#*`_]/g, "") ||
-                            "Explore in-depth engineering architectures, performance benchmarks, and design systems from the Codex Dynamics technical studio."}
+                            "Explore in-depth engineering architectures, performance benchmarks, and design systems from the Codex Dynamics technical team."}
                         </p>
                       </div>
 
@@ -1362,7 +1362,7 @@ export function BlogEditorPage({
                   </div>
                 )}
 
-                {/* 3B. POWER WORDS & HEADLINE STUDIO TAB (FIXED - NO CRASH) */}
+                {/* 3B. POWER WORDS & HEADLINE SUITE TAB (FIXED - NO CRASH) */}
                 {metaBoxTab === "power-words" && (
                   <div className="space-y-6">
                     {/* Headline Performance Card */}
@@ -2091,7 +2091,7 @@ export function BlogEditorPage({
                   className="w-full py-2 rounded bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold text-xs flex items-center justify-center gap-1 cursor-pointer transition-colors"
                 >
                   <Zap className="size-3.5" />
-                  <span>Open Power Words Studio</span>
+                  <span>Open Power Words Suite</span>
                 </button>
               </div>
             )}

@@ -377,7 +377,7 @@ export function BlogsTab({
             <p className="text-xs text-neutral-500 max-w-sm mx-auto">
               {searchQuery || selectedStatusFilter !== "all" || selectedCategoryFilter !== "all"
                 ? "Try adjusting your search terms or filter criteria."
-                : "Your publication studio is clean. Create your first architectural teardown or case study."}
+                : "Your publication board is clean. Create your first architectural teardown or case study."}
             </p>
           </div>
           <button

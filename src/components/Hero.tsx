@@ -9,7 +9,7 @@ export const HERO_VIDEOS = [
     src: "/hero/studio.mp4",
     poster: "/hero/studio.jpg",
     label: "Codex Dynamics",
-    line: "The studio. The standard.",
+    line: "The agency. The standard.",
   },
   {
     src: "/hero/web-dev.mp4",

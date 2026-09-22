@@ -60,7 +60,7 @@ By offloading analytic pipelines to non-blocking background workers, our public 
 
 ### Summary & Next Steps
 
-When evaluating your studio or product stack, treat typography and layout as physical materials. Build components with strict boundary scopes, verify your Rank Math on-page keyword density, and inspect your real-world mobile scroll ergonomics.`,
+When evaluating your digital product stack, treat typography and layout as physical materials. Build components with strict boundary scopes, verify your Rank Math on-page keyword density, and inspect your real-world mobile scroll ergonomics.`,
   author: "Codex Dynamics Engineering",
   category: "Engineering",
   publishedAt: "2026-09-17T00:00:00.000Z",

@@ -28,7 +28,7 @@ export type AdminTabKey =
   | "branding"
   | "layout"
   | "conversion"
-  | "seo_studio"
+  | "seo_suite"
   | "emergency"
   | "content"
   | "site_content"
@@ -69,7 +69,7 @@ export function AdminSidebar({
 
   const navSections = [
     {
-      group: "Studio & Site Customizer",
+      group: "Design & Site Customizer",
       items: [
         {
           id: "branding" as const,
@@ -96,7 +96,7 @@ export function AdminSidebar({
           badgeText: "WhatsApp",
         },
         {
-          id: "seo_studio" as const,
+          id: "seo_suite" as const,
           label: "SEO & Social Sharing",
           icon: Globe,
           count: null,
@@ -243,7 +243,14 @@ export function AdminSidebar({
         <Link
           to="/"
           className="flex items-center gap-3 group focus:outline-none"
-          onClick={onCloseMobile}
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              sessionStorage.setItem("codex_return_to_public", "true");
+              sessionStorage.removeItem("codex_on_admin");
+              localStorage.removeItem("codex_on_admin");
+            }
+            onCloseMobile();
+          }}
         >
           {/* iOS App Icon Squircle */}
           <div className="relative flex size-9 shrink-0 items-center justify-center rounded-[11px] bg-gradient-to-b from-[#0077ED] to-[#0066CC] text-white shadow-[0_2px_5px_rgba(0,102,204,0.25),inset_0_1px_0_rgba(255,255,255,0.35)] transition-transform duration-200 group-hover:scale-105">

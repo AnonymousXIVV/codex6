@@ -262,14 +262,14 @@ export function EmergencySettingsSection({ config, onChange }: EmergencySettings
         )}
       </div>
 
-      {/* 3. Custom Code Injection Studio */}
+      {/* 3. Custom Code Injection Engine */}
       <div className="rounded-2xl border border-hairline bg-surface-card p-6 shadow-xs">
         <div className="flex items-center gap-3 mb-4">
           <div className="p-2 rounded-xl bg-purple-500/10 text-purple-600">
             <Code2 className="size-5" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-label">Custom HTML & CSS Code Injection Studio</h3>
+            <h3 className="text-base font-semibold text-label">Custom HTML & CSS Code Injection Engine</h3>
             <p className="text-xs text-subtle">
               Safely inject custom CSS styles, web fonts, tracking snippets or chat widgets into the DOM canvas.
             </p>

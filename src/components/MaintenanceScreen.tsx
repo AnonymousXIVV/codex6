@@ -100,7 +100,7 @@ export function MaintenanceScreen() {
         <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-md mx-auto mb-8">
           {emergency?.subtext ||
             emergency?.message ||
-            "We are fine-tuning our high-performance digital studio platform. We will be back shortly with enhanced speed, security, and capabilities."}
+            "We are fine-tuning our high-performance digital agency platform. We will be back shortly with enhanced speed, security, and capabilities."}
         </p>
 
         {/* Countdown timer */}
@@ -165,7 +165,7 @@ export function MaintenanceScreen() {
 
       {/* Footer info */}
       <div className="text-center text-xs text-subtle max-w-4xl mx-auto w-full pt-6 border-t border-black/5">
-        <span>© {new Date().getFullYear()} {config.siteName || "Codex Dynamics"}. High-Performance Digital Studio.</span>
+        <span>© {new Date().getFullYear()} {config.siteName || "Codex Dynamics"}. High-Performance Digital Agency.</span>
       </div>
     </div>
   );

@@ -357,7 +357,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     {
       id: "ph-2",
       type: "phone",
-      label: "Kyiv Studio Landline",
+      label: "Kyiv HQ Landline",
       value: "+380 44 233 4567",
       href: "tel:+380442334567",
       isPrimary: false,
@@ -405,7 +405,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     {
       id: "em-2",
       type: "email",
-      label: "Direct Studio Desk",
+      label: "Direct Agency Desk",
       value: "hello@codexdynamics.com",
       href: "mailto:hello@codexdynamics.com",
       isPrimary: false,
@@ -431,7 +431,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   addresses: [
     {
       id: "addr-1",
-      label: "Kyiv Studio (HQ)",
+      label: "Kyiv Office (HQ)",
       street: "Sportyvna, 1A",
       city: "Kyiv, 012023, Ukraine",
       fullAddress: "Sportyvna, 1A, Kyiv, 012023, Ukraine",
@@ -460,7 +460,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       {
         id: "clip-1",
         label: "Codex Dynamics",
-        line: "The studio. The standard.",
+        line: "The agency. The standard.",
         src: "/hero/studio.mp4",
         poster: "/hero/studio.jpg",
       },
@@ -504,7 +504,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       },
       {
         href: "#studio",
-        kicker: "Studio",
+        kicker: "About",
         title: "One standard.",
         copy: "The same care on the page, in the brand, and in the feed.",
       },
@@ -703,8 +703,8 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
       {
         id: "gal-1",
         src: "/studio/interior.jpg",
-        alt: "The Codex Dynamics studio overlooking the city",
-        label: "Studio Interior",
+        alt: "The Codex Dynamics office overlooking the city",
+        label: "Office Interior",
       },
       {
         id: "gal-2",
@@ -785,7 +785,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
     phoneCardSubtitle: "Mon–Fri · 9:00–19:00 EET",
     emailCardTitle: "Email us",
     emailCardSubtitle: "Briefs, RFPs, decks",
-    locationCardTitle: "Kyiv Studio",
+    locationCardTitle: "Kyiv Office",
     locationCardSubtitle: "Visits by appointment",
   },
 
@@ -888,8 +888,8 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   },
 
   seo: {
-    metaTitle: "Codex Dynamics — High-Performance Websites & Digital Studio",
-    metaDescription: "High-performance websites, web design, web development, and digital marketing studio. Precision engineering on every screen.",
+    metaTitle: "Codex Dynamics — High-Performance Websites & Digital Agency",
+    metaDescription: "High-performance websites, web design, web development, and digital marketing agency. Precision engineering on every screen.",
     canonicalUrl: "https://codexdynamics.com",
     ogImage: "/hero/studio.jpg",
     gaId: "",
@@ -900,7 +900,7 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   emergency: {
     maintenanceMode: false,
     headline: "System Maintenance & Upgrades in Progress",
-    subtext: "We are fine-tuning our high-performance digital studio platform. We will be back shortly with enhanced capabilities.",
+    subtext: "We are fine-tuning our high-performance digital agency platform. We will be back shortly with enhanced capabilities.",
     estimatedLaunch: "2026-10-01T12:00",
     notifyEmail: "codexdynamix@gmail.com",
   },

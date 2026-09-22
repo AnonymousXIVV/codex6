@@ -32,16 +32,109 @@ import { TidioTab } from "@/components/admin/TidioTab";
 import { SiteContentTab } from "@/components/admin/SiteContentTab";
 import { HostingerModal } from "@/components/admin/HostingerModal";
 
+const VALID_ADMIN_TABS = new Set<string>([
+  "customizer",
+  "branding",
+  "layout",
+  "conversion",
+  "seo_suite",
+  "emergency",
+  "content",
+  "site_content",
+  "tidio",
+  "visitors",
+  "leads",
+  "analytics",
+  "backlinks",
+  "blogs",
+  "enquiries",
+  "reviews",
+  "projects",
+  "settings",
+]);
+
+function isValidAdminTab(tab: string | null): tab is AdminTabKey {
+  if (tab === "seo_studio") return true;
+  return typeof tab === "string" && VALID_ADMIN_TABS.has(tab);
+}
+
 export const Route = createFileRoute("/admin")({ component: AdminCRM });
 
 function AdminCRM() {
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("codex_admin_auth") === "true";
+    }
+    return false;
+  });
   const [emailInput, setEmailInput] = useState("admin@codexdynamics.com");
   const [passwordInput, setPasswordInput] = useState("Admin123!");
   const [authError, setAuthError] = useState("");
   const [isBlogEditing, setIsBlogEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState<AdminTabKey>("visitors");
+  const [activeTab, setActiveTab] = useState<AdminTabKey>(() => {
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const urlTab = searchParams.get("tab");
+      if (urlTab === "seo_studio") return "seo_suite";
+      if (isValidAdminTab(urlTab)) return urlTab;
+
+      const savedTab = (sessionStorage.getItem("codex_admin_active_tab") ||
+        localStorage.getItem("codex_admin_active_tab")) as AdminTabKey;
+      if ((savedTab as string) === "seo_studio") return "seo_suite";
+      if (isValidAdminTab(savedTab)) return savedTab;
+    }
+    return "visitors";
+  });
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  // Mark admin presence so page refreshes always reload the admin page
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("codex_on_admin", "true");
+      localStorage.setItem("codex_on_admin", "true");
+      sessionStorage.removeItem("codex_return_to_public");
+
+      const stored = localStorage.getItem("codex_admin_auth") === "true";
+      if (stored && !isAuth) {
+        setIsAuth(true);
+      }
+    }
+  }, [isAuth]);
+
+  // Keep activeTab synced with URL query and storage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("codex_admin_active_tab", activeTab);
+      localStorage.setItem("codex_admin_active_tab", activeTab);
+
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get("tab") !== activeTab) {
+          url.searchParams.set("tab", activeTab);
+          window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+        }
+      } catch {
+        // Ignore URL replace errors in restricted iframe environments
+      }
+    }
+  }, [activeTab]);
+
+  // Listen to browser popstate to allow back/forward navigation between tabs
+  useEffect(() => {
+    const handlePopState = () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get("tab");
+        if (isValidAdminTab(tab) && tab !== activeTab) {
+          setActiveTab(tab);
+        }
+      } catch {
+        // Ignore malformed query params
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [activeTab]);
 
   useEffect(() => {
     if (activeTab !== "blogs") {
@@ -208,6 +301,9 @@ function AdminCRM() {
       const data = await res.json();
       if (data.ok) {
         localStorage.setItem("codex_admin_auth", "true");
+        sessionStorage.setItem("codex_on_admin", "true");
+        localStorage.setItem("codex_on_admin", "true");
+        sessionStorage.removeItem("codex_return_to_public");
         setIsAuth(true);
         setAuthError("");
         toast.success("Welcome to Codex Dynamics Back Office!");
@@ -222,6 +318,9 @@ function AdminCRM() {
       passwordInput === "Admin123!"
     ) {
       localStorage.setItem("codex_admin_auth", "true");
+      sessionStorage.setItem("codex_on_admin", "true");
+      localStorage.setItem("codex_on_admin", "true");
+      sessionStorage.removeItem("codex_return_to_public");
       setIsAuth(true);
       setAuthError("");
       toast.success("Welcome to Codex Dynamics Back Office!");
@@ -292,7 +391,7 @@ function AdminCRM() {
       { country: "Japan", flag: "🇯🇵", ip: "133.242.18.99", browser: "Chrome 125", device: "Mobile (Android)" },
     ];
     const pick = countries[Math.floor(Math.random() * countries.length)];
-    const pages = ["/", "/#work", "/#services", "/#contact", "/#studio"];
+    const pages = ["/", "/#work", "/#services", "/#contact", "/#about"];
     const page = pages[Math.floor(Math.random() * pages.length)];
 
     await dispatchAction("simulate_visitor", {
@@ -471,7 +570,7 @@ function AdminCRM() {
               activeTab === "branding" ||
               activeTab === "layout" ||
               activeTab === "conversion" ||
-              activeTab === "seo_studio" ||
+              activeTab === "seo_suite" ||
               activeTab === "emergency") && (
               <SettingsTab
                 stats={stats}
@@ -488,7 +587,7 @@ function AdminCRM() {
                     ? "layout"
                     : activeTab === "conversion"
                     ? "conversion"
-                    : activeTab === "seo_studio"
+                    : activeTab === "seo_suite"
                     ? "seo"
                     : activeTab === "emergency"
                     ? "emergency"
@@ -500,7 +599,7 @@ function AdminCRM() {
                   if (sub === "branding") setActiveTab("branding");
                   else if (sub === "layout") setActiveTab("layout");
                   else if (sub === "conversion") setActiveTab("conversion");
-                  else if (sub === "seo") setActiveTab("seo_studio");
+                  else if (sub === "seo") setActiveTab("seo_suite");
                   else if (sub === "emergency") setActiveTab("emergency");
                   else if (sub === "system") setActiveTab("settings");
                 }}

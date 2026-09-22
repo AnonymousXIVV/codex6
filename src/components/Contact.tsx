@@ -147,7 +147,7 @@ export function Contact() {
 
   const currentAddress = primaryAddress || {
     id: "addr-default",
-    label: "Kyiv Studio",
+    label: "Kyiv Office",
     city: "Kyiv",
     street: CONTACT.addressStreet,
     fullAddress: CONTACT.addressFull,

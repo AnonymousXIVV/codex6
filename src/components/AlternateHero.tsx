@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { useSiteConfig } from "@/context/SiteConfigContext";
 
 const FALLBACK = [
-  { src: "/hero/studio.mp4", poster: "/hero/studio.jpg", label: "Codex Dynamics", line: "The studio. The standard." },
+  { src: "/hero/studio.mp4", poster: "/hero/studio.jpg", label: "Codex Dynamics", line: "The agency. The standard." },
   { src: "/hero/web-dev.mp4", poster: "/hero/web-dev.jpg", label: "Web Development", line: "Websites and web apps, assembled like a product." },
   { src: "/hero/design.mp4", poster: "/hero/design.jpg", label: "Web Design", line: "Type, color, and layout as one material." },
   { src: "/hero/social.mp4", poster: "/hero/social.jpg", label: "Social Media", line: "Content, campaigns, and growth — in one system." },

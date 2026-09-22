@@ -142,7 +142,7 @@ export function NewsletterSignup({
         <div>
           <h4 className="text-xs font-semibold tracking-wider text-label uppercase flex items-center gap-1.5">
             <Sparkles className="size-3 text-blue" />
-            <span>Studio Newsletter</span>
+            <span>Agency Newsletter</span>
           </h4>
           <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
             Quarterly engineering blueprints and design systems.

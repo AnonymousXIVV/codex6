@@ -58,7 +58,7 @@ const PRESET_CATEGORIES = [
 const PRESET_AUTHORS = [
   "Codex Dynamics Research",
   "Codex Dynamics Engineering",
-  "Codex Dynamics Design Studio",
+  "Codex Dynamics Editorial Team",
   "Founder & Principal Architect",
 ];
 
@@ -183,7 +183,7 @@ export function BlogEditorModal({
   onClose,
   onSave,
 }: BlogEditorModalProps) {
-  // Navigation Tabs in Studio
+  // Navigation Tabs in Editor
   const [activeTab, setActiveTab] = useState<"editor" | "media" | "seo" | "settings">("editor");
 
   // Editor sub-mode: Split / Write / Preview
@@ -685,7 +685,7 @@ export function BlogEditorModal({
             : "max-w-7xl h-[100dvh] sm:h-[94vh] sm:max-h-[960px] rounded-none sm:rounded-3xl"
         }`}
       >
-        {/* 1. Studio Header */}
+        {/* 1. Editor Header */}
         <div className="px-4 sm:px-6 py-3 border-b border-black/8 bg-zinc-50/90 flex flex-wrap items-center justify-between gap-2.5 shrink-0">
           {/* Left: Title & Live Indicators */}
           <div className="flex items-center gap-3 min-w-0">
@@ -836,7 +836,7 @@ export function BlogEditorModal({
           </div>
         </div>
 
-        {/* 2. Studio Workspace Body */}
+        {/* 2. Editor Workspace Body */}
         <div className="flex-1 overflow-hidden flex flex-col bg-zinc-50/40">
           {/* TAB 1: WRITE & FORMAT */}
           {activeTab === "editor" && (
@@ -1753,7 +1753,7 @@ export function BlogEditorModal({
           )}
         </div>
 
-        {/* 3. Studio Footer */}
+        {/* 3. Editor Footer */}
         <div className="px-4 sm:px-6 py-3 border-t border-black/8 bg-zinc-50/90 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3 text-xs text-muted-foreground font-mono">
             <span>{editingId ? `Article ID: #${editingId}` : "New Draft"}</span>

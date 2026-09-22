@@ -9,6 +9,32 @@ export const Route = createFileRoute("/")({ component: Home });
 
 function Home() {
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const onAdmin =
+        sessionStorage.getItem("codex_on_admin") === "true" ||
+        localStorage.getItem("codex_on_admin") === "true";
+      const returnToPublic = sessionStorage.getItem("codex_return_to_public") === "true";
+
+      const navEntry = (performance.getEntriesByType?.("navigation")?.[0] as
+        | PerformanceNavigationTiming
+        | undefined);
+      const isBack = navEntry?.type === "back_forward";
+
+      if (onAdmin && !returnToPublic && !isBack) {
+        const lastTab =
+          sessionStorage.getItem("codex_admin_active_tab") ||
+          localStorage.getItem("codex_admin_active_tab");
+        const target = lastTab ? `/admin?tab=${encodeURIComponent(lastTab)}` : "/admin";
+        window.location.replace(target);
+        return;
+      }
+
+      if (returnToPublic || isBack) {
+        sessionStorage.removeItem("codex_return_to_public");
+        sessionStorage.removeItem("codex_on_admin");
+        localStorage.removeItem("codex_on_admin");
+      }
+    }
     void trackCurrentVisitor(window.location.pathname);
   }, []);
 

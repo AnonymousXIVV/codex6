@@ -18,18 +18,18 @@ interface ImagePickerModalProps {
 }
 
 const LOCAL_PRESETS = [
-  { url: "/hero/studio.jpg", label: "Studio Aerial", group: "Hero" },
+  { url: "/hero/studio.jpg", label: "Agency Aerial", group: "Hero" },
   { url: "/hero/web-apps.jpg", label: "Web Applications (Apple)", group: "Hero" },
   { url: "/hero/web-dev.jpg", label: "Web Development", group: "Hero" },
   { url: "/hero/design.jpg", label: "Design Workspace", group: "Hero" },
   { url: "/hero/social.jpg", label: "Social Media Campaign", group: "Hero" },
-  { url: "/studio/interior.jpg", label: "Studio Loft Interior", group: "Studio" },
-  { url: "/studio/headquarters.jpg", label: "Studio Architecture Exterior", group: "Studio" },
-  { url: "/studio/code.jpg", label: "Code Terminal", group: "Studio" },
-  { url: "/studio/design.jpg", label: "Interface Design Desk", group: "Studio" },
-  { url: "/studio/wireframes.jpg", label: "Product Wireframes", group: "Studio" },
-  { url: "/studio/social.jpg", label: "Social Feed Mockup", group: "Studio" },
-  { url: "/studio/analytics.jpg", label: "Telemetry & Analytics", group: "Studio" },
+  { url: "/studio/interior.jpg", label: "Office Loft Interior", group: "Workplace" },
+  { url: "/studio/headquarters.jpg", label: "Architecture Exterior", group: "Workplace" },
+  { url: "/studio/code.jpg", label: "Code Terminal", group: "Workplace" },
+  { url: "/studio/design.jpg", label: "Interface Design Desk", group: "Workplace" },
+  { url: "/studio/wireframes.jpg", label: "Product Wireframes", group: "Workplace" },
+  { url: "/studio/social.jpg", label: "Social Feed Mockup", group: "Workplace" },
+  { url: "/studio/analytics.jpg", label: "Telemetry & Analytics", group: "Workplace" },
   { url: "/work/ecommerce-storefront.jpg", label: "Luxury E-Commerce Storefront", group: "Portfolio" },
   { url: "/work/nordic-goods.jpg", label: "Nordic Goods Storefront", group: "Portfolio" },
   { url: "/work/krypton-horology.jpg", label: "Krypton Horology Watches", group: "Portfolio" },
@@ -69,7 +69,7 @@ const CURATED_TECH_PRESETS = [
     url: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=1200&q=80",
     label: "Minimalist Engineering Workstation",
     alt: "Minimalist workspace with laptop and mechanical keyboard",
-    group: "Studio",
+    group: "Workplace",
   },
   {
     url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
@@ -189,7 +189,7 @@ export function ImagePickerModal({
             <div className="min-w-0">
               <h3 className="text-sm font-bold text-label truncate font-display">{title}</h3>
               <p className="text-[11px] text-muted-foreground truncate hidden sm:block">
-                Curated engineering stock, local studio assets, direct uploads, or web URLs
+                Curated engineering stock, local media assets, direct uploads, or web URLs
               </p>
             </div>
           </div>
@@ -225,7 +225,7 @@ export function ImagePickerModal({
                 : "border-transparent text-muted-foreground hover:text-label"
             }`}
           >
-            Local Studio Library
+            Local Media Library
           </button>
           <button
             type="button"
@@ -308,7 +308,7 @@ export function ImagePickerModal({
             </div>
           )}
 
-          {/* Local Studio Presets */}
+          {/* Local Media Presets */}
           {activeTab === "library" && (
             <div className="space-y-3">
               <p className="text-xs text-muted-foreground pb-1">
@@ -426,7 +426,7 @@ export function ImagePickerModal({
                     setCustomInput(e.target.value);
                     setSelectedUrl(e.target.value);
                   }}
-                  placeholder="e.g. https://images.unsplash.com/... or /hero/studio.jpg"
+                  placeholder="e.g. https://images.unsplash.com/... or /hero/web-dev.jpg"
                   className="w-full px-3.5 py-2 text-xs rounded-xl border border-black/15 focus:outline-none focus:border-blue font-mono"
                 />
               </div>

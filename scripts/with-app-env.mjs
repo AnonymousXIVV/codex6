@@ -121,7 +121,7 @@ function main(argv) {
   const binPath = join(projectRoot(), "node_modules", ".bin");
   const pathWithBin = binPath + ":" + (process.env.PATH || "");
   const mergedEnv = { ...env, PATH: pathWithBin };
-  const child = spawn(command, args, { stdio: "inherit", env: mergedEnv, shell: true });
+  const child = spawn(command, args, { stdio: "inherit", env: mergedEnv });
   // The dev server is long-running and is stopped by signalling this wrapper.
   for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
     process.on(signal, () => child.kill(signal));

@@ -179,7 +179,7 @@ export function ContactModal({ isOpen, onClose, defaultService }: ContactModalPr
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-blue mb-1">
                   <Sparkles className="size-3.5" />
-                  <span>Direct Studio Desk</span>
+                  <span>Direct Agency Desk</span>
                 </div>
                 <h2
                   id="contact-modal-title"
@@ -224,7 +224,7 @@ export function ContactModal({ isOpen, onClose, defaultService }: ContactModalPr
                       onClick={onClose}
                       className="w-full sm:w-auto px-6 h-10 rounded-xl bg-blue text-white text-xs font-semibold hover:bg-blue-hover transition-colors cursor-pointer"
                     >
-                      Return to Studio
+                      Return to Site
                     </button>
                     <a
                       href={LINKS.whatsapp}
@@ -385,7 +385,7 @@ export function ContactModal({ isOpen, onClose, defaultService }: ContactModalPr
               <div className="pt-5 border-t border-hairline">
                 <div className="text-[11px] font-medium text-muted-foreground mb-3 flex items-center justify-between">
                   <span>Prefer an instant direct channel?</span>
-                  <span className="font-mono text-[10px] text-subtle">Kyiv Studio UTC+2</span>
+                  <span className="font-mono text-[10px] text-subtle">Kyiv Office UTC+2</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <a

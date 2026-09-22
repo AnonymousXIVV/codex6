@@ -13,11 +13,11 @@ const SECTION_METADATA: Record<string, { label: string; desc: string; category: 
   portfolio: { label: "Portfolio Works Showcase", desc: "Interactive project gallery with live case studies & preview modal", category: "Case Studies" },
   results: { label: "Results & Growth Metrics", desc: "Verifiable KPIs, lighthouse 100/100 scores & conversion stats", category: "Proof" },
   reviews: { label: "Client Testimonials Slider", desc: "Verified corporate client reviews and executive endorsements", category: "Social Proof" },
-  about: { label: "About Studio & DNA", desc: "Philosophy, architectural principles and studio manifesto", category: "Story" },
+  about: { label: "About Agency & DNA", desc: "Philosophy, architectural principles and agency manifesto", category: "Story" },
   services: { label: "Services & Capabilities", desc: "Full spectrum of web engineering, UI/UX, and marketing offerings", category: "Offerings" },
-  studio: { label: "Kyiv Studio & Culture", desc: "Physical space, hardware lab & engineering culture", category: "Story" },
+  studio: { label: "Kyiv Office & Culture", desc: "Physical space, hardware lab & engineering culture", category: "Story" },
   blog: { label: "Insights & Technical Blog", desc: "Thought leadership, engineering breakdowns, and search engine articles", category: "Content" },
-  contact: { label: "Contact & Project Inquiry", desc: "Direct inquiry form, phone, email, WhatsApp & Kyiv studio map", category: "Conversion" },
+  contact: { label: "Contact & Project Inquiry", desc: "Direct inquiry form, phone, email, WhatsApp & Kyiv office map", category: "Conversion" },
 };
 
 const HERO_LAYOUT_OPTIONS = [

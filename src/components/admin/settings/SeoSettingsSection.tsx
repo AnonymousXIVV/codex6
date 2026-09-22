@@ -8,9 +8,9 @@ interface SeoSettingsSectionProps {
 
 export function SeoSettingsSection({ config, onChange }: SeoSettingsSectionProps) {
   const seo = config.seo || {
-    metaTitle: "Codex Dynamics — High-Performance Websites & Digital Studio",
+    metaTitle: "Codex Dynamics — High-Performance Websites & Digital Agency",
     metaDescription:
-      "High-performance websites, web design, web development, and digital marketing studio. Precision engineering on every screen.",
+      "High-performance websites, web design, web development, and digital marketing agency. Precision engineering on every screen.",
     canonicalUrl: "https://codexdynamics.com",
     ogImage: "/hero/studio.jpg",
     gaId: "",
@@ -33,7 +33,7 @@ export function SeoSettingsSection({ config, onChange }: SeoSettingsSectionProps
             <Globe className="size-5" />
           </div>
           <div>
-            <h3 className="text-base font-semibold text-neutral-900 tracking-tight">Global Search & OpenGraph Meta Studio</h3>
+            <h3 className="text-base font-semibold text-neutral-900 tracking-tight">Global Search & OpenGraph Meta Suite</h3>
             <p className="text-xs text-neutral-500 mt-0.5">
               Manage title tags, meta descriptions, canonical routing, and social share cards.
             </p>
@@ -61,7 +61,7 @@ export function SeoSettingsSection({ config, onChange }: SeoSettingsSectionProps
                   seo: { ...seo, metaTitle: e.target.value },
                 })
               }
-              placeholder="Codex Dynamics — High-Performance Websites & Digital Studio"
+              placeholder="Codex Dynamics — High-Performance Websites & Digital Agency"
               className="w-full text-xs px-3 py-2 rounded-xl border border-black/[0.08] bg-[#F9F9FB] focus:border-[#0071E3] focus:bg-white text-neutral-900 outline-none transition"
             />
           </div>
@@ -86,7 +86,7 @@ export function SeoSettingsSection({ config, onChange }: SeoSettingsSectionProps
                   seo: { ...seo, metaDescription: e.target.value },
                 })
               }
-              placeholder="High-performance websites, web design, web development, and digital marketing studio..."
+              placeholder="High-performance websites, web design, web development, and digital marketing agency..."
               className="w-full text-xs px-3 py-2 rounded-xl border border-black/[0.08] bg-[#F9F9FB] focus:border-[#0071E3] focus:bg-white text-neutral-900 outline-none transition resize-none"
             />
           </div>
@@ -119,7 +119,7 @@ export function SeoSettingsSection({ config, onChange }: SeoSettingsSectionProps
                     seo: { ...seo, ogImage: e.target.value },
                   })
                 }
-                placeholder="/hero/studio.jpg or https://..."
+                placeholder="/hero/web-dev.jpg or https://..."
                 className="w-full text-xs px-3 py-2 rounded-xl border border-black/[0.08] bg-[#F9F9FB] focus:border-[#0071E3] focus:bg-white text-neutral-900 outline-none transition"
               />
             </div>
@@ -150,12 +150,12 @@ export function SeoSettingsSection({ config, onChange }: SeoSettingsSectionProps
             </div>
 
             <h5 className="text-[15px] leading-snug text-[#0071E3] hover:underline cursor-pointer font-medium line-clamp-1 mt-1">
-              {seo.metaTitle || "Codex Dynamics — High-Performance Websites & Digital Studio"}
+              {seo.metaTitle || "Codex Dynamics — High-Performance Websites & Digital Agency"}
             </h5>
 
             <p className="text-[13px] leading-relaxed text-neutral-600 mt-1 line-clamp-2">
               {seo.metaDescription ||
-                "High-performance websites, web design, web development, and digital marketing studio."}
+                "High-performance websites, web design, web development, and digital marketing agency."}
             </p>
           </div>
         </div>
@@ -186,7 +186,7 @@ export function SeoSettingsSection({ config, onChange }: SeoSettingsSectionProps
                 {seo.metaTitle || "Codex Dynamics"}
               </p>
               <p className="text-[11px] text-neutral-500 line-clamp-2 mt-0.5">
-                {seo.metaDescription || "High-performance websites and digital studio."}
+                {seo.metaDescription || "High-performance websites and digital agency."}
               </p>
             </div>
           </div>

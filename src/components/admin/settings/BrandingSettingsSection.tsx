@@ -10,7 +10,7 @@ const COLOR_PRESETS = [
   { id: "blue", name: "Codex Blue", primary: "#0071e3", accent: "#0071e3", bg: "#f5f5f7", card: "#ffffff" },
   { id: "teal", name: "Pacific Cyan", primary: "#0ea5e9", accent: "#0ea5e9", bg: "#f0f9ff", card: "#ffffff" },
   { id: "violet", name: "Royal Purple", primary: "#8b5cf6", accent: "#8b5cf6", bg: "#faf5ff", card: "#ffffff" },
-  { id: "emerald", name: "Studio Emerald", primary: "#10b981", accent: "#10b981", bg: "#f0fdf4", card: "#ffffff" },
+  { id: "emerald", name: "Emerald Peak", primary: "#10b981", accent: "#10b981", bg: "#f0fdf4", card: "#ffffff" },
   { id: "amber", name: "Obsidian Gold", primary: "#d97706", accent: "#d97706", bg: "#fffbeb", card: "#ffffff" },
   { id: "dark", name: "Pure Midnight", primary: "#3b82f6", accent: "#60a5fa", bg: "#0f172a", card: "#1e293b" },
 ];
@@ -18,7 +18,7 @@ const COLOR_PRESETS = [
 const RADIUS_OPTIONS = [
   { id: "sharp", label: "Sharp (0px)", desc: "Geometric architectural finish" },
   { id: "clean", label: "Clean (8px)", desc: "Apple HIG precision standard" },
-  { id: "modern", label: "Modern (16px)", desc: "Soft fluid studio feel" },
+  { id: "modern", label: "Modern (16px)", desc: "Soft fluid modern feel" },
   { id: "pill", label: "Pill (24px)", desc: "Ultra-rounded pill curves" },
 ] as const;
 
@@ -26,7 +26,7 @@ const FONT_OPTIONS = [
   { id: "system", name: "Apple System (SF Pro)", sample: "Precision engineering" },
   { id: "inter", name: "Inter Sans", sample: "Ultra-legible neo-grotesque" },
   { id: "playfair", name: "Playfair Display", sample: "Editorial luxury typography" },
-  { id: "syne", name: "Syne Geometric", sample: "Avant-garde design studio" },
+  { id: "syne", name: "Syne Geometric", sample: "Avant-garde design agency" },
 ] as const;
 
 export function BrandingSettingsSection({ config, onChange }: BrandingSettingsSectionProps) {
@@ -325,7 +325,7 @@ export function BrandingSettingsSection({ config, onChange }: BrandingSettingsSe
             className="text-xs px-3 py-2 rounded-lg border border-black/10 bg-white text-label cursor-pointer"
           >
             <option value="1200px">1200px (Compact & Dense)</option>
-            <option value="1280px">1280px (Optimal Studio Standard)</option>
+            <option value="1280px">1280px (Optimal Standard)</option>
             <option value="1440px">1440px (Spacious Wide Canvas)</option>
             <option value="full">Full Fluid Width (100%)</option>
           </select>

@@ -161,6 +161,25 @@ export function TidioWidget() {
     };
     updateStyles();
 
+    // Track whether the visitor has deliberately clicked or opened Tidio
+    let userHasInteracted = false;
+
+    const onUserInteraction = () => {
+      userHasInteracted = true;
+    };
+    window.addEventListener("pointerdown", (e) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.("#tidio-chat, #tidio-chat-iframe")) {
+        userHasInteracted = true;
+      }
+    }, true);
+    window.addEventListener("click", (e) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.("#tidio-chat, #tidio-chat-iframe")) {
+        userHasInteracted = true;
+      }
+    }, true);
+
     // Synchronize open/closed state of external Tidio
     let lastKnownOpen = false;
     const syncOpenState = (nowOpen: boolean) => {
@@ -179,39 +198,37 @@ export function TidioWidget() {
       }
     };
 
-    // Multi-strategy detection across Tidio v4 (Shadow DOM), v3 (iframe), and custom popups
+    // Detection across Tidio v4 (Shadow DOM) and v3 (iframe)
+    // Only treats FULL expanded conversation chat window as active; excludes small "chat with us" badges and welcome popups
     const evaluateTidioActivity = () => {
       const tidioHost = document.getElementById("tidio-chat");
       if (tidioHost) {
         // 1. Check if Tidio is using Shadow DOM
         const shadow = tidioHost.shadowRoot;
         if (shadow) {
+          // If .chat-closed is present, chat is explicitly closed
+          if (shadow.querySelector(".chat-closed")) {
+            syncOpenState(false);
+            return;
+          }
+
           // Check for .chat-open on button or container
           if (shadow.querySelector(".chat-open")) {
             syncOpenState(true);
             return;
           }
 
-          // Check for full active chat window view
-          if (shadow.querySelector(".chat-view, [class*='chatWindow'], [class*='conversationContainer']")) {
-            syncOpenState(true);
-            return;
-          }
-
-          // Check if any element in the shadow tree has expanded into full chat window size (> 300px height, > 240px width)
-          const allShadowDivs = shadow.querySelectorAll("div, section, main");
-          for (let i = 0; i < allShadowDivs.length; i++) {
-            const r = allShadowDivs[i].getBoundingClientRect();
-            if (r.height > 300 && r.width > 240) {
+          // Check for full active chat window view with message input or conversation container
+          const chatWindow = shadow.querySelector(
+            ".chat-view, [class*='chatWindow'], [class*='conversationContainer'], [role='dialog'], textarea, [contenteditable='true']"
+          );
+          if (chatWindow) {
+            const r = chatWindow.getBoundingClientRect();
+            // A full chat conversation dialog is large (>250px height, >220px width)
+            if (r.height > 250 && r.width > 220) {
               syncOpenState(true);
               return;
             }
-          }
-
-          // If .chat-closed is explicitly present, chat is closed
-          if (shadow.querySelector(".chat-closed")) {
-            syncOpenState(false);
-            return;
           }
         }
 
@@ -221,14 +238,21 @@ export function TidioWidget() {
           return;
         }
 
-        // 3. Attach click listener to host container if not yet attached
+        // 3. Attach click / pointer listeners to host container to register deliberate user interaction
         if (!tidioHost.dataset.listenerAttached) {
           tidioHost.dataset.listenerAttached = "true";
-          tidioHost.addEventListener("click", () => {
+          const markInteraction = () => {
+            userHasInteracted = true;
             setTimeout(evaluateTidioActivity, 50);
             setTimeout(evaluateTidioActivity, 200);
             setTimeout(evaluateTidioActivity, 500);
-          });
+          };
+          tidioHost.addEventListener("click", markInteraction);
+          tidioHost.addEventListener("pointerdown", markInteraction);
+          if (shadow) {
+            shadow.addEventListener("click", markInteraction);
+            shadow.addEventListener("pointerdown", markInteraction);
+          }
         }
       }
 
@@ -238,7 +262,9 @@ export function TidioWidget() {
         document.querySelector("iframe[src*='tidio']")) as HTMLIFrameElement | null;
       if (iframe && iframe.id !== "tidio-chat-code") {
         const rect = iframe.getBoundingClientRect();
-        if (rect.height > 300 && rect.width > 240) {
+        // A full chat window iframe is >380px height & >280px width
+        // A minimized launcher iframe with greeting popup is smaller
+        if (rect.height > 380 && rect.width > 280) {
           syncOpenState(true);
           return;
         }
@@ -251,15 +277,37 @@ export function TidioWidget() {
     const attachTidioApiEvents = () => {
       if (window.tidioChatApi) {
         try {
-          window.tidioChatApi.on("open", () => syncOpenState(true));
-          window.tidioChatApi.on("close", () => syncOpenState(false));
-          window.tidioChatApi.on("messageFromOperator", () => syncOpenState(true));
-          window.tidioChatApi.on("messageFromVisitor", () => syncOpenState(true));
-          window.tidioChatApi.on("popUpOpen", () => syncOpenState(true));
-          window.tidioChatApi.on("popUpHide", () => syncOpenState(false));
-          window.tidioChatApi.on("popUpClose", () => syncOpenState(false));
-          window.tidioChatApi.on("display", () => evaluateTidioActivity());
-          window.tidioChatApi.on("ready", () => evaluateTidioActivity());
+          window.tidioChatApi.on("open", () => {
+            // If Tidio fired open automatically on initial visit without any user interaction,
+            // close it so it does not auto-expand over the page or suppress WhatsApp
+            if (!userHasInteracted) {
+              try {
+                window.tidioChatApi?.close();
+              } catch {
+                // ignore
+              }
+              syncOpenState(false);
+              return;
+            }
+            syncOpenState(true);
+          });
+          window.tidioChatApi.on("close", () => {
+            syncOpenState(false);
+          });
+          window.tidioChatApi.on("ready", () => {
+            // On initial ready, ensure chat starts closed unless user interacted
+            if (!userHasInteracted) {
+              try {
+                window.tidioChatApi?.close();
+              } catch {
+                // ignore
+              }
+            }
+            evaluateTidioActivity();
+          });
+          window.tidioChatApi.on("display", () => {
+            evaluateTidioActivity();
+          });
         } catch {
           // Ignore registration failures if API is still booting
         }
@@ -267,27 +315,25 @@ export function TidioWidget() {
     };
     attachTidioApiEvents();
 
-    // Listen for iframe clicks via window blur
-    const onWindowBlur = () => {
-      setTimeout(() => {
-        const active = document.activeElement;
-        if (active && (active.id === "tidio-chat-iframe" || active.id === "tidio-chat" || (active.tagName === "IFRAME" && (active as HTMLIFrameElement).src?.includes("tidio")))) {
-          syncOpenState(true);
-        }
-      }, 50);
-    };
-    window.addEventListener("blur", onWindowBlur);
-
-    // Listen for incoming postMessages from Tidio
+    // Listen for incoming postMessages from Tidio (only explicit open/close actions)
     const onWindowMessage = (e: MessageEvent) => {
       try {
-        const dataStr = typeof e.data === "string" ? e.data : JSON.stringify(e.data || {});
-        const lower = dataStr.toLowerCase();
-        if (lower.includes("tidio")) {
-          if (lower.includes("open") || lower.includes("message") || lower.includes("popup")) {
-            syncOpenState(true);
-          } else if (lower.includes("close")) {
+        const data = e.data;
+        if (typeof data === "string") {
+          if (data === "tidioChat-open" || data === "tidio_chat_open") {
+            if (userHasInteracted) syncOpenState(true);
+          } else if (data === "tidioChat-close" || data === "tidio_chat_close") {
             syncOpenState(false);
+          }
+        } else if (data && typeof data === "object") {
+          const action = (data.action || data.event || data.type || "") as string;
+          if (typeof action === "string") {
+            const actLower = action.toLowerCase();
+            if (actLower === "open" || actLower === "chat_open" || actLower === "chatopen" || actLower === "window_open") {
+              if (userHasInteracted) syncOpenState(true);
+            } else if (actLower === "close" || actLower === "chat_close" || actLower === "chatclose" || actLower === "window_close") {
+              syncOpenState(false);
+            }
           }
         }
       } catch {
@@ -296,20 +342,27 @@ export function TidioWidget() {
     };
     window.addEventListener("message", onWindowMessage);
 
-    const onTidioDocOpen = () => syncOpenState(true);
+    const onTidioDocOpen = () => {
+      if (userHasInteracted) {
+        syncOpenState(true);
+      } else {
+        try {
+          window.tidioChatApi?.close();
+        } catch {
+          // ignore
+        }
+        syncOpenState(false);
+      }
+    };
     const onTidioDocClose = () => syncOpenState(false);
-    const onTidioDocMsg = () => syncOpenState(true);
     document.addEventListener("tidioChat-open", onTidioDocOpen);
     document.addEventListener("tidioChat-close", onTidioDocClose);
-    document.addEventListener("tidioChat-messageFromOperator", onTidioDocMsg);
-    document.addEventListener("tidioChat-popUpOpen", onTidioDocOpen);
-    document.addEventListener("tidioChat-popUpHide", onTidioDocClose);
 
     // Periodic evaluation of Tidio state
     const pollTimer = setInterval(() => {
       evaluateTidioActivity();
       attachTidioApiEvents();
-    }, 200);
+    }, 250);
 
     // Mutation observer to detect when Tidio renders its DOM or changes state
     const observer = new MutationObserver(() => {
@@ -337,13 +390,11 @@ export function TidioWidget() {
     return () => {
       clearInterval(pollTimer);
       observer.disconnect();
-      window.removeEventListener("blur", onWindowBlur);
+      window.removeEventListener("pointerdown", onUserInteraction, true);
+      window.removeEventListener("click", onUserInteraction, true);
       window.removeEventListener("message", onWindowMessage);
       document.removeEventListener("tidioChat-open", onTidioDocOpen);
       document.removeEventListener("tidioChat-close", onTidioDocClose);
-      document.removeEventListener("tidioChat-messageFromOperator", onTidioDocMsg);
-      document.removeEventListener("tidioChat-popUpOpen", onTidioDocOpen);
-      document.removeEventListener("tidioChat-popUpHide", onTidioDocClose);
       document.body.classList.remove("tidio-chat-is-open");
       document.documentElement.classList.remove("tidio-chat-is-open");
     };
@@ -485,7 +536,7 @@ export function TidioWidget() {
                   >
                     {!isVisitor && (
                       <p className="text-[10px] font-semibold text-[#0066FF] mb-0.5">
-                        {isBot ? "🤖 Automated Assistant" : "👤 Studio Operator"}
+                        {isBot ? "🤖 Automated Assistant" : "👤 Support Specialist"}
                       </p>
                     )}
                     <p className="whitespace-pre-wrap">{msg.message}</p>

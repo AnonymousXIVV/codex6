@@ -35,7 +35,7 @@ interface AdminHeaderProps {
 
 const tabMeta: Record<AdminTabKey, { label: string; icon: any; subtitle: string }> = {
   customizer: {
-    label: "Studio Customizer & Visual Architecture",
+    label: "Site Customizer & Visual Architecture",
     icon: Sparkles,
     subtitle: "Complete visual branding, section order, conversion docks, SEO and emergency controls",
   },
@@ -54,8 +54,8 @@ const tabMeta: Record<AdminTabKey, { label: string; icon: any; subtitle: string 
     icon: Megaphone,
     subtitle: "Global announcement bar, WhatsApp floating dock, multi-channel flyout, and lead form qualification",
   },
-  seo_studio: {
-    label: "SEO & Social Sharing Studio",
+  seo_suite: {
+    label: "SEO & Social Sharing Suite",
     icon: Globe,
     subtitle: "Meta tags with character counters, live Google SERP preview, OpenGraph social card, and GA4 telemetry",
   },
@@ -141,7 +141,7 @@ export function AdminHeader({
     activeTab === "branding" ||
     activeTab === "layout" ||
     activeTab === "conversion" ||
-    activeTab === "seo_studio" ||
+    activeTab === "seo_suite" ||
     activeTab === "emergency";
   const isContentActive = activeTab === "content" || activeTab === "site_content";
 
@@ -192,10 +192,10 @@ export function AdminHeader({
                     ? "bg-[#0071E3] text-white border-[#0071E3] shadow-xs"
                     : "bg-[#0071E3]/10 hover:bg-[#0071E3]/15 text-[#0071E3] border-[#0071E3]/20"
                 }`}
-                title="Open Studio Customizer (Branding, Layout, WhatsApp, SEO & Emergency)"
+                title="Open Site Customizer (Branding, Layout, WhatsApp, SEO & Emergency)"
               >
                 <Sparkles className="size-3.5" />
-                <span>Studio Customizer</span>
+                <span>Site Customizer</span>
               </button>
 
               <button
