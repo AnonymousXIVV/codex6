@@ -666,11 +666,11 @@ export function Services() {
                         <div className="space-y-4 lg:col-span-4">
                           {/* What We Take Off Your Plate */}
                           {service.offYourPlate && (
-                            <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
-                              <p className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                            <div className="rounded-xl border border-hairline bg-card p-4">
+                              <p className="text-xs font-semibold text-label">
                                 What We Take Off Your Plate:
                               </p>
-                              <p className="mt-1 text-xs leading-relaxed text-amber-900/80 dark:text-amber-300/80">
+                              <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
                                 {service.offYourPlate}
                               </p>
                             </div>

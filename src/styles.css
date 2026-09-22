@@ -704,3 +704,16 @@
   -webkit-backdrop-filter: saturate(170%) blur(18px);
 }
 
+/* Auto-hide WhatsApp Dock and all floating popups when Tidio chat is active/open */
+body.tidio-chat-is-open #whatsapp-floating-dock,
+body.tidio-chat-is-open .whatsapp-dock-container,
+html.tidio-chat-is-open #whatsapp-floating-dock,
+html.tidio-chat-is-open .whatsapp-dock-container {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(24px) scale(0.85) !important;
+}
+
+

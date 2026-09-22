@@ -26,7 +26,6 @@ export function Footer() {
     primaryTelegram,
     primaryViber,
     socialsGrouped,
-    addresses,
   } = useSiteConfig();
 
   const { openContactModal } = useContactModal();
@@ -272,64 +271,6 @@ export function Footer() {
               source="footer_subscription"
               placeholder="Your email address..."
             />
-
-            <div className="pt-2 border-t border-hairline">
-              <h3 className="mb-2 font-medium text-label text-xs">Direct Desk</h3>
-              <ul className="space-y-1.5 text-xs">
-                {socialsGrouped.phone?.map((p, idx) => (
-                  <li key={`phone-${p.id || idx}`}>
-                    <a href={p.href || `tel:${p.value}`} className="hover:text-label transition-colors flex items-center gap-1.5">
-                      <span className="text-muted-foreground">{p.label || "Phone"}:</span>
-                      <span className="font-mono text-label">{p.value}</span>
-                    </a>
-                  </li>
-                ))}
-                {socialsGrouped.whatsapp?.map((w, idx) => (
-                  <li key={`wa-${w.id || idx}`}>
-                    <a href={w.href || `https://wa.me/${w.value.replace(/[^0-9]/g, "")}`} target="_blank" rel="noopener noreferrer" className="hover:text-label transition-colors flex items-center gap-1.5">
-                      <span className="text-muted-foreground">{w.label || "WhatsApp"}:</span>
-                      <span className="font-mono text-label">{w.value}</span>
-                    </a>
-                  </li>
-                ))}
-                {socialsGrouped.telegram?.map((t, idx) => (
-                  <li key={`tg-${t.id || idx}`}>
-                    <a href={t.href || `https://t.me/${t.value.replace(/^@/, "")}`} target="_blank" rel="noopener noreferrer" className="hover:text-label transition-colors flex items-center gap-1.5">
-                      <span className="text-muted-foreground">{t.label || "Telegram"}:</span>
-                      <span className="font-mono text-label">{t.value}</span>
-                    </a>
-                  </li>
-                ))}
-                {socialsGrouped.viber?.map((v, idx) => (
-                  <li key={`vb-${v.id || idx}`}>
-                    <a href={v.href || `viber://chat?number=${encodeURIComponent(v.value)}`} target="_blank" rel="noopener noreferrer" className="hover:text-label transition-colors flex items-center gap-1.5">
-                      <span className="text-muted-foreground">{v.label || "Viber"}:</span>
-                      <span className="font-mono text-label">{v.value}</span>
-                    </a>
-                  </li>
-                ))}
-                {socialsGrouped.email?.map((e, idx) => (
-                  <li key={`email-${e.id || idx}`}>
-                    <a href={e.href || `mailto:${e.value}`} className="hover:text-label transition-colors flex items-center gap-1.5">
-                      <span className="text-muted-foreground">{e.label || "Email"}:</span>
-                      <span className="font-mono text-label">{e.value}</span>
-                    </a>
-                  </li>
-                ))}
-                {addresses?.map((addr, idx) => (
-                  <li key={`addr-${addr.id || idx}`}>
-                    <a
-                      href={`https://maps.google.com/?q=${encodeURIComponent(addr.fullAddress || `${addr.street}, ${addr.city}`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-label transition-colors"
-                    >
-                      {addr.label ? `${addr.label}: ` : (addr.city ? `${addr.city} · ` : "")}{addr.street}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
           </div>
         </div>
 

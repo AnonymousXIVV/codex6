@@ -3,7 +3,6 @@ import {
   RefreshCw,
   ExternalLink,
   Menu,
-  Database,
   Download,
   Activity,
   BarChart3,

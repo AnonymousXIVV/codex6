@@ -4,7 +4,6 @@ import {
   FacebookLogo,
   GmailLogo,
   InstagramLogo,
-  MapsLogo,
   PhoneLogo,
   TelegramLogo,
   ViberLogo,
@@ -36,15 +35,6 @@ const emptyForm: Inquiry = {
   service: "",
   message: "",
 };
-
-async function copyText(value: string, ok: string) {
-  try {
-    await navigator.clipboard.writeText(value);
-    toast.success(ok);
-  } catch {
-    toast.error("Could not copy. Try selecting it instead.");
-  }
-}
 
 function isJsonResponse(res: Response) {
   return (res.headers.get("content-type") ?? "").includes("application/json");
@@ -142,7 +132,6 @@ export function Contact() {
   const {
     config,
     socialsGrouped,
-    addresses,
     primaryPhone,
     primaryWhatsApp,
     primaryTelegram,
@@ -197,8 +186,6 @@ export function Contact() {
     const extraNotes = [
       formData.company ? `Company: ${formData.company}` : null,
       formData.service ? `Service: ${formData.service}` : null,
-      formData.budget ? `Budget: ${formData.budget}` : null,
-      formData.timeline ? `Timeline: ${formData.timeline}` : null,
     ].filter(Boolean).join(" | ");
 
     const finalMessage = extraNotes
@@ -210,8 +197,6 @@ export function Contact() {
       phone: formData.phone.trim(),
       email: formData.email.trim(),
       company: formData.company?.trim(),
-      budget: formData.budget?.trim(),
-      timeline: formData.timeline?.trim(),
       service: formData.service?.trim(),
       message: finalMessage,
     };
@@ -262,14 +247,14 @@ export function Contact() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid items-stretch gap-6 lg:grid-cols-2 lg:gap-8">
-          <Reveal className="h-full">
-            <article className="surface-lift flex h-full max-h-[740px] flex-col overflow-hidden rounded-xl bg-card">
-              <div className="shrink-0 flex flex-col items-center px-6 pt-8 pb-5 text-center">
-                <span className="flex size-14 items-center justify-center rounded-[1.25rem] bg-blue text-xl font-semibold text-paper shadow-[inset_0_0.5px_0_rgb(255_255_255_/_0.35)]">
+        <div className="mt-12 grid items-start gap-6 lg:grid-cols-2 lg:gap-8">
+          <Reveal>
+            <article className="surface-lift flex flex-col overflow-hidden rounded-xl bg-card">
+              <div className="flex flex-col items-center px-6 pt-6 pb-5 text-center">
+                <span className="flex size-14 items-center justify-center rounded-2xl bg-blue text-xl font-semibold text-paper shadow-[inset_0_0.5px_0_rgb(255_255_255_/_0.35)]">
                   {config.siteName?.[0] || CONTACT.name[0] || "C"}
                 </span>
-                <h3 className="mt-3.5 text-2xl font-semibold tracking-tight text-label">
+                <h3 className="mt-3.5 text-xl font-semibold tracking-tight text-label">
                   {config.siteName || CONTACT.name}
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -277,254 +262,68 @@ export function Contact() {
                 </p>
               </div>
 
-              <div className="shrink-0 grid grid-cols-5 gap-1 border-b border-hairline px-3 pb-5 sm:px-5">
-                {actionList.map((action) => (
-                  <a
-                    key={action.label}
-                    href={action.href}
-                    {...(action.external
-                      ? { target: "_blank", rel: "noopener noreferrer" }
-                      : {})}
-                    className="flex flex-col items-center gap-2 rounded-xl py-2 transition-colors duration-150 hover:bg-fill"
-                  >
-                    <action.Logo className="size-10 sm:size-11" />
-                    <span className="text-[10px] font-medium tracking-wide text-label sm:text-[11px]">
-                      {action.hint}
-                    </span>
-                  </a>
-                ))}
-              </div>
-
-              <div className="flex-1 overflow-y-auto overscroll-contain">
-                <ul className="divide-y divide-hairline">
-                {/* Phone Numbers */}
-                {socialsGrouped.phone?.map((phone, idx) => (
-                  <li key={`phone-${phone.id || idx}`}>
-                    <div className="flex w-full items-center justify-between gap-3 px-5 py-3.5 hover:bg-fill transition-colors">
-                      <a
-                        href={phone.href || `tel:${phone.value.replace(/[^\d+]/g, "")}`}
-                        className="flex items-center gap-3.5 flex-1 min-w-0"
-                      >
-                        <PhoneLogo className="size-8 sm:size-9 shrink-0" />
-                        <span className="min-w-0 truncate">
-                          <span className="block text-xs text-subtle truncate">
-                            {phone.label || "Direct Phone Line"} {phone.isPrimary && "· Primary"}
-                          </span>
-                          <span className="mt-0.5 block text-[14px] sm:text-[15px] font-medium text-label truncate font-mono">
-                            {phone.value}
-                          </span>
-                        </span>
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          copyText(phone.value.replace(/[^\d+]/g, ""), "Phone number copied.")
-                        }
-                        className="px-2.5 py-1 text-xs text-muted-foreground hover:text-label hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition shrink-0 cursor-pointer"
-                        title="Copy number"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </li>
-                ))}
-
-                {/* WhatsApp Lines */}
-                {socialsGrouped.whatsapp?.map((wa, idx) => (
-                  <li key={`wa-${wa.id || idx}`}>
-                    <div className="flex w-full items-center justify-between gap-3 px-5 py-3.5 hover:bg-fill transition-colors">
-                      <a
-                        href={wa.href || `https://wa.me/${wa.value.replace(/[^0-9]/g, "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3.5 flex-1 min-w-0"
-                      >
-                        <WhatsAppLogo className="size-8 sm:size-9 shrink-0" />
-                        <span className="min-w-0 truncate">
-                          <span className="block text-xs text-subtle truncate">
-                            {wa.label || "WhatsApp Business"} {wa.isPrimary && "· Primary"}
-                          </span>
-                          <span className="mt-0.5 block text-[14px] sm:text-[15px] font-medium text-label truncate font-mono">
-                            {wa.value}
-                          </span>
-                        </span>
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          copyText(wa.value.replace(/[^0-9+]/g, ""), "WhatsApp number copied.")
-                        }
-                        className="px-2.5 py-1 text-xs text-muted-foreground hover:text-label hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition shrink-0 cursor-pointer"
-                        title="Copy WhatsApp"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </li>
-                ))}
-
-                {/* Telegram Accounts */}
-                {socialsGrouped.telegram?.map((tg, idx) => (
-                  <li key={`tg-${tg.id || idx}`}>
-                    <div className="flex w-full items-center justify-between gap-3 px-5 py-3.5 hover:bg-fill transition-colors">
-                      <a
-                        href={tg.href || `https://t.me/${tg.value.replace(/^@/, "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3.5 flex-1 min-w-0"
-                      >
-                        <TelegramLogo className="size-8 sm:size-9 shrink-0" />
-                        <span className="min-w-0 truncate">
-                          <span className="block text-xs text-subtle truncate">
-                            {tg.label || "Telegram Desk"} {tg.isPrimary && "· Primary"}
-                          </span>
-                          <span className="mt-0.5 block text-[14px] sm:text-[15px] font-medium text-label truncate font-mono">
-                            {tg.value}
-                          </span>
-                        </span>
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          copyText(tg.value, "Telegram copied.")
-                        }
-                        className="px-2.5 py-1 text-xs text-muted-foreground hover:text-label hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition shrink-0 cursor-pointer"
-                        title="Copy Telegram"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </li>
-                ))}
-
-                {/* Viber Lines */}
-                {socialsGrouped.viber?.map((vb, idx) => (
-                  <li key={`vb-${vb.id || idx}`}>
-                    <div className="flex w-full items-center justify-between gap-3 px-5 py-3.5 hover:bg-fill transition-colors">
-                      <a
-                        href={vb.href || `viber://chat?number=${encodeURIComponent(vb.value)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-3.5 flex-1 min-w-0"
-                      >
-                        <ViberLogo className="size-8 sm:size-9 shrink-0" />
-                        <span className="min-w-0 truncate">
-                          <span className="block text-xs text-subtle truncate">
-                            {vb.label || "Viber Client Desk"} {vb.isPrimary && "· Primary"}
-                          </span>
-                          <span className="mt-0.5 block text-[14px] sm:text-[15px] font-medium text-label truncate font-mono">
-                            {vb.value}
-                          </span>
-                        </span>
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          copyText(vb.value.replace(/[^\d+]/g, ""), "Viber copied.")
-                        }
-                        className="px-2.5 py-1 text-xs text-muted-foreground hover:text-label hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition shrink-0 cursor-pointer"
-                        title="Copy Viber"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </li>
-                ))}
-
-                {/* Emails */}
-                {socialsGrouped.email?.map((email, idx) => (
-                  <li key={`email-${email.id || idx}`}>
-                    <div className="flex w-full items-center justify-between gap-3 px-5 py-3.5 hover:bg-fill transition-colors">
-                      <a
-                        href={email.href || `mailto:${email.value}`}
-                        className="flex items-center gap-3.5 flex-1 min-w-0"
-                      >
-                        <GmailLogo className="size-8 sm:size-9 shrink-0" />
-                        <span className="min-w-0 truncate">
-                          <span className="block text-xs text-subtle truncate">
-                            {email.label || "Email Inbox"} {email.isPrimary && "· Primary"}
-                          </span>
-                          <span className="mt-0.5 block text-[14px] sm:text-[15px] font-medium text-label truncate font-mono">
-                            {email.value}
-                          </span>
-                        </span>
-                      </a>
-                      <button
-                        type="button"
-                        onClick={() => copyText(email.value, "Email address copied.")}
-                        className="px-2.5 py-1 text-xs text-muted-foreground hover:text-label hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition shrink-0 cursor-pointer"
-                        title="Copy Email"
-                      >
-                        Copy
-                      </button>
-                    </div>
-                  </li>
-                ))}
-
-                {/* Physical Office Addresses */}
-                {addresses?.map((addr, idx) => (
-                  <li key={`addr-${addr.id || idx}`}>
+              <div>
+                <div className="grid grid-cols-5 gap-1 border-t border-hairline px-3 py-4 sm:px-5">
+                  {actionList.map((action) => (
                     <a
-                      href={`https://maps.google.com/?q=${encodeURIComponent(addr.fullAddress || `${addr.street}, ${addr.city}`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3.5 px-5 py-3.5 hover:bg-fill transition-colors"
+                      key={action.label}
+                      href={action.href}
+                      {...(action.external
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                      className="flex flex-col items-center gap-1.5 rounded-xl py-2 transition-colors duration-150 hover:bg-fill"
                     >
-                      <MapsLogo className="size-8 sm:size-9 shrink-0" />
-                      <span className="min-w-0 truncate">
-                        <span className="block text-xs text-subtle truncate">
-                          {addr.label || (addr.city ? `${addr.city} Office` : "Office Location")} {addr.isPrimary && "· Primary HQ"}
-                        </span>
-                        <span className="mt-0.5 block text-[14px] sm:text-[15px] font-medium text-label truncate">
-                          {addr.street} {addr.city ? `· ${addr.city}` : ""}
-                        </span>
+                      <action.Logo className="size-9 sm:size-10" />
+                      <span className="text-[10px] font-medium tracking-wide text-label sm:text-[11px]">
+                        {action.hint}
                       </span>
                     </a>
-                  </li>
-                ))}
-                </ul>
-              </div>
+                  ))}
+                </div>
 
-              <div className="shrink-0 flex flex-wrap items-center justify-center gap-3 border-t border-hairline px-5 py-3.5 bg-card">
-                {instagramUrl && (
-                  <a
-                    href={instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    className="transition-transform duration-150 hover:scale-105"
-                  >
-                    <InstagramLogo className="size-9" />
-                  </a>
+                {(instagramUrl || facebookUrl || (socialsGrouped.custom && socialsGrouped.custom.length > 0)) && (
+                  <div className="flex flex-wrap items-center justify-center gap-3 border-t border-hairline px-5 py-3 bg-card">
+                    {instagramUrl && (
+                      <a
+                        href={instagramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram"
+                        className="transition-transform duration-150 hover:scale-105"
+                      >
+                        <InstagramLogo className="size-8" />
+                      </a>
+                    )}
+                    {facebookUrl && (
+                      <a
+                        href={facebookUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Facebook"
+                        className="transition-transform duration-150 hover:scale-105"
+                      >
+                        <FacebookLogo className="size-8" />
+                      </a>
+                    )}
+                    {socialsGrouped.custom?.map((s, idx) => (
+                      <a
+                        key={idx}
+                        href={s.href || s.value}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-label hover:bg-fill transition-colors"
+                      >
+                        {s.label || "Link"}
+                      </a>
+                    ))}
+                  </div>
                 )}
-                {facebookUrl && (
-                  <a
-                    href={facebookUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Facebook"
-                    className="transition-transform duration-150 hover:scale-105"
-                  >
-                    <FacebookLogo className="size-9" />
-                  </a>
-                )}
-                {socialsGrouped.custom?.map((s, idx) => (
-                  <a
-                    key={idx}
-                    href={s.href || s.value}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-label hover:bg-fill transition-colors"
-                  >
-                    {s.label || "Link"}
-                  </a>
-                ))}
               </div>
             </article>
           </Reveal>
 
-          <Reveal delay={80} className="h-full">
-            <div className="surface-lift flex h-full flex-col justify-between overflow-hidden rounded-xl bg-card">
+          <Reveal delay={80}>
+            <div className="surface-lift flex flex-col justify-between overflow-hidden rounded-xl bg-card">
               {live ? (
                 <form
                   action="/send-mail.php"
@@ -581,7 +380,7 @@ export function Contact() {
                           }))
                         }
                         className="w-full bg-transparent text-base text-label outline-none placeholder:text-subtle"
-                        placeholder="+380 63 000 0000"
+                        placeholder="+1 (555) 000-0000"
                         autoComplete="tel"
                       />
                     </label>
@@ -656,61 +455,6 @@ export function Contact() {
                           <option value="Brand Identity & Web Systems">Brand Identity & Web Systems</option>
                         </select>
                       </label>
-                    )}
-
-                    {(config.contactForm?.showBudget !== false || config.contactForm?.showTimeline !== false) && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-hairline">
-                        {config.contactForm?.showBudget !== false && (
-                          <label className="block px-5 py-4">
-                            <span className="mb-1.5 block text-xs font-medium tracking-wide text-subtle uppercase">
-                              Budget Range
-                            </span>
-                            <select
-                              id="budget"
-                              name="budget"
-                              value={formData.budget || ""}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  budget: e.target.value,
-                                }))
-                              }
-                              className="w-full bg-transparent text-sm text-label outline-none"
-                            >
-                              <option value="">Select budget...</option>
-                              <option value="$3,000 – $5,000">$3,000 – $5,000</option>
-                              <option value="$5,000 – $10,000">$5,000 – $10,000</option>
-                              <option value="$10,000 – $25,000">$10,000 – $25,000</option>
-                              <option value="$25,000+">$25,000+ Enterprise</option>
-                            </select>
-                          </label>
-                        )}
-                        {config.contactForm?.showTimeline !== false && (
-                          <label className="block px-5 py-4">
-                            <span className="mb-1.5 block text-xs font-medium tracking-wide text-subtle uppercase">
-                              Target Timeline
-                            </span>
-                            <select
-                              id="timeline"
-                              name="timeline"
-                              value={formData.timeline || ""}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  timeline: e.target.value,
-                                }))
-                              }
-                              className="w-full bg-transparent text-sm text-label outline-none"
-                            >
-                              <option value="">Select timeline...</option>
-                              <option value="Urgent (< 2 weeks)">Urgent (&lt; 2 weeks)</option>
-                              <option value="1 month">1 month</option>
-                              <option value="2 – 3 months">2 – 3 months</option>
-                              <option value="Flexible">Flexible / Planning</option>
-                            </select>
-                          </label>
-                        )}
-                      </div>
                     )}
 
                     <label className="block px-5 py-4">

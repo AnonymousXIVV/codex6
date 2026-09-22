@@ -1575,7 +1575,9 @@ export function sendChatMessage({ threadId, sender = "visitor", senderName = "Vi
   let thread = null;
   try {
     thread = db.prepare("SELECT * FROM chat_threads WHERE id = ?").get(tId);
-  } catch {}
+  } catch (_err) {
+    // Thread not found or query failed
+  }
 
   if (!thread) {
     db.prepare(`
@@ -1626,14 +1628,18 @@ export function markChatThreadRead(threadId) {
   try {
     db.prepare("UPDATE chat_threads SET unread_count = 0 WHERE id = ?").run(threadId);
     db.prepare("UPDATE chat_messages SET is_read = 1 WHERE thread_id = ?").run(threadId);
-  } catch {}
+  } catch (_err) {
+    // Ignore mark read error
+  }
 }
 
 export function updateChatThreadStatus(threadId, status = "active") {
   const db = getDb();
   try {
     db.prepare("UPDATE chat_threads SET status = ? WHERE id = ?").run(status, threadId);
-  } catch {}
+  } catch (_err) {
+    // Ignore status update error
+  }
 }
 
 export function deleteChatThread(threadId) {
@@ -1641,7 +1647,9 @@ export function deleteChatThread(threadId) {
   try {
     db.prepare("DELETE FROM chat_messages WHERE thread_id = ?").run(threadId);
     db.prepare("DELETE FROM chat_threads WHERE id = ?").run(threadId);
-  } catch {}
+  } catch (_err) {
+    // Ignore thread deletion error
+  }
 }
 
 

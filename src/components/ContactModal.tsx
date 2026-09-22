@@ -304,7 +304,7 @@ export function ContactModal({ isOpen, onClose, defaultService }: ContactModalPr
                         onChange={(e) =>
                           setForm((f) => ({ ...f, phone: e.target.value }))
                         }
-                        placeholder="+380 63 000 0000"
+                        placeholder="+1 (555) 000-0000"
                         disabled={isSubmitting}
                         className="w-full h-10 rounded-xl bg-paper px-3.5 text-xs text-label border border-hairline focus:border-blue focus:ring-1 focus:ring-blue outline-none transition-colors"
                       />
@@ -344,7 +344,7 @@ export function ContactModal({ isOpen, onClose, defaultService }: ContactModalPr
                         setForm((f) => ({ ...f, message: e.target.value }));
                         if (errors.message) setErrors((err) => ({ ...err, message: undefined }));
                       }}
-                      placeholder="Outline your timeline, goals, or architectural requirements..."
+                      placeholder="Outline your project, goals, or architectural requirements..."
                       disabled={isSubmitting}
                       className={cn(
                         "w-full rounded-xl bg-paper p-3 text-xs text-label border transition-colors outline-none resize-none leading-relaxed",

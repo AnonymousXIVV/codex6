@@ -27,14 +27,22 @@ export function WhatsAppDock() {
 
   // Listen for Tidio open/close events to auto-hide dock when full chat window is active
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || typeof document === "undefined") return;
 
-    const handleOpen = () => setIsTidioOpen(true);
-    const handleClose = () => setIsTidioOpen(false);
+    const handleOpen = () => {
+      setIsTidioOpen(true);
+      setOpen(false);
+    };
+    const handleClose = () => {
+      setIsTidioOpen(false);
+    };
     const handleStatus = (e: Event) => {
       const custom = e as CustomEvent<{ isOpen?: boolean }>;
       if (typeof custom.detail?.isOpen === "boolean") {
         setIsTidioOpen(custom.detail.isOpen);
+        if (custom.detail.isOpen) {
+          setOpen(false);
+        }
       }
     };
 
@@ -42,18 +50,88 @@ export function WhatsAppDock() {
     window.addEventListener("tidio-chat-close", handleClose);
     window.addEventListener("tidio-chat-status", handleStatus);
 
-    // Initial check in case Tidio is already open
-    const iframe = document.getElementById("tidio-chat-iframe");
-    if (iframe && (iframe.offsetHeight || iframe.getBoundingClientRect().height) > 220) {
-      setIsTidioOpen(true);
-    }
+    // Official Tidio document events
+    document.addEventListener("tidioChat-open", handleOpen);
+    document.addEventListener("tidioChat-close", handleClose);
+    document.addEventListener("tidioChat-messageFromOperator", handleOpen);
+    document.addEventListener("tidioChat-popUpOpen", handleOpen);
+    document.addEventListener("tidioChat-popUpHide", handleClose);
+
+    // Initial and periodic evaluation of whether Tidio chat is open/expanded or has sent a message
+    const evaluateTidioState = () => {
+      const isOpenViaClass =
+        document.body.classList.contains("tidio-chat-is-open") ||
+        document.documentElement.classList.contains("tidio-chat-is-open");
+
+      let isOpenViaDom = false;
+      const tidioHost = document.getElementById("tidio-chat");
+      if (tidioHost) {
+        const shadow = tidioHost.shadowRoot;
+        if (shadow) {
+          if (shadow.querySelector(".chat-open")) {
+            isOpenViaDom = true;
+          } else if (shadow.querySelector("form, textarea, input[type='text'], .chat-view, [class*='conversation'], [class*='chatWindow']")) {
+            isOpenViaDom = true;
+          } else if (shadow.querySelector("[data-testid='messageFlyout'], [class*='flyout'], [class*='messageBubble'], [class*='popup'], [class*='preview']")) {
+            isOpenViaDom = true;
+          } else {
+            const divs = shadow.querySelectorAll("div, section, main");
+            for (let i = 0; i < divs.length; i++) {
+              const r = divs[i].getBoundingClientRect();
+              if (r.height > 100 && r.width > 100) {
+                isOpenViaDom = true;
+                break;
+              }
+            }
+          }
+        }
+        if (tidioHost.classList.contains("chat-open") || tidioHost.getAttribute("data-state") === "open") {
+          isOpenViaDom = true;
+        }
+      }
+
+      const iframe = (document.getElementById("tidio-chat-iframe") ||
+        document.querySelector("#tidio-chat iframe") ||
+        document.querySelector("iframe[src*='tidio']")) as HTMLIFrameElement | null;
+      if (iframe && iframe.id !== "tidio-chat-code") {
+        const r = iframe.getBoundingClientRect();
+        if (r.height > 100) {
+          isOpenViaDom = true;
+        }
+      }
+
+      const isCurrentlyOpen = isOpenViaClass || isOpenViaDom;
+      setIsTidioOpen(isCurrentlyOpen);
+      if (isCurrentlyOpen) {
+        setOpen(false);
+      }
+    };
+
+    evaluateTidioState();
+    const interval = setInterval(evaluateTidioState, 200);
 
     return () => {
+      clearInterval(interval);
       window.removeEventListener("tidio-chat-open", handleOpen);
       window.removeEventListener("tidio-chat-close", handleClose);
       window.removeEventListener("tidio-chat-status", handleStatus);
+      document.removeEventListener("tidioChat-open", handleOpen);
+      document.removeEventListener("tidioChat-close", handleClose);
+      document.removeEventListener("tidioChat-messageFromOperator", handleOpen);
+      document.removeEventListener("tidioChat-popUpOpen", handleOpen);
+      document.removeEventListener("tidioChat-popUpHide", handleClose);
     };
   }, []);
+
+  // Collapse popup badges on Escape key press
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
 
   const waConfig = config.whatsapp;
   if (waConfig && waConfig.enabled === false) {
@@ -102,12 +180,13 @@ export function WhatsAppDock() {
     <AnimatePresence>
       {!isTidioOpen && (
         <motion.div
+          id="whatsapp-floating-dock"
           key="whatsapp-dock"
           initial={{ opacity: 0, scale: 0.85, y: 14 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.85, y: 14 }}
           transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          className={`pointer-events-none fixed ${
+          className={`pointer-events-none fixed whatsapp-dock-container ${
             shouldOffset
               ? isLeft
                 ? "left-[calc(22px+env(safe-area-inset-left,0px))] items-start"
@@ -121,16 +200,18 @@ export function WhatsAppDock() {
                 ? "bottom-[calc(18px+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(118px+env(safe-area-inset-bottom,0px))]"
                 : "bottom-[calc(118px+env(safe-area-inset-bottom,0px))]"
               : "bottom-[calc(18px+env(safe-area-inset-bottom,0px))]"
-          } z-[2147483647] flex flex-col gap-2.5 transition-all duration-300`}
-          style={{ zIndex: 2147483647 }}
+          } z-[2147483630] flex flex-col gap-2.5 transition-all duration-300`}
+          style={{ zIndex: 2147483630 }}
         >
           <div
             className={`pointer-events-auto flex flex-col ${isLeft ? "items-start" : "items-end"} gap-2.5`}
-            onMouseEnter={() => setOpen(true)}
+            onMouseEnter={() => {
+              if (!isTidioOpen) setOpen(true);
+            }}
             onMouseLeave={() => setOpen(false)}
           >
             <AnimatePresence>
-              {open && showExtras ? (
+              {open && showExtras && !isTidioOpen ? (
                 <motion.div
                   key="stack"
                   initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
@@ -171,7 +252,9 @@ export function WhatsAppDock() {
                 rel="noopener noreferrer"
                 className="relative flex size-[50px] min-w-[50px] min-h-[50px] w-[50px] h-[50px] items-center justify-center rounded-full transition-transform duration-150 ease-out hover:scale-105 active:scale-[0.96] shadow-[0_6px_20px_rgba(37,211,102,0.38),0_2px_6px_rgba(0,0,0,0.1)]"
                 aria-label="WhatsApp"
-                onFocus={() => setOpen(true)}
+                onFocus={() => {
+                  if (!isTidioOpen) setOpen(true);
+                }}
               >
                 <WhatsAppLogo className="size-[50px] w-[50px] h-[50px]" />
                 <span className="wa-pulse" aria-hidden="true" />
